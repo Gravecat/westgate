@@ -18,6 +18,9 @@
 *.lnk
 log.txt
 
+# Personal scripts I use for local tasks. Not useful for anyone else.
+scripts/**
+
 # Visual Studio Code settings, which aren't relevant to the repo.
 .vscode/**
 
