@@ -102,6 +102,7 @@ set(LOM_CPPS
   src/util/file/binpath.cpp
   src/util/file/fileutils.cpp
   src/util/file/yaml.cpp
+  src/util/text/namegen.cpp
 )
 
 # Binary file. LOM_RC should be blank for non-Windows builds.
