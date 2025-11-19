@@ -90,7 +90,7 @@ endif(TARGET_WINDOWS)
 
 # Source files.
 set(LOM_CPPS
-  src/main.cpp
+  src/core/core.cpp
   src/core/terminal.cpp
 )
 
