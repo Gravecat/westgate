@@ -10,15 +10,7 @@
 #include <iostream> // std::cout and associated functionality
 
 // rang library, used to add colour to the terminal.
-// The #pragma lines are to suppress compiler warnings.
-#ifdef __GNUC__
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wcast-function-type"
-#endif
 #include "3rdparty/rang/rang.hpp"
-#ifdef __GNUC__
-    #pragma GCC diagnostic pop
-#endif
 
 using std::cout;
 using std::endl;
