@@ -91,7 +91,6 @@ set(LOM_CPPS
   src/core/core.cpp
   src/core/global/terminal.cpp
   src/util/file/binpath.cpp
-  src/util/file/fileutils.cpp
 )
 
 # Binary file. LOM_RC should be blank for non-Windows builds.
