@@ -7,8 +7,6 @@
 #pragma once
 #include "core/global.hpp"
 
-#include <iostream> // std::cout and associated functionality
-
 // rang library, used to add colour to the terminal.
 #include "3rdparty/rang/rang.hpp"
 
