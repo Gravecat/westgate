@@ -273,10 +273,35 @@ int main(int argc, char** argv)
     try
     {
         // Check command-line parameters.
-        if (parameters.size()) { }
+        for (auto param : parameters)
+        {
+            if (param == "-no-colour" || param == "-no-color")
+            {
+                core().log("Disabling ANSI colour codes.");
+                rang::setControlMode(rang::control::Off);
+            }
+            else if (param == "-force-colour" || param == "-force-color")
+            {
+                core().log("Force-enabling ANSI colour codes.");
+                rang::setControlMode(rang::control::Force);
+            }
+
+#ifdef LOM_TARGET_WINDOWS
+            else if (param == "-native")
+            {
+                core().log("Forcing use of native console attributes.");
+                rang::setWinTermMode(rang::winTerm::Native);
+            }
+            else if (param == "-ansi")
+            {
+                core().log("Forcing use of ANSI console attributes.");
+                rang::setWinTermMode(rang::winTerm::Ansi);
+            }
+#endif
+        }
 
         // Test code
-        cout << fg::cyan << style::bold << "Hello, world!" << style::reset << endl;
+        cout << fg::cyan << style::bold << style::italic << "Hello, world!" << style::reset << endl;
     }
     catch (std::exception &e) { core().halt(e); }
 
