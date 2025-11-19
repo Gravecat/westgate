@@ -100,6 +100,14 @@ set(LOM_CPPS
 add_executable(lom ${LOM_CPPS} ${LOM_RC})
 target_link_libraries(lom PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 
+# Compiler definitions for target platform.
+target_compile_definitions(lom PRIVATE
+  $<$<BOOL:${TARGET_WINDOWS}>:LOM_TARGET_WINDOWS>
+  $<$<BOOL:${TARGET_MINGW}>:LOM_TARGET_MINGW>
+  $<$<BOOL:${TARGET_LINUX}>:LOM_TARGET_LINUX>
+  $<$<BOOL:${TARGET_APPLE}>:LOM_TARGET_APPLE>
+)
+
 # Include directories.
 target_include_directories(lom PRIVATE
   "${CMAKE_SOURCE_DIR}/src"
@@ -135,10 +143,7 @@ if(TARGET_WINDOWS)
   if(TARGET_MINGW)
     set(LOM_BIN "$<TARGET_FILE:lom>.exe")
   endif(TARGET_MINGW)
-  target_compile_definitions(lom PRIVATE
-    LOM_TARGET_WINDOWS
-	WIN32_LEAN_AND_MEAN
-  )
+  target_compile_definitions(lom PRIVATE WIN32_LEAN_AND_MEAN)
   target_link_libraries(lom PRIVATE
     $<$<BOOL:${TARGET_MINGW}>:mingw32>
 	shlwapi
