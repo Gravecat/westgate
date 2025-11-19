@@ -1,0 +1,15 @@
+// cmake/source.hpp.in -- Simple header file processed by CMake to record the source folder for the CMake build.
+// This is used so that we can locate the correct place to find the game's data files, if not located with the binary file.
+
+// SPDX-FileType: SOURCE
+// SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+#pragma once
+
+#include "core/global.hpp"
+
+namespace lom {
+namespace source {
+static const std::string SOURCE_DIR = "@CMAKE_SOURCE_DIR@";
+} }

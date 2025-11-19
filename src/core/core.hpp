@@ -23,9 +23,11 @@ public:
     static constexpr int    CORE_ERROR =    2;  // Serious errors. Shit is going down.
     static constexpr int    CORE_CRITICAL = 3;  // Critical system failure.
 
-    void            check_stderr(); // Checks stderr for any updates, puts them in the log if any exist.
-    static Core&    core(); // Returns a reference to the singleton Core object.
+    void            check_stderr();                 // Checks stderr for any updates, puts them in the log if any exist.
+    static Core&    core();                         // Returns a reference to the singleton Core object.
+    std::string     datafile(const std::string file);   // Returns the full path to a specified game data file.
     void            destroy_core(int exit_code);    // Destroys the singleton Core object and ends execution.
+    void            find_gamedata();                // Attempts to locate the gamedata folder.
     Game&           game() const;                   // Returns a reference to the Game manager object.
     void            halt(std::string error);        // Stops the game and displays an error messge.
     void            halt(const std::exception &e);  // As above, but with an exception instead of a string.
@@ -40,17 +42,19 @@ private:
     static constexpr int    ERROR_CASCADE_WEIGHT_CRITICAL = 20; // The amount a critical type log entry will add to the cascade timer.
     static constexpr int    ERROR_CASCADE_WEIGHT_ERROR =    5;  // The amount an error type log entry will add to the cascade timer.
     static constexpr int    ERROR_CASCADE_WEIGHT_WARNING =  1;  // The amount a warning type log entry will add to the cascade timer.
+    static constexpr int    LOM_GAMEDATA_VERSION =          2;  // The expected version for the gamedata folder.
 
-    int     cascade_count_;     // Keeps track of rapidly-occurring, non-fatal error messages.
-    bool    cascade_failure_;   // Is a cascade failure in progress?
-    time_t  cascade_timer_;     // Timer to check the speed of non-halting warnings, to prevent cascade locks.
-    int     dead_already_;      // Have we already died? Is this crash within the Core subsystem?
-    bool    lock_stderr_;       // Whether the stderr-checking code is allowed to run or not.
-    std::stringstream   stderr_buffer_; // Pointer to a stringstream buffer used to catch stderr messages.
-    std::streambuf*     stderr_old_;    // The old stderr buffer.
-    std::ofstream       syslog_;        // The system log file.
+    int                 cascade_count_;     // Keeps track of rapidly-occurring, non-fatal error messages.
+    bool                cascade_failure_;   // Is a cascade failure in progress?
+    time_t              cascade_timer_;     // Timer to check the speed of non-halting warnings, to prevent cascade locks.
+    int                 dead_already_;      // Have we already died? Is this crash within the Core subsystem?
+    std::string         gamedata_location_; // The path of the game's data files.
+    bool                lock_stderr_;       // Whether the stderr-checking code is allowed to run or not.
+    std::stringstream   stderr_buffer_;     // Pointer to a stringstream buffer used to catch stderr messages.
+    std::streambuf*     stderr_old_;        // The old stderr buffer.
+    std::ofstream       syslog_;            // The system log file.
 
-    std::unique_ptr<Game>   game_ptr_;  // Pointer to the Game manager object, which handles the current game state.
+    std::unique_ptr<Game>   game_ptr_;      // Pointer to the Game manager object, which handles the current game state.
 
             Core();         // Constructor, sets up the Core object.
     void    cleanup();      // Attempts to gracefully clean up memory and subsystems.
