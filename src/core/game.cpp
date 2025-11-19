@@ -6,21 +6,32 @@
 
 #include "core/core.hpp"
 #include "core/game.hpp"
+#include "world/codex.hpp"
 
 namespace lom {
 
 // Constructor, sets up the game manager.
-Game::Game() { }
+Game::Game() : codex_ptr_(nullptr) { }
 
 // Destructor, cleans up attached classes.
-Game::~Game() { }
+Game::~Game()
+{ codex_ptr_.reset(nullptr); }
 
 // Starts the game, in the form of a title screen followed by the main game loop.
 void Game::begin()
 {
     // Except there is no title screen yet. That'll come later.
+
+    codex_ptr_ = std::make_unique<Codex>();
     new_game();
     main_loop();
+}
+
+// Returns a reference to the Codex object.
+Codex& Game::codex() const
+{
+    if (!codex_ptr_) throw std::runtime_error("Attempt to access null Codex pointer!");
+    return *codex_ptr_;
 }
 
 // Shuts things down cleanly and exits the game.
