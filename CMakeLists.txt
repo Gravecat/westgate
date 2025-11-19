@@ -91,6 +91,7 @@ endif(TARGET_WINDOWS)
 # Source files.
 set(LOM_CPPS
   src/core/core.cpp
+  src/core/game.cpp
   src/core/global/terminal.cpp
   src/util/file/binpath.cpp
 )

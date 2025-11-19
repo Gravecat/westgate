@@ -14,6 +14,8 @@
 
 namespace lom {
 
+class Game; // defined in core/game.hpp
+
 class Core {
 public:
     static constexpr int    CORE_INFO =     0;  // General logging information.
@@ -24,6 +26,7 @@ public:
     void            check_stderr(); // Checks stderr for any updates, puts them in the log if any exist.
     static Core&    core(); // Returns a reference to the singleton Core object.
     void            destroy_core(int exit_code);    // Destroys the singleton Core object and ends execution.
+    Game&           game() const;                   // Returns a reference to the Game manager object.
     void            halt(std::string error);        // Stops the game and displays an error messge.
     void            halt(const std::exception &e);  // As above, but with an exception instead of a string.
     void            init_core(std::vector<std::string> parameters);   // Sets up the core game classes and data, and the terminal subsystem.
@@ -46,6 +49,8 @@ private:
     std::stringstream   stderr_buffer_; // Pointer to a stringstream buffer used to catch stderr messages.
     std::streambuf*     stderr_old_;    // The old stderr buffer.
     std::ofstream       syslog_;        // The system log file.
+
+    std::unique_ptr<Game>   game_ptr_;  // Pointer to the Game manager object, which handles the current game state.
 
             Core();         // Constructor, sets up the Core object.
     void    cleanup();      // Attempts to gracefully clean up memory and subsystems.
