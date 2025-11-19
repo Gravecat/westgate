@@ -8,12 +8,14 @@
 
 #include "core/global.hpp"
 
+#include <filesystem>
+
 namespace lom {
 namespace fileutils {
 
-void    delete_file(const std::string &filename);   // Deletes a specified file.
-bool    directory_exists(const std::string &dir);   // Check if a directory exists.
-bool    file_exists(const std::string &file);       // Checks if a file exists.
-void    make_dir(const std::string &dir);           // Makes a new directory, if it doesn't already exist.
+void    delete_file(const std::filesystem::path& filename); // Deletes a specified file.
+bool    directory_exists(const std::filesystem::path& dir); // Check if a directory exists.
+bool    file_exists(const std::filesystem::path& file);     // Checks if a file exists.
+void    make_dir(const std::filesystem::path& dir);         // Makes a new directory, if it doesn't already exist.
 
 } } // fileutils, lom namespaces
