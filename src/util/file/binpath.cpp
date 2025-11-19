@@ -54,10 +54,10 @@ std::string BinPath::get_executable_dir()
 {
     std::string executablePath = get_executable_path();
     char* exePath = new char[executablePath.length() + 1];
-#ifdef __STDC_LIB_EXT1__
-    strcpy_s(exePath, executablePath.length() + 1, executablePath.c_str());
-#else
+#ifdef LOM_TARGET_MINGW
     strcpy(exePath, executablePath.c_str());
+#else
+    strcpy_s(exePath, executablePath.length() + 1, executablePath.c_str());
 #endif
     PathRemoveFileSpecA(exePath);
     std::string directory = std::string(exePath);
@@ -93,11 +93,7 @@ std::string BinPath::get_executable_dir()
 {
     const std::string& executablePath = get_executable_path();
     char *executablePathStr = new char[executablePath.length() + 1];
-#ifdef __STDC_LIB_EXT1__
-    strcpy_s(executablePathStr, executablePath.length() + 1, executablePath.c_str());
-#else
     strcpy(executablePathStr, executablePath.c_str());
-#endif
     char* executableDir = dirname(executablePathStr);
     const std::string exec_dir = std::string(executableDir);
     delete[] executablePathStr;
@@ -124,11 +120,7 @@ std::string BinPath::get_executable_dir()
 {
     const std::string& executablePath = get_executable_path();
     char *executablePathStr = new char[executablePath.length() + 1];
-#ifdef __STDC_LIB_EXT1__
-    strcpy_s(executablePathStr, executablePath.length() + 1, executablePath.c_str());
-#else
     strcpy(executablePathStr, executablePath.c_str());
-#endif
     char* executableDir = dirname(executablePathStr);
     const std::string exec_dir = std::string(executableDir);
     delete[] executablePathStr;
