@@ -9,9 +9,13 @@
 // rang library, used to add colour to the terminal.
 #include "3rdparty/rang/rang.hpp"
 
-using std::cout;
-using std::endl;
 using namespace rang;
+
+#ifdef EOL
+#error EOL definition already exists!
+#else
+#define EOL rang::style::reset << std::endl
+#endif
 
 namespace lom {
 namespace terminal {

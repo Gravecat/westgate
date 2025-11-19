@@ -15,7 +15,7 @@ void set_window_title(std::string new_title)
 #ifdef LOM_TARGET_WINDOWS
     SetConsoleTitleA(new_title.c_str());
 #else
-    cout << "\033]2;" << new_title << "\007" << std::flush;
+    std::cout << "\033]2;" << new_title << "\007" << std::flush;
 #endif
 }
 

@@ -41,7 +41,7 @@ void Core::check_stderr()
 void Core::cleanup()
 {
     close_log();
-    cout << style::reset;   // Reset any lingering ANSI codes.
+    std::cout << style::reset;   // Reset any lingering ANSI codes.
 }
 
 // Closes the system log and releases hooks.
@@ -177,9 +177,9 @@ void Core::log(std::string msg, int type)
     switch(type)
     {
         case CORE_INFO: break;
-        case CORE_WARN: txt_tag = "[WARN] "; cout << bgB::yellow << fg::black; break;
-        case CORE_ERROR: txt_tag = "[ERROR] "; cout << bgB::red << fg::black; break;
-        case CORE_CRITICAL: txt_tag = "[CRITICAL] "; cout << bg::red << fg::black; break;
+        case CORE_WARN: txt_tag = "[WARN] "; std::cout << bgB::yellow << fg::black; break;
+        case CORE_ERROR: txt_tag = "[ERROR] "; std::cout << bgB::red << fg::black; break;
+        case CORE_CRITICAL: txt_tag = "[CRITICAL] "; std::cout << bg::red << fg::black; break;
     }
 
     char* buffer = new char[32];
@@ -197,7 +197,7 @@ void Core::log(std::string msg, int type)
     syslog_ << msg << std::endl;
     delete[] buffer;
 
-    if (type != CORE_INFO) cout << msg << style::reset << endl;
+    if (type != CORE_INFO) std::cout << msg << EOL;
 }
 
 // Reports a non-fatal error, which will be logged but will not halt execution unless it cascades.
@@ -301,7 +301,7 @@ int main(int argc, char** argv)
         }
 
         // Test code
-        cout << fg::cyan << style::bold << style::italic << "Hello, world!" << style::reset << endl;
+        std::cout << fgB::cyan << "Hello, world!" << EOL;
     }
     catch (std::exception &e) { core().halt(e); }
 
