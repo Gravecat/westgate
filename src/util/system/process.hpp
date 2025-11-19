@@ -7,6 +7,8 @@
 
 #include "core/global.hpp"
 
+#include <windows.h>
+
 namespace lom {
 
 class Process
