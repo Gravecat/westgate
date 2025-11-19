@@ -29,8 +29,12 @@ if(WIN32)
 elseif(MINGW)
   set(TARGET_WINDOWS 1)
   set(TARGET_MINGW 1)
-elseif(UNIX AND NOT APPLE)
+elseif(APPLE)
+  set(TARGET_APPLE 1)
+elseif(UNIX)
   set(TARGET_LINUX 1)
+else()
+  message(WARNING "Could not determine build environment.")
 endif()
 
 # Detect if MinGW is being used to cross-compile to Windows. There are simpler ways, but this way guarantees success when using WSL.
