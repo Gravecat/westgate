@@ -6,8 +6,9 @@
 
 #include <cstdlib>  // EXIT_SUCCESS, EXIT_FAILURE, std::getenv
 
-#include "core/core.hpp"
 #include "cmake/version.hpp"
+#include "core/core.hpp"
+#include "core/game.hpp"
 #include "util/file/binpath.hpp"
 
 #include <csignal>
@@ -19,7 +20,8 @@ namespace lom {
 void core_intercept_signal(int sig) { core().intercept_signal(sig); }
 
 // Constructor, sets up the Core object.
-Core::Core() : cascade_count_(0), cascade_failure_(false), cascade_timer_(std::time(0)), dead_already_(0), lock_stderr_(false), stderr_old_(nullptr) { }
+Core::Core() : cascade_count_(0), cascade_failure_(false), cascade_timer_(std::time(0)), dead_already_(0), lock_stderr_(false), stderr_old_(nullptr),
+    game_ptr_(nullptr) { }
 
 // Checks stderr for any updates, puts them in the log if any exist.
 void Core::check_stderr()
@@ -40,6 +42,7 @@ void Core::check_stderr()
 // Cleans up all Core-managed objects.
 void Core::cleanup()
 {
+    game_ptr_.reset(nullptr);
     close_log();
     std::cout << style::reset;   // Reset any lingering ANSI codes.
 }
@@ -83,6 +86,13 @@ void Core::destroy_core(int exit_code)
     //else log("Core shutdown with unknown error code: " + std::to_string(exit_code), Core::CORE_ERROR);
     cleanup();
     std::exit(exit_code);
+}
+
+// Returns a reference to the Game manager object.
+Game& Core::game() const
+{
+    if (!game_ptr_) throw std::runtime_error("Attempt to access null Game pointer!");
+    return *game_ptr_;
 }
 
 // Used internally only to apply the most powerful possible method to kill the process, in event of emergency.
@@ -134,9 +144,38 @@ void Core::hook_signals()
 // Sets up the core game classes and data, and the terminal subsystem.
 void Core::init_core(std::vector<std::string> parameters)
 {
-    (void)parameters;
     open_log();
     terminal::set_window_title("Lom v" + version::VERSION_STRING + " (" + version::BUILD_TIMESTAMP + ")");
+
+    // Check command-line parameters.
+    for (auto param : parameters)
+    {
+        if (param == "-no-colour" || param == "-no-color")
+        {
+            core().log("Disabling ANSI colour codes.");
+            rang::setControlMode(rang::control::Off);
+        }
+        else if (param == "-force-colour" || param == "-force-color")
+        {
+            core().log("Force-enabling ANSI colour codes.");
+            rang::setControlMode(rang::control::Force);
+        }
+
+#ifdef LOM_TARGET_WINDOWS
+        else if (param == "-native")
+        {
+            core().log("Forcing use of native console attributes.");
+            rang::setWinTermMode(rang::winTerm::Native);
+        }
+        else if (param == "-ansi")
+        {
+            core().log("Forcing use of ANSI console attributes.");
+            rang::setWinTermMode(rang::winTerm::Ansi);
+        }
+#endif
+    }
+
+    game_ptr_ = std::make_unique<Game>();
 }
 
 // Catches a segfault or other fatal signal.
@@ -270,38 +309,7 @@ int main(int argc, char** argv)
     }
 
     try
-    {
-        // Check command-line parameters.
-        for (auto param : parameters)
-        {
-            if (param == "-no-colour" || param == "-no-color")
-            {
-                core().log("Disabling ANSI colour codes.");
-                rang::setControlMode(rang::control::Off);
-            }
-            else if (param == "-force-colour" || param == "-force-color")
-            {
-                core().log("Force-enabling ANSI colour codes.");
-                rang::setControlMode(rang::control::Force);
-            }
-
-#ifdef LOM_TARGET_WINDOWS
-            else if (param == "-native")
-            {
-                core().log("Forcing use of native console attributes.");
-                rang::setWinTermMode(rang::winTerm::Native);
-            }
-            else if (param == "-ansi")
-            {
-                core().log("Forcing use of ANSI console attributes.");
-                rang::setWinTermMode(rang::winTerm::Ansi);
-            }
-#endif
-        }
-
-        // Test code
-        std::cout << fgB::cyan << "Hello, world!" << EOL;
-    }
+    { game().begin(); }
     catch (std::exception &e) { core().halt(e); }
 
     // Trigger cleanup code.
