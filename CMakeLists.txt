@@ -9,12 +9,9 @@ cmake_minimum_required(VERSION 3.13)
 project(lom LANGUAGES CXX)
 
 # Automatically default to debug builds if a type is not specified.
-# This code borrowed from BearLibTerminal, copyright (c) 2013-2017 Cfyz.
-if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+if (NOT CMAKE_BUILD_TYPE)
   message(STATUS "Build type was not specified, switching to 'Debug'.")
-  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
-  # Set the possible values of build type for cmake-gui
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+  set(CMAKE_BUILD_TYPE Debug)
 endif()
 
 # Automatically generate version strings used in-game and in the Windows resource file, from this specified game version.
@@ -133,7 +130,9 @@ target_link_options(lom PRIVATE
 
 # Windows-specific stuff.
 if(TARGET_WINDOWS)
-  set(LOM_BIN "$<TARGET_FILE:lom>.exe")
+  if(TARGET_MINGW)
+    set(LOM_BIN "$<TARGET_FILE:lom>.exe")
+  endif(TARGET_MINGW)
   target_compile_definitions(lom PRIVATE
     LOM_TARGET_WINDOWS
 	WIN32_LEAN_AND_MEAN
