@@ -169,5 +169,6 @@ add_custom_command(TARGET lom POST_BUILD
 )
 
 # Build some third-party code as separate binaries to be linked in.
+add_subdirectory(src/3rdparty/fantasyname)
 add_subdirectory(src/3rdparty/rapidyaml)
-target_link_libraries(lom PRIVATE rapidyaml)
+target_link_libraries(lom PRIVATE fantasyname rapidyaml)
