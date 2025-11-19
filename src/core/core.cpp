@@ -90,13 +90,12 @@ void Core::great_googly_moogly_its_all_gone_to_shit()
 {
 #ifdef LOM_TARGET_WINDOWS
     TerminateProcess(GetCurrentProcess(), 1);
-#else   // LOM_TARGET_WINDOWS
-#if LOM_TARGET_LINUX
+#elif defined(LOM_TARGET_LINUX)
     std::raise(SIGKILL);
-#else   // LOM_TARGET_LINUX
+#else
     std::terminate();   // Not great, but that's our fallback.
-#endif  // LOM_TARGET_LINUX
-#endif  // LOM_TARGET_WINDOWS
+#endif
+    exit(EXIT_FAILURE); // This is just overkill. :3
 }
 
 // Stops the game and displays an error messge.
