@@ -134,7 +134,7 @@ target_compile_options(lom PRIVATE
   >
   # MSVC
   $<$<CXX_COMPILER_ID:MSVC>:
-    /W4 /permissive-
+    /W4 /permissive- /wd4244 /wd4267
     $<$<BOOL:${WARNINGS_AS_ERRORS}>:/WX>
   >
 )
