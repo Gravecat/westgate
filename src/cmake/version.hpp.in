@@ -1,0 +1,15 @@
+// cmake/version.hpp.in -- Processed by CMake to create a version string for the game, along with a timestamp of when it was built.
+
+// SPDX-FileType: SOURCE
+// SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+#pragma once
+
+#include <string>
+
+namespace lom {
+namespace version {
+static const std::string BUILD_TIMESTAMP =  "@BUILD_TIMESTAMP@";
+static const std::string VERSION_STRING =   "@LOM_VERSION@";
+} }

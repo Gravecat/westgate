@@ -22,6 +22,7 @@ file(READ "${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/version.txt" LOM_VERSION)
 string(REPLACE "." "," LOM_VERSION_COMMA "${LOM_VERSION}")
 execute_process(COMMAND date "+%y%m%d%H%M" OUTPUT_VARIABLE BUILD_TIMESTAMP OUTPUT_STRIP_TRAILING_WHITESPACE)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/resource.rc.in ${CMAKE_CURRENT_BINARY_DIR}/cmake/resource.rc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/version.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/cmake/version.hpp @ONLY)
 
 # Determine target platform.
 if(WIN32)
