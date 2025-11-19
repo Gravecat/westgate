@@ -1,0 +1,24 @@
+name: Build Test
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  Linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: CMake build
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Debug ..
+          make -j
