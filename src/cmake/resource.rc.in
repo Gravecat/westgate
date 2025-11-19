@@ -1,0 +1,42 @@
+// cmake/resource.rc.in -- Adds the application icon and metadata to Windows builds.
+
+// SPDX-FileType: SOURCE
+// SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+#include <windows.h>
+
+IDI_APP_ICON ICON "@CMAKE_CURRENT_SOURCE_DIR@/src/3rdparty/app-icon/ghost.ico"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION @LOM_VERSION_COMMA@
+PRODUCTVERSION @LOM_VERSION_COMMA@
+FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+FILEFLAGS VS_FF_DEBUG | VS_FF_PRERELEASE | VS_FF_PRIVATEBUILD
+#else
+FILEFLAGS 0x0L | VS_FF_PRERELEASE | VS_FF_PRIVATEBUILD
+#endif
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080904e4" // Language and code page (e.g., 0409 = U.S. English, 0809 = British English; 04b0 = Unicode, 04e4 = ANSI Latin-1)
+        BEGIN
+            VALUE "CompanyName", "Raine ""Gravecat"" Simmons\0"
+            VALUE "FileDescription", "Lom\0"
+            VALUE "FileVersion", "@LOM_VERSION@\0"
+            VALUE "InternalName", "lom.exe\0"
+            VALUE "LegalCopyright", "Copyright (c) 2025 Raine Simmons\0"
+            VALUE "OriginalFilename", "lom.exe\0"
+            VALUE "ProductName", "Lom\0"
+            VALUE "ProductVersion", "@LOM_VERSION@\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0809, 1252 // Language (British English) and code page (ANSI Latin-1). Unicode is 1200.
+    END
+END

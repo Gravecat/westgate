@@ -17,6 +17,12 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
+# Automatically generate version strings used in-game and in the Windows resource file, from this specified game version.
+set(LOM_VERSION "0.0.0.1")
+string(REPLACE "." "," LOM_VERSION_COMMA "${LOM_VERSION}")
+execute_process(COMMAND date "+%y%m%d%H%M" OUTPUT_VARIABLE BUILD_TIMESTAMP OUTPUT_STRIP_TRAILING_WHITESPACE)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/resource.rc.in ${CMAKE_CURRENT_BINARY_DIR}/cmake/resource.rc @ONLY)
+
 # Determine target platform.
 if(WIN32)
   set(TARGET_WINDOWS 1)
@@ -61,6 +67,25 @@ add_compile_definitions(__STDC_LIMIT_MACROS)
 add_compile_definitions(_USE_MATH_DEFINES)
 set(LOM_BIN "$<TARGET_FILE:lom>")
 
+# RC compiler, for building the application icon.
+if(TARGET_WINDOWS)
+  if(TARGET_MINGW)  # MinGW cross-compilation
+    find_program(CMAKE_RC_COMPILER
+      NAMES x86_64-w64-mingw32-windres i686-w64-mingw32-windres windres
+      DOC "Resource compiler for MinGW targets"
+    )
+    if(NOT CMAKE_RC_COMPILER)
+      message(FATAL_ERROR "windres not found – cannot compile resources")
+    endif()
+  else()    # MSVC or ClangCL
+    # CMake already knows where rc.exe lives; just enable the language
+    set(CMAKE_RC_COMPILER_INIT rc)
+  endif(TARGET_MINGW)
+  enable_language(RC)
+  set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
+  set(LOM_RC "${CMAKE_CURRENT_BINARY_DIR}/cmake/resource.rc")
+endif(TARGET_WINDOWS)
+
 # Source files.
 set(LOM_CPPS
   src/main.cpp
@@ -95,6 +120,7 @@ target_link_options(lom PRIVATE
 
 # Windows-specific stuff.
 if(TARGET_WINDOWS)
+  set(LOM_BIN "$<TARGET_FILE:lom>.exe")
   target_compile_definitions(lom PRIVATE
     LOM_TARGET_WINDOWS
 	WIN32_LEAN_AND_MEAN
@@ -104,7 +130,6 @@ if(TARGET_WINDOWS)
 	shlwapi
 	ntdll
   )
-  set(LOM_BIN "$<TARGET_FILE:lom>.exe")
 endif(TARGET_WINDOWS)
 
 # Post-build, make a 'bin' folder and copy the binary file in there.
