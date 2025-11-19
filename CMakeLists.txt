@@ -94,6 +94,7 @@ endif(TARGET_WINDOWS)
 # Source files.
 set(LOM_CPPS
   src/main.cpp
+  src/core/terminal.cpp
 )
 
 # Binary file. LOM_RC should be blank for non-Windows builds.
