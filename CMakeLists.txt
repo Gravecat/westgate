@@ -65,8 +65,6 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-add_compile_definitions(__STDC_LIMIT_MACROS)
-add_compile_definitions(_USE_MATH_DEFINES)
 set(LOM_BIN "$<TARGET_FILE:lom>")
 
 # RC compiler, for building the application icon.
@@ -143,7 +141,6 @@ if(TARGET_WINDOWS)
   if(TARGET_MINGW)
     set(LOM_BIN "$<TARGET_FILE:lom>.exe")
   endif(TARGET_MINGW)
-  target_compile_definitions(lom PRIVATE WIN32_LEAN_AND_MEAN)
   target_link_libraries(lom PRIVATE
     $<$<BOOL:${TARGET_MINGW}>:mingw32>
 	shlwapi
