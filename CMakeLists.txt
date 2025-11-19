@@ -66,6 +66,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(LOM_BIN "$<TARGET_FILE:lom>")
+add_compile_definitions(__STDC_LIMIT_MACROS)
+add_compile_definitions(_USE_MATH_DEFINES)
 
 # RC compiler, for building the application icon.
 if(TARGET_WINDOWS)
