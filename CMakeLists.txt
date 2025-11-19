@@ -103,6 +103,7 @@ set(LOM_CPPS
   src/util/file/fileutils.cpp
   src/util/file/yaml.cpp
   src/util/text/namegen.cpp
+  src/world/codex.cpp
 )
 
 # Binary file. LOM_RC should be blank for non-Windows builds.

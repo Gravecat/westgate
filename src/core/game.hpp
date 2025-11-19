@@ -10,15 +10,20 @@
 
 namespace lom {
 
+class Codex;    // defined in world/codex.hpp
+
 class Game {
 public:
             Game();         // Constructor, sets up the game manager.
             ~Game();        // Destructor, cleans up attached classes.
     void    begin();        // Starts the game, in the form of a title screen followed by the main game loop.
+    Codex&  codex() const;  // Returns a reference to the Codex object.
     void    leave_game();   // Shuts things down cleanly and exits the game.
     void    process_input(const std::string &input);    // Processes input from the player.
 
 private:
+    std::unique_ptr<Codex>  codex_ptr_; // The Codex object, which stores all the static game data in memory, and generates copies of said data.
+
     void    main_loop();    // brøether, may i have the lööps
     void    new_game();     // Sets up for a new game!
 };
