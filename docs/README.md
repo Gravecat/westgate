@@ -7,3 +7,5 @@ Lom is copyright © 2025 [Raine "Gravecat" Simmons](https://github.com/Gravecat)
 [Random for modern C++](https://github.com/ilqvya/random) copyright © 2017-2023 effolkronium (Illia Polishchuk).
 
 [rang](https://github.com/agauniyal/rang) created by Abhinav Gauniyal.
+
+[Rapid YAML](https://github.com/biojppm/rapidyaml) copyright © 2018 Joao Paulo Magalhaes (<dev@jpmag.me>)

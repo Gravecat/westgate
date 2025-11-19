@@ -166,3 +166,6 @@ add_custom_command(TARGET lom POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/bin"
   COMMAND ${CMAKE_COMMAND} -E copy "${LOM_BIN}" "${CMAKE_BINARY_DIR}/bin"
 )
+
+# Build some third-party code as separate binaries to be linked in.
+add_subdirectory(src/3rdparty/rapidyaml)
