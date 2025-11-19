@@ -6,10 +6,13 @@
 
 #include <cstdlib>  // EXIT_SUCCESS, EXIT_FAILURE, std::getenv
 
+#include "3rdparty/rapidyaml/rapidyaml-0.10.0.hpp"
+#include "cmake/source.hpp"
 #include "cmake/version.hpp"
 #include "core/core.hpp"
 #include "core/game.hpp"
 #include "util/file/binpath.hpp"
+#include "util/file/yaml.hpp"
 
 #include <csignal>
 #include <filesystem>
@@ -78,6 +81,13 @@ Core& Core::core()
     return the_core;
 }
 
+// Returns the full path to a specified game data file.
+std::string Core::datafile(const std::string file)
+{
+    if (!gamedata_location_.size()) throw std::runtime_error("Could not locate valid gamedata folder!");
+    return BinPath::merge_paths(gamedata_location_, file);
+}
+
 // Destroys the singleton Core object and ends execution.
 void Core::destroy_core(int exit_code)
 {
@@ -86,6 +96,33 @@ void Core::destroy_core(int exit_code)
     //else log("Core shutdown with unknown error code: " + std::to_string(exit_code), Core::CORE_ERROR);
     cleanup();
     std::exit(exit_code);
+}
+
+// Attempts to locate the gamedata folder.
+void Core::find_gamedata()
+{
+    const std::string game_path_data = BinPath::game_path("gamedata");
+    const std::string game_path_data_lom_yml = BinPath::merge_paths(game_path_data, "lom.yml");
+    const std::string source_path_data = BinPath::merge_paths(source::SOURCE_DIR, "gamedata");
+    const std::string source_path_data_lom_yml = BinPath::merge_paths(source_path_data, "lom.yml");
+    
+    if (std::filesystem::exists(game_path_data_lom_yml))
+    {
+        log("Game data folder location: " + game_path_data);
+        gamedata_location_ = game_path_data;
+    }
+    else if (std::filesystem::exists(source_path_data_lom_yml))
+    {
+        log("Game data folder location: " + source_path_data);
+        gamedata_location_ = source_path_data;
+    }
+    else throw std::runtime_error("Could not locate valid gamedata folder!");
+
+    YAML yaml_file(datafile("lom.yml"));
+    if (!yaml_file.is_map() || !yaml_file.key_exists("lom_gamedata_version")) throw std::runtime_error("lom.yml: Invalid file format!");
+    const int data_version = std::stoi(yaml_file.val("lom_gamedata_version"));
+    if (data_version != LOM_GAMEDATA_VERSION) this->halt("Unexpected gamedata version! (" + std::to_string(data_version) + ", expected " +
+        std::to_string(LOM_GAMEDATA_VERSION) + ")");
 }
 
 // Returns a reference to the Game manager object.
@@ -175,6 +212,7 @@ void Core::init_core(std::vector<std::string> parameters)
 #endif
     }
 
+    find_gamedata();
     game_ptr_ = std::make_unique<Game>();
 }
 
