@@ -5,6 +5,8 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#include "util/file/binpath.hpp"
+
 #ifdef LOM_TARGET_WINDOWS
 #include <windows.h>
 #include <psapi.h>      // EnumProcesses(), GetModuleBaseName()
@@ -27,8 +29,6 @@
 
 #include <algorithm>
 #include <cstring>
-
-#include "util/file/binpath.hpp"
 
 namespace lom {
 
