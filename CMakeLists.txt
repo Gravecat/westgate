@@ -93,7 +93,6 @@ set(LOM_CPPS
   src/core/core.cpp
   src/core/global/terminal.cpp
   src/util/file/binpath.cpp
-  src/util/system/process.cpp
 )
 
 # Binary file. LOM_RC should be blank for non-Windows builds.
@@ -149,6 +148,8 @@ target_link_options(lom PRIVATE
 if(TARGET_WINDOWS)
   if(TARGET_MINGW)
     set(LOM_BIN "$<TARGET_FILE:lom>.exe")
+    add_compile_definitions(WIN32_LEAN_AND_MEAN)
+    add_compile_definitions(VC_EXTRALEAN)
   endif(TARGET_MINGW)
   target_link_libraries(lom PRIVATE
     $<$<BOOL:${TARGET_MINGW}>:mingw32>

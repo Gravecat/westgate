@@ -9,7 +9,6 @@
 #include "core/core.hpp"
 #include "cmake/version.hpp"
 #include "util/file/binpath.hpp"
-#include "util/system/process.hpp"
 
 #include <csignal>
 #include <filesystem>
@@ -256,11 +255,6 @@ int main(int argc, char** argv)
 
     // Create the main Core object.
     std::vector<std::string> parameters(argv + 1, argv + argc);
-
-#ifdef LOM_TARGET_WINDOWS
-    // Check if lom.exe is already running.
-    lom::Process::check_if_already_running();
-#endif
     
     try { core().init_core(parameters); }
     catch (std::exception &e)
