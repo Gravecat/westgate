@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <string>
+#include "core/global.hpp"
 
 namespace lom {
 namespace version {
