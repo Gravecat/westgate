@@ -94,6 +94,7 @@ set(LOM_CPPS
   src/core/game.cpp
   src/core/global/terminal.cpp
   src/util/file/binpath.cpp
+  src/util/file/fileutils.cpp
   src/util/file/yaml.cpp
 )
 

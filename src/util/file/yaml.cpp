@@ -4,11 +4,8 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#include "util/file/fileutils.hpp"
 #include "util/file/yaml.hpp"
-
-#include <filesystem>
-#include <fstream>
-#include <sstream>
 
 namespace lom {
 
@@ -20,17 +17,6 @@ YAML::YAML(const std::string& filename, bool allow_backslash) { load_file(filena
 
 // Creates a new YAML object from a parent tree.
 YAML::YAML(const ryml::Tree tree, ryml::ConstNodeRef new_ref) : ref_(new_ref), tree_(tree) { }
-
-// Loads a text file into an std::string.
-std::string YAML::file_to_string(const std::string &filename)
-{
-    std::ifstream file(filename);
-    if (!file.is_open()) throw std::runtime_error("Cannot open file: " + filename);
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    file.close();
-    return buffer.str();
-}
 
 // Retrieves a value from a sequence, as a string.
 std::string YAML::get(unsigned int index) const
@@ -102,8 +88,7 @@ std::map<std::string, std::string> YAML::keys_vals() const
 // Loads a YAML file into memory and parse it.
 void YAML::load_file(const std::string& filename, bool allow_backslash)
 {
-    if (!std::filesystem::exists(filename)) throw std::runtime_error("Invalid file: " + filename);
-    std::string file_string = file_to_string(filename.c_str());
+    std::string file_string = fileutils::file_to_string(filename.c_str());
     // If we don't care about using backslash for... whatever rapidYAML does with them, just turn them into double-backslashes so they're treated as a
     // string literal of \ instead of... I don't know, it's probably used for writing hex or octal or some shit.
     if (!allow_backslash)

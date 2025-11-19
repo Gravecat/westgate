@@ -17,7 +17,6 @@ class YAML {
 public:
                     YAML();                                     // Blank constructor.
                     YAML(const std::string& filename, bool allow_backslash = false);    // Calls load_file() when constructing.
-    std::string     file_to_string(const std::string &filename);    // Loads a text file into an std::string.
     std::string     get(unsigned int index) const;              // Retrieves a value from a sequence, as a string.
     YAML            get_child(const std::string& key) const;    // Retrieves a child noderef of this tree.
     std::vector<std::string>    get_seq(const std::string &key) const;  // Retrieves all values of a sequence.
