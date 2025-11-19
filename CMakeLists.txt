@@ -99,6 +99,13 @@ set(LOM_CPPS
 add_executable(lom ${LOM_CPPS} ${LOM_RC})
 target_link_libraries(lom PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 
+# Include directories.
+target_include_directories(lom PRIVATE
+  "${CMAKE_SOURCE_DIR}/src"
+  "${CMAKE_SOURCE_DIR}/src/3rdparty"
+  "${CMAKE_CURRENT_BINARY_DIR}"
+)
+
 # Compiler-specific flags.
 target_compile_options(lom PRIVATE
   $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:

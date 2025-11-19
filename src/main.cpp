@@ -1,3 +1,5 @@
+#include "core/global.hpp"
+
 #include <iostream>
 
 int main() {
