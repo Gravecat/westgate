@@ -9,6 +9,7 @@
 #include "core/core.hpp"
 #include "cmake/version.hpp"
 #include "util/file/binpath.hpp"
+#include "util/system/process.hpp"
 
 #include <csignal>
 #include <filesystem>
@@ -258,7 +259,7 @@ int main(int argc, char** argv)
 
 #ifdef LOM_TARGET_WINDOWS
     // Check if lom.exe is already running.
-    //lom::Process::check_if_already_running();
+    lom::Process::check_if_already_running();
 #endif
     
     try { core().init_core(parameters); }
@@ -276,8 +277,6 @@ int main(int argc, char** argv)
         // Test code
         terminal::set_window_title("Lom v" + version::VERSION_STRING + " (" + version::BUILD_TIMESTAMP + ")");
         cout << fg::cyan << style::bold << "Hello, world!" << style::reset << endl;
-
-        throw std::runtime_error("test errror!");
     }
     catch (std::exception &e) { core().halt(e); }
 
