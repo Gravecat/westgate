@@ -13,4 +13,4 @@
 *.yml text linguist-detectable=true linguist-language=YAML
 CMakeLists.txt text linguist-language=CMake
 
-src/3rdparty/rang/** linguist-vendored
+src/3rdparty/** linguist-vendored
