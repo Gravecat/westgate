@@ -7,6 +7,10 @@
  *
  */
 
+#if defined(LOM_TARGET_WINDOWS) && !defined(LOM_TARGET_MINGW)
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include "namegen.hpp"
 
 #include <algorithm>  // for move, reverse
