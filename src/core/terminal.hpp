@@ -6,20 +6,12 @@
 
 #pragma once
 
-// rang library, used to add colour to the terminal.
-#include "3rdparty/rang/rang.hpp"
-
-using namespace rang;
-
-#ifdef EOL
-#error EOL definition already exists!
-#else
-#define EOL rang::style::reset << std::endl
-#endif
+#include "core/global.hpp"
 
 namespace lom {
 namespace terminal {
 
+void    print(const std::string& text); // Prints a string of text with std::cout, processing ANSI colour tags.
 void    set_window_title(const std::string& new_title); // Attempts to set the title of the console window. May not work on all platforms.
 
 } } // namespace terminal, lom

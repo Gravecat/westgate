@@ -9,6 +9,8 @@
 #include "core/terminal.hpp"
 #include "world/codex.hpp"
 
+#include <iostream>
+
 namespace lom {
 
 // Constructor, sets up the game manager.
@@ -41,7 +43,9 @@ void Game::leave_game() { core().destroy_core(EXIT_SUCCESS); }
 // brøether, may i have the lööps
 void Game::main_loop()
 {
-    std::cout << fgB::cyan << "Hello, world!" << EOL;
+    terminal::print("{C}Hello, world!");
+    terminal::print("This is a test string {B}i{G}ncorporating {R}ANSI {Y}colour {C}tags{0}! Let's see how it works.{M}");
+
     std::string input;
     while(true)
     {
@@ -55,7 +59,7 @@ void Game::new_game() { }
 
 // Processes input from the player.
 void Game::process_input(const std::string &input)
-{ std::cout << std::endl << fgB::green << input << std::endl << EOL; }
+{ terminal::print("{G}" + input); }
 
 // A shortcut instead of using core().game()
 Game& game() { return core().game(); }

@@ -4,9 +4,8 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-#include <cstdlib>  // EXIT_SUCCESS, EXIT_FAILURE, std::getenv
-
-#include "3rdparty/rapidyaml/rapidyaml-0.10.0.hpp"
+#include "3rdparty/rapidyaml/rapidyaml-0.10.0.hpp"  // This MUST be included before anything else, or Visual Studio builds won't work.
+#include "3rdparty/rang/rang.hpp"
 #include "cmake/source.hpp"
 #include "cmake/version.hpp"
 #include "core/core.hpp"
@@ -15,8 +14,9 @@
 #include "util/file/binpath.hpp"
 #include "util/file/yaml.hpp"
 
-#include <csignal>
-#include <filesystem>
+#include <csignal>      // Hooking signals like SIGABRT
+#include <cstdlib>      // EXIT_SUCCESS, EXIT_FAILURE, std::getenv
+#include <filesystem>   // Platform-agnostic file/directory management.
 
 namespace lom {
 
@@ -48,7 +48,7 @@ void Core::cleanup()
 {
     game_ptr_.reset(nullptr);
     close_log();
-    std::cout << style::reset;   // Reset any lingering ANSI codes.
+    std::cout << rang::style::reset;    // Reset any lingering ANSI codes.
 }
 
 // Closes the system log and releases hooks.
@@ -256,9 +256,9 @@ void Core::log(std::string msg, int type)
     switch(type)
     {
         case CORE_INFO: break;
-        case CORE_WARN: txt_tag = "[WARN] "; std::cout << bgB::yellow << fg::black; break;
-        case CORE_ERROR: txt_tag = "[ERROR] "; std::cout << bgB::red << fg::black; break;
-        case CORE_CRITICAL: txt_tag = "[CRITICAL] "; std::cout << bg::red << fg::black; break;
+        case CORE_WARN: txt_tag = "[WARN] "; std::cout << rang::bgB::yellow << rang::fg::black; break;
+        case CORE_ERROR: txt_tag = "[ERROR] "; std::cout << rang::bgB::red << rang::fg::black; break;
+        case CORE_CRITICAL: txt_tag = "[CRITICAL] "; std::cout << rang::bg::red << rang::fg::black; break;
     }
 
     char* buffer = new char[32];
@@ -276,7 +276,7 @@ void Core::log(std::string msg, int type)
     syslog_ << msg << std::endl;
     delete[] buffer;
 
-    if (type != CORE_INFO) std::cout << msg << EOL;
+    if (type != CORE_INFO) std::cout << msg << rang::style::reset << std::endl;
 }
 
 // Reports a non-fatal error, which will be logged but will not halt execution unless it cascades.
