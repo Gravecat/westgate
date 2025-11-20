@@ -4,9 +4,14 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-#include <csignal>      // Hooking signals like SIGABRT
-#include <cstdlib>      // EXIT_SUCCESS, EXIT_FAILURE, std::getenv
-#include <filesystem>   // Platform-agnostic file/directory management.
+#include <csignal>
+#include <cstdlib>
+#include <iostream>
+#include <filesystem>
+
+#ifdef WESTGATE_TARGET_WINDOWS
+#include <windows.h>
+#endif
 
 #include "3rdparty/rang/rang.hpp"
 #include "cmake/source.hpp"

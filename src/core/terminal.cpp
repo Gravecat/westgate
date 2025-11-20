@@ -4,6 +4,13 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#include <iostream>
+#include <vector>
+
+#ifdef WESTGATE_TARGET_WINDOWS
+#include <windows.h>
+#endif
+
 #include "3rdparty/rang/rang.hpp"
 #include "core/core.hpp"
 #include "core/terminal.hpp"
