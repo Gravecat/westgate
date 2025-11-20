@@ -10,7 +10,7 @@
 #include "core/global.hpp"
 #include "world/entity/entity.hpp"
 
-namespace lom {
+namespace westgate {
 
 class Mobile : public Entity {
 public:
@@ -20,4 +20,4 @@ public:
 private:
 };
 
-}   // namespace lom
+}   // namespace westgate

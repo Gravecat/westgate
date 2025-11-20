@@ -7,10 +7,10 @@
 
 #include "world/entity/mobile.hpp"
 
-namespace lom {
+namespace westgate {
 
 // Creates a blank Mobile with default values.
 Mobile::Mobile() : Entity()
 { name_ = "undefined mobile"; }
 
-}   // namespace lom
+}   // namespace westgate

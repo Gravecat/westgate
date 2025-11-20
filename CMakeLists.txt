@@ -1,4 +1,4 @@
-# CMakeLists.txt -- CMake build file for LOM. Mainly built for GCC but should support
+# CMakeLists.txt -- CMake build file for Westgate. Mainly built for GCC but should support
 # some other popular compilers too.
 
 # SPDX-FileType: SOURCE
@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 cmake_minimum_required(VERSION 3.13)
-project(lom LANGUAGES CXX)
+project(westgate LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Source files.
-set(LOM_CPPS
+set(WESTGATE_CPPS
   src/core/core.cpp
   src/core/game.cpp
   src/core/terminal.cpp
@@ -31,8 +31,8 @@ add_subdirectory(src/3rdparty/fantasyname)
 add_subdirectory(src/3rdparty/rapidyaml)
 
 # Automatically generate version strings used in-game and in the Windows resource file, from this specified game version.
-file(READ "${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/version.txt" LOM_VERSION)
-string(REPLACE "." "," LOM_VERSION_COMMA "${LOM_VERSION}")
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/version.txt" WESTGATE_VERSION)
+string(REPLACE "." "," WESTGATE_VERSION_COMMA "${WESTGATE_VERSION}")
 execute_process(COMMAND date "+%y%m%d%H%M" OUTPUT_VARIABLE BUILD_TIMESTAMP OUTPUT_STRIP_TRAILING_WHITESPACE)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/resource.rc.in ${CMAKE_CURRENT_BINARY_DIR}/cmake/resource.rc @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/source.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/cmake/source.hpp @ONLY)
@@ -88,12 +88,12 @@ endif()
 
 # Compiler definitions, including target platform and build type.
 add_compile_definitions(
-  $<$<BOOL:${TARGET_WINDOWS}>:LOM_TARGET_WINDOWS>
-  $<$<BOOL:${TARGET_MINGW}>:LOM_TARGET_MINGW>
-  $<$<BOOL:${TARGET_LINUX}>:LOM_TARGET_LINUX>
-  $<$<BOOL:${TARGET_APPLE}>:LOM_TARGET_APPLE>
-  $<$<BOOL:${RELEASE_BUILD}>:LOM_BUILD_RELEASE>
-  $<$<BOOL:${DEBUG_BUILD}>:LOM_BUILD_DEBUG>
+  $<$<BOOL:${TARGET_WINDOWS}>:WESTGATE_TARGET_WINDOWS>
+  $<$<BOOL:${TARGET_MINGW}>:WESTGATE_TARGET_MINGW>
+  $<$<BOOL:${TARGET_LINUX}>:WESTGATE_TARGET_LINUX>
+  $<$<BOOL:${TARGET_APPLE}>:WESTGATE_TARGET_APPLE>
+  $<$<BOOL:${RELEASE_BUILD}>:WESTGATE_BUILD_RELEASE>
+  $<$<BOOL:${DEBUG_BUILD}>:WESTGATE_BUILD_DEBUG>
   __STDC_LIMIT_MACROS
   _USE_MATH_DEFINES
 )
@@ -114,26 +114,26 @@ if(TARGET_WINDOWS)
   endif(TARGET_MINGW)
   enable_language(RC)
   set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
-  set(LOM_RC "${CMAKE_CURRENT_BINARY_DIR}/cmake/resource.rc")
+  set(WESTGATE_RC "${CMAKE_CURRENT_BINARY_DIR}/cmake/resource.rc")
 endif(TARGET_WINDOWS)
 
-# Binary file output. LOM_RC should be blank for non-Windows builds.
-add_executable(lom ${LOM_CPPS} ${LOM_RC})
-target_link_libraries(lom PRIVATE
+# Binary file output. WESTGATE_RC should be blank for non-Windows builds.
+add_executable(westgate ${WESTGATE_CPPS} ${WESTGATE_RC})
+target_link_libraries(westgate PRIVATE
   ${CMAKE_THREAD_LIBS_INIT}
   fantasyname
   rapidyaml
 )
 
 # Include directories.
-target_include_directories(lom PRIVATE
+target_include_directories(westgate PRIVATE
   "${CMAKE_SOURCE_DIR}/src"
   "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
 # Compiler-specific flags.
 option(WARNINGS_AS_ERRORS "Turn warnings into errors" OFF)
-target_compile_options(lom PRIVATE
+target_compile_options(westgate PRIVATE
   # GNU / Clang / Apple Clang
   $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:
     -Wall -Wextra -pedantic -pedantic-errors
@@ -151,7 +151,7 @@ target_compile_options(lom PRIVATE
 )
 
 # Compiler-specific stripping of symbols.
-target_link_options(lom PRIVATE
+target_link_options(westgate PRIVATE
   $<$<AND:$<CONFIG:Release>,$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>>:-s>
 )
 
@@ -162,7 +162,7 @@ if(TARGET_WINDOWS)
     VC_EXTRALEAN
     WIN32_LEAN_AND_MEAN
   )
-  target_link_libraries(lom PRIVATE
+  target_link_libraries(westgate PRIVATE
     $<$<BOOL:${TARGET_MINGW}>:mingw32>
 	shlwapi
 	ntdll
@@ -170,7 +170,7 @@ if(TARGET_WINDOWS)
 endif(TARGET_WINDOWS)
 
 # Post-build, make a 'bin' folder and copy the binary file in there.
-add_custom_command(TARGET lom POST_BUILD
+add_custom_command(TARGET westgate POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/bin"
-  COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:lom>$<$<BOOL:${TARGET_MINGW}>:.exe>" "${CMAKE_BINARY_DIR}/bin"
+  COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:westgate>$<$<BOOL:${TARGET_MINGW}>:.exe>" "${CMAKE_BINARY_DIR}/bin"
 )

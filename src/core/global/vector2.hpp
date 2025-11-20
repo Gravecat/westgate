@@ -10,7 +10,7 @@
 #include <initializer_list>
 #include <string>
 
-namespace lom {
+namespace westgate {
 
 // Simple two-dimensional integer coordinate struct.
 struct Vector2
@@ -74,4 +74,4 @@ struct Vector2u
     uint32_t x, y;
 };
 
-}   // namespace lom
+}   // namespace westgate

@@ -1,4 +1,4 @@
-// core/global.hpp -- Core definitions that are used very frequently in Lom, enough that they warrant being put in a shared header together.
+// core/global.hpp -- Core definitions that are used very frequently in Westgate, enough that they warrant being put in a shared header together.
 // This header also includes some very frequently-used system headers, to avoid having to include them everywhere by hand.
 
 // SPDX-FileType: SOURCE

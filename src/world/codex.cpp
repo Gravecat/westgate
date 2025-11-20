@@ -9,7 +9,7 @@
 #include "util/text/namegen.hpp"
 #include "world/codex.hpp"
 
-namespace lom {
+namespace westgate {
 
 // Loads the static data from the gorp.k10 datafile.
 Codex::Codex() : namegen_ptr_(std::make_unique<ProcNameGen>())
@@ -31,4 +31,4 @@ ProcNameGen& Codex::namegen() const
 // Shortcut instead of using game()->codex()
 Codex& codex() { return game().codex(); }
 
-}   // namespace gorp
+}   // namespace westgate

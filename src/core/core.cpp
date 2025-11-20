@@ -17,7 +17,7 @@
 #include <cstdlib>      // EXIT_SUCCESS, EXIT_FAILURE, std::getenv
 #include <filesystem>   // Platform-agnostic file/directory management.
 
-namespace lom {
+namespace westgate {
 
 // This has to be a non-class function because C.
 void core_intercept_signal(int sig) { core().intercept_signal(sig); }
@@ -106,27 +106,27 @@ void Core::destroy_core(int exit_code)
 void Core::find_gamedata()
 {
     const std::string game_path_data = BinPath::game_path("gamedata");
-    const std::string game_path_data_lom_yml = BinPath::merge_paths(game_path_data, "lom.yml");
+    const std::string game_path_data_westgate_yml = BinPath::merge_paths(game_path_data, "westgate.yml");
     const std::string source_path_data = BinPath::merge_paths(source::SOURCE_DIR, "gamedata");
-    const std::string source_path_data_lom_yml = BinPath::merge_paths(source_path_data, "lom.yml");
+    const std::string source_path_data_westgate_yml = BinPath::merge_paths(source_path_data, "westgate.yml");
     
-    if (std::filesystem::exists(game_path_data_lom_yml))
+    if (std::filesystem::exists(game_path_data_westgate_yml))
     {
         log("Game data folder location: " + game_path_data);
         gamedata_location_ = game_path_data;
     }
-    else if (std::filesystem::exists(source_path_data_lom_yml))
+    else if (std::filesystem::exists(source_path_data_westgate_yml))
     {
         log("Game data folder location: " + source_path_data);
         gamedata_location_ = source_path_data;
     }
     else throw std::runtime_error("Could not locate valid gamedata folder!");
 
-    YAML yaml_file(datafile("lom.yml"));
-    if (!yaml_file.is_map() || !yaml_file.key_exists("lom_gamedata_version")) throw std::runtime_error("lom.yml: Invalid file format!");
-    const int data_version = std::stoi(yaml_file.val("lom_gamedata_version"));
-    if (data_version != LOM_GAMEDATA_VERSION) this->halt("Unexpected gamedata version! (" + std::to_string(data_version) + ", expected " +
-        std::to_string(LOM_GAMEDATA_VERSION) + ")");
+    YAML yaml_file(datafile("westgate.yml"));
+    if (!yaml_file.is_map() || !yaml_file.key_exists("westgate_gamedata_version")) throw std::runtime_error("westgate.yml: Invalid file format!");
+    const int data_version = std::stoi(yaml_file.val("westgate_gamedata_version"));
+    if (data_version != WESTGATE_GAMEDATA_VERSION) this->halt("Unexpected gamedata version! (" + std::to_string(data_version) + ", expected " +
+        std::to_string(WESTGATE_GAMEDATA_VERSION) + ")");
 }
 
 // Returns a reference to the Game manager object.
@@ -139,9 +139,9 @@ Game& Core::game() const
 // Used internally only to apply the most powerful possible method to kill the process, in event of emergency.
 void Core::great_googly_moogly_its_all_gone_to_shit()
 {
-#ifdef LOM_TARGET_WINDOWS
+#ifdef WESTGATE_TARGET_WINDOWS
     TerminateProcess(GetCurrentProcess(), 1);
-#elif defined(LOM_TARGET_LINUX)
+#elif defined(WESTGATE_TARGET_LINUX)
     std::raise(SIGKILL);
 #else
     std::terminate();   // Not great, but that's our fallback.
@@ -208,7 +208,7 @@ void Core::init_core(std::vector<std::string> parameters)
             set_title = true;
         }
 
-#ifdef LOM_TARGET_WINDOWS
+#ifdef WESTGATE_TARGET_WINDOWS
         else if (param == "-native")
         {
             core().log("Forcing use of native console attributes.");
@@ -222,7 +222,7 @@ void Core::init_core(std::vector<std::string> parameters)
 #endif
     }
 
-    if (set_title) terminal::set_window_title("Lom v" + version::VERSION_STRING + " (" + version::BUILD_TIMESTAMP + ")");
+    if (set_title) terminal::set_window_title("Westgate v" + version::VERSION_STRING + " (" + version::BUILD_TIMESTAMP + ")");
     find_gamedata();
     game_ptr_ = std::make_unique<Game>();
 }
@@ -271,7 +271,7 @@ void Core::log(std::string msg, int type)
 
     char* buffer = new char[32];
     const time_t now = time(nullptr);
-#if defined(LOM_TARGET_WINDOWS) && !defined(LOM_TARGET_MINGW)
+#if defined(WESTGATE_TARGET_WINDOWS) && !defined(WESTGATE_TARGET_MINGW)
     tm time_struct;
     tm* ptm = &time_struct;
     localtime_s(ptm, &now);
@@ -333,24 +333,22 @@ void Core::open_log()
     if (!syslog_.is_open()) throw std::runtime_error("Cannot open " + logfile_path.string());
     hook_signals();
     stderr_old_ = std::cerr.rdbuf(stderr_buffer_.rdbuf());
-    this->log("Welcome to Lom " + version::VERSION_STRING + " build " + version::BUILD_TIMESTAMP);
+    this->log("Welcome to Westgate " + version::VERSION_STRING + " build " + version::BUILD_TIMESTAMP);
     this->log("Logging and error-handling system is online.");
 }
 
 // A shortcut to using Core::core().
 Core& core() { return Core::core(); }
 
-}   // namespace lom
+}   // namespace westgate
 
-// Main program entry point. Must be OUTSIDE the lom namespace.
+// Main program entry point. Must be OUTSIDE the westgate namespace.
 int main(int argc, char** argv)
 {
-    using namespace lom;
-
     // Create the main Core object.
     std::vector<std::string> parameters(argv + 1, argv + argc);
     
-    try { core().init_core(parameters); }
+    try { westgate::core().init_core(parameters); }
     catch (std::exception &e)
     {
         std::cout << "[FATAL] " << e.what() << std::endl;
@@ -358,10 +356,10 @@ int main(int argc, char** argv)
     }
 
     try
-    { game().begin(); }
-    catch (std::exception &e) { core().halt(e); }
+    { westgate::game().begin(); }
+    catch (std::exception &e) { westgate::core().halt(e); }
 
     // Trigger cleanup code.
-    core().destroy_core(EXIT_SUCCESS);
+    westgate::core().destroy_core(EXIT_SUCCESS);
     return EXIT_SUCCESS;    // Technically not needed, as destroy_core() calls exit(), but this'll keep the compiler happy.
 }

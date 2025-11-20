@@ -9,7 +9,7 @@
 
 #include "core/global.hpp"
 
-namespace lom {
+namespace westgate {
 
 class BinPath {
 public:
@@ -24,4 +24,4 @@ private:
     static std::string  get_executable_path();  // Platform-agnostic way to find this binary's runtime path.
 };
 
-}   // namespace lom
+}   // namespace westgate

@@ -8,7 +8,7 @@
 
 #include "core/global.hpp"
 
-namespace lom {
+namespace westgate {
 
 class Mobile;   // defined in entity/mobile.hpp
 
@@ -32,4 +32,4 @@ private:
     Vector2     world_pos_; // The X/Y coordinates of this Room in the game's world-space. Negative values are permitted, but {0,0} are forbidden coordinates.
 };
 
-}   // namespace lom
+}   // namespace westgate

@@ -5,9 +5,9 @@
 
 #include "3rdparty/random/random.hpp"
 
-namespace lom {
+namespace westgate {
 
 // get base random alias which is auto seeded and has static API and internal state
 using random = effolkronium::random_static;
 
-}   // namespace lom
+}   // namespace westgate

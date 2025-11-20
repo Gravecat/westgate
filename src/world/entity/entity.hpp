@@ -9,7 +9,7 @@
 
 #include "core/global.hpp"
 
-namespace lom {
+namespace westgate {
 
 class Room; // defined in world/room.hpp
 
@@ -37,4 +37,4 @@ protected:
     Room*       parent_room_;   // The Room (if any) where this Entity is located.
 };
 
-}   // namespace lom
+}   // namespace westgate

@@ -7,13 +7,13 @@
 
 #include "util/file/binpath.hpp"
 
-#ifdef LOM_TARGET_WINDOWS
+#ifdef WESTGATE_TARGET_WINDOWS
 #include <windows.h>
 #include <psapi.h>      // EnumProcesses(), GetModuleBaseName()
 #include <shlwapi.h>    // PathRemoveFileSpecA(), PathCombineA()
 #endif
 
-#ifdef LOM_TARGET_LINUX
+#ifdef WESTGATE_TARGET_LINUX
 #include <libgen.h>     // dirname()
 #if defined(__sun)
     #define PROC_SELF_EXE "/proc/self/path/a.out"
@@ -22,7 +22,7 @@
 #endif
 #endif
 
-#ifdef LOM_TARGET_APPLE
+#ifdef WESTGATE_TARGET_APPLE
 #include <libgen.h>         // dirname()
 #include <mach-o/dyld.h>    // _NSGetExecutablePath()
 #endif
@@ -30,7 +30,7 @@
 #include <algorithm>
 #include <cstring>
 
-namespace lom {
+namespace westgate {
 
 std::string BinPath::exe_dir;   // The path to the binary.
 
@@ -41,7 +41,7 @@ std::string BinPath::game_path(const std::string &path)
     return merge_paths(exe_dir, path);
 }
 
-#ifdef LOM_TARGET_WINDOWS
+#ifdef WESTGATE_TARGET_WINDOWS
 // Platform-agnostic way to find this binary's runtime path.
 std::string BinPath::get_executable_path()
 {
@@ -54,7 +54,7 @@ std::string BinPath::get_executable_dir()
 {
     std::string executablePath = get_executable_path();
     char* exePath = new char[executablePath.length() + 1];
-#ifdef LOM_TARGET_MINGW
+#ifdef WESTGATE_TARGET_MINGW
     strcpy(exePath, executablePath.c_str());
 #else
     strcpy_s(exePath, executablePath.length() + 1, executablePath.c_str());
@@ -77,9 +77,9 @@ std::string BinPath::merge_paths(const std::string &pathA, const std::string &pa
         std::replace(merged_path.begin(), merged_path.end(), '/', '\\');
     return merged_path;
 }
-#endif  // LOM_TARGET_WINDOWS
+#endif  // WESTGATE_TARGET_WINDOWS
 
-#ifdef LOM_TARGET_LINUX
+#ifdef WESTGATE_TARGET_LINUX
 std::string BinPath::get_executable_path()
 {
     char rawPathName[PATH_MAX];
@@ -102,9 +102,9 @@ std::string BinPath::get_executable_dir()
 }
 
 std::string BinPath::merge_paths(const std::string &pathA, const std::string &pathB) { return pathA + "/" + pathB; }
-#endif  // LOM_TARGET_LINUX
+#endif  // WESTGATE_TARGET_LINUX
 
-#ifdef LOM_TARGET_APPLE
+#ifdef WESTGATE_TARGET_APPLE
 std::string BinPath::get_executable_path()
 {
     char rawPathName[PATH_MAX];
@@ -130,6 +130,6 @@ std::string BinPath::get_executable_dir()
 }
 
 std::string BinPath::merge_paths(const std::string& pathA, const std::string& pathB) { return pathA + "/" + pathB; }
-#endif  // LOM_TARGET_APPLE
+#endif  // WESTGATE_TARGET_APPLE
 
-}   // namespace lom
+}   // namespace westgate

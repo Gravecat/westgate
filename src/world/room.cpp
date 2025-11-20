@@ -8,7 +8,7 @@
 #include "world/entity/mobile.hpp"
 #include "world/room.hpp"
 
-namespace lom {
+namespace westgate {
 
 // Creates a blank Room with default values.
 Room::Room() : desc_("Missing room description."), name_("Undefined Room"), world_pos_({0,0}) { }
@@ -115,4 +115,4 @@ const Vector2 Room::world_pos() const
     return world_pos_;
 }
 
-}   // namespace lom
+}   // namespace westgate

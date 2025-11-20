@@ -8,7 +8,7 @@
 #include "core/core.hpp"
 #include "core/terminal.hpp"
 
-namespace lom {
+namespace westgate {
 namespace terminal {
 
 // Prints a string of text with std::cout, processing ANSI colour tags.
@@ -94,11 +94,11 @@ void print(const std::string& text)
 // Attempts to set the title of the console window. May not work on all platforms.
 void set_window_title(const std::string& new_title)
 {
-#ifdef LOM_TARGET_WINDOWS
+#ifdef WESTGATE_TARGET_WINDOWS
     SetConsoleTitleA(new_title.c_str());
 #else
     std::cout << "\033]2;" << new_title << "\007" << std::flush;
 #endif
 }
 
-} } // namespace terminal, lom
+} } // namespace terminal, westgate

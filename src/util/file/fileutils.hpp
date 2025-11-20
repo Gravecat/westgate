@@ -8,10 +8,10 @@
 
 #include "core/global.hpp"
 
-namespace lom {
+namespace westgate {
 namespace fileutils {
 
 std::string                 file_to_string(const std::string &filename);    // Loads a text file into an std::string.
 std::vector<std::string>    file_to_vec(const std::string &filename);       // Loads a text file into a vector, one string for each line of the file.
 
-} } // fileutils, lom namespaces
+} } // fileutils, westgate namespaces

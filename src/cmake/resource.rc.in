@@ -9,8 +9,8 @@
 IDI_APP_ICON ICON "@CMAKE_CURRENT_SOURCE_DIR@/src/3rdparty/app-icon/ghost.ico"
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION @LOM_VERSION_COMMA@
-PRODUCTVERSION @LOM_VERSION_COMMA@
+FILEVERSION @WESTGATE_VERSION_COMMA@
+PRODUCTVERSION @WESTGATE_VERSION_COMMA@
 FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
 FILEFLAGS VS_FF_DEBUG | VS_FF_PRERELEASE | VS_FF_PRIVATEBUILD
@@ -26,13 +26,13 @@ BEGIN
         BLOCK "080904e4" // Language and code page (e.g., 0409 = U.S. English, 0809 = British English; 04b0 = Unicode, 04e4 = ANSI Latin-1)
         BEGIN
             VALUE "CompanyName", "Raine ""Gravecat"" Simmons\0"
-            VALUE "FileDescription", "Lom\0"
-            VALUE "FileVersion", "@LOM_VERSION@\0"
-            VALUE "InternalName", "lom.exe\0"
+            VALUE "FileDescription", "Westgate\0"
+            VALUE "FileVersion", "@WESTGATE_VERSION@\0"
+            VALUE "InternalName", "westgate.exe\0"
             VALUE "LegalCopyright", "Copyright (c) 2025 Raine Simmons\0"
-            VALUE "OriginalFilename", "lom.exe\0"
-            VALUE "ProductName", "Lom\0"
-            VALUE "ProductVersion", "@LOM_VERSION@\0"
+            VALUE "OriginalFilename", "westgate.exe\0"
+            VALUE "ProductName", "WESTGATE\0"
+            VALUE "ProductVersion", "@WESTGATE_VERSION@\0"
         END
     END
     BLOCK "VarFileInfo"

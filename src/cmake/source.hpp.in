@@ -9,7 +9,7 @@
 
 #include "core/global.hpp"
 
-namespace lom {
+namespace westgate {
 namespace source {
 static const std::string SOURCE_DIR = "@CMAKE_SOURCE_DIR@";
 } }

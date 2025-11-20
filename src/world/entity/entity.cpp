@@ -9,7 +9,7 @@
 #include "world/entity/entity.hpp"
 #include "world/room.hpp"
 
-namespace lom {
+namespace westgate {
 
 // Creates a blank Entity with default values.
 Entity::Entity() : gender_(Gender::NONE), name_("undefined entity"), parent_entity_(nullptr), parent_room_(nullptr) { }
@@ -78,4 +78,4 @@ const Vector2 Entity::world_pos() const
     else return {0,0};
 }
 
-}   // namespace lom
+}   // namespace westgate

@@ -8,10 +8,10 @@
 
 #include "core/global.hpp"
 
-namespace lom {
+namespace westgate {
 namespace terminal {
 
 void    print(const std::string& text); // Prints a string of text with std::cout, processing ANSI colour tags.
 void    set_window_title(const std::string& new_title); // Attempts to set the title of the console window. May not work on all platforms.
 
-} } // namespace terminal, lom
+} } // namespace terminal, westgate
