@@ -21,6 +21,8 @@ set(LOM_CPPS
   src/util/file/yaml.cpp
   src/util/text/namegen.cpp
   src/world/codex.cpp
+  src/world/entity/entity.cpp
+  src/world/entity/mobile.cpp
 )
 
 # Third-party code being built as separate object files.

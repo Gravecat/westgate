@@ -7,9 +7,10 @@
 #pragma once
 
 #include "core/global.hpp"
-#include "enums/gender.hpp"
 
 namespace lom {
+
+enum class Gender : uint8_t;    // defined in world/entity/entity.hpp
 
 class ProcNameGen {
 public:

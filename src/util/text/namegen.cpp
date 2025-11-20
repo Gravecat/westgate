@@ -10,6 +10,7 @@
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
 #include "util/text/namegen.hpp"
+#include "world/entity/entity.hpp"
 
 namespace lom {
 
