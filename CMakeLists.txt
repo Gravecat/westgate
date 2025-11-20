@@ -21,6 +21,7 @@ set(LOM_CPPS
   src/util/file/yaml.cpp
   src/util/text/namegen.cpp
   src/world/codex.cpp
+  src/world/room.cpp
   src/world/entity/entity.cpp
   src/world/entity/mobile.cpp
 )
