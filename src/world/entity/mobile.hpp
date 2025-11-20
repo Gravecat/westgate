@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "core/global.hpp"
 #include "world/entity/entity.hpp"
 
 namespace westgate {

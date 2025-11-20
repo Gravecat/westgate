@@ -7,7 +7,10 @@
 
 #pragma once
 
-#include "core/global.hpp"
+#include <cstdint>
+#include <string>
+
+#include "util/math/vector2.hpp"
 
 namespace westgate {
 

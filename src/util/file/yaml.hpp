@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include "core/global.hpp"
-#include "3rdparty/rapidyaml/rapidyaml-0.10.0.hpp"
-
 #include <map>
+#include <string>
+
+#include "3rdparty/rapidyaml/rapidyaml-0.10.0.hpp"
 
 namespace westgate {
 

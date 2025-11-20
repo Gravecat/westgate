@@ -6,9 +6,7 @@
 
 #pragma once
 
-#include <map>
-
-#include "core/global.hpp"
+#include <memory>
 
 namespace westgate {
 

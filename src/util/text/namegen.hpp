@@ -6,7 +6,9 @@
 
 #pragma once
 
-#include "core/global.hpp"
+#include <cstdint>
+#include <string>
+#include <vector>
 
 namespace westgate {
 

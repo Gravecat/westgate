@@ -5,7 +5,8 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-#include "util/file/binpath.hpp"
+#include <algorithm>
+#include <cstring>
 
 #ifdef WESTGATE_TARGET_WINDOWS
 #include <windows.h>
@@ -14,6 +15,7 @@
 #endif
 
 #ifdef WESTGATE_TARGET_LINUX
+#include <climits>      // PATH_MAX
 #include <libgen.h>     // dirname()
 #if defined(__sun)
     #define PROC_SELF_EXE "/proc/self/path/a.out"
@@ -23,12 +25,12 @@
 #endif
 
 #ifdef WESTGATE_TARGET_APPLE
+#include <climits>          // PATH_MAX
 #include <libgen.h>         // dirname()
 #include <mach-o/dyld.h>    // _NSGetExecutablePath()
 #endif
 
-#include <algorithm>
-#include <cstring>
+#include "util/file/binpath.hpp"
 
 namespace westgate {
 

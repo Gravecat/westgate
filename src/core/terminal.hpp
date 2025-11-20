@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "core/global.hpp"
+#include <string>
 
 namespace westgate {
 namespace terminal {

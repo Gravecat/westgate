@@ -6,7 +6,11 @@
 
 #pragma once
 
-#include "core/global.hpp"
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "util/math/vector2.hpp"
 
 namespace westgate {
 

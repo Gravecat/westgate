@@ -1,4 +1,4 @@
-// core/global/vector2.hpp -- The Vector2 struct provides a simple way of storing and sharing 2D coordinates.
+// util/math/vector2.hpp -- The Vector2 struct provides a simple way of storing and sharing 2D coordinates.
 
 // SPDX-FileType: SOURCE
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>

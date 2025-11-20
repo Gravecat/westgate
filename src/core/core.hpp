@@ -6,11 +6,13 @@
 
 #pragma once
 
-#include "core/global.hpp"
-
 #include <ctime>
 #include <fstream>
+#include <memory>
 #include <sstream>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
 namespace westgate {
 

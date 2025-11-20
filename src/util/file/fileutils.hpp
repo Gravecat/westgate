@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include "core/global.hpp"
+#include <string>
+#include <vector>
 
 namespace westgate {
 namespace fileutils {
