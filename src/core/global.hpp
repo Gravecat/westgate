@@ -7,6 +7,5 @@
 
 #pragma once
 
-#include "core/global/enums.hpp"            // Enums used frequently in the code.
 #include "core/global/global-includes.hpp"  // Very frequently-used system headers.
 #include "core/global/vector2.hpp"          // Vector2 struct definition.

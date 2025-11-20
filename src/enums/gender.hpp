@@ -1,4 +1,4 @@
-// core/global/enums.hpp -- Enums which are used frequently enough in the code to belong in a gloabl header.
+// enums/gender.hpp -- Simple gender enum, used to determine the gender of entities in the game world.
 
 // SPDX-FileType: SOURCE
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "core/global.hpp"
+#include "enums/gender.hpp"
 
 namespace lom {
 
