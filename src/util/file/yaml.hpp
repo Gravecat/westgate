@@ -11,7 +11,7 @@
 
 #include <map>
 
-namespace lom {
+namespace westgate {
 
 class YAML {
 public:
@@ -39,4 +39,4 @@ private:
     ryml::Tree          tree_;  // The parsed YAML data.
 };
 
-}   // namespace lom
+}   // namespace westgate

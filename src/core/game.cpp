@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-namespace lom {
+namespace westgate {
 
 // Constructor, sets up the game manager.
 Game::Game() : codex_ptr_(nullptr) { }
@@ -64,4 +64,4 @@ void Game::process_input(const std::string &input)
 // A shortcut instead of using core().game()
 Game& game() { return core().game(); }
 
-}   // namespace lom
+}   // namespace westgate

@@ -7,7 +7,7 @@
  *
  */
 
-#if defined(LOM_TARGET_WINDOWS) && !defined(LOM_TARGET_MINGW)
+#if defined(WESTGATE_TARGET_WINDOWS) && !defined(WESTGATE_TARGET_MINGW)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 

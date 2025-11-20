@@ -12,7 +12,7 @@
 #include <fstream>
 #include <sstream>
 
-namespace lom {
+namespace westgate {
 
 class Game; // defined in core/game.hpp
 
@@ -42,7 +42,7 @@ private:
     static constexpr int    ERROR_CASCADE_WEIGHT_CRITICAL = 20; // The amount a critical type log entry will add to the cascade timer.
     static constexpr int    ERROR_CASCADE_WEIGHT_ERROR =    5;  // The amount an error type log entry will add to the cascade timer.
     static constexpr int    ERROR_CASCADE_WEIGHT_WARNING =  1;  // The amount a warning type log entry will add to the cascade timer.
-    static constexpr int    LOM_GAMEDATA_VERSION =          1;  // The expected version for the gamedata folder.
+    static constexpr int    WESTGATE_GAMEDATA_VERSION =     1;  // The expected version for the gamedata folder.
 
     int                 cascade_count_;     // Keeps track of rapidly-occurring, non-fatal error messages.
     bool                cascade_failure_;   // Is a cascade failure in progress?
@@ -67,4 +67,4 @@ private:
 
 Core&   core(); // A shortcut to using Core::core().
 
-}   // namespace lom
+}   // namespace westgate

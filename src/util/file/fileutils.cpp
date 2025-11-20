@@ -10,7 +10,7 @@
 #include <fstream>
 #include <sstream>
 
-namespace lom {
+namespace westgate {
 namespace fileutils {
 
 // Loads a text file into an std::string.
@@ -43,4 +43,4 @@ std::vector<std::string> file_to_vec(const std::string &filename)
     return lines;
 }
 
-} } // fileutils, lom namespaces
+} } // fileutils, westgate namespaces

@@ -8,7 +8,7 @@
 
 #include "core/global.hpp"
 
-namespace lom {
+namespace westgate {
 
 class Codex;    // defined in world/codex.hpp
 
@@ -30,4 +30,4 @@ private:
 
 Game&   game(); // A shortcut instead of using core().game()
 
-}   // namespace lom
+}   // namespace westgate

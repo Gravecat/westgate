@@ -8,7 +8,7 @@
 #include "util/file/fileutils.hpp"
 #include "util/file/yaml.hpp"
 
-namespace lom {
+namespace westgate {
 
 // Blank constructor.
 YAML::YAML() : ref_(nullptr) { }
@@ -120,4 +120,4 @@ std::string YAML::val(const std::string& key) const
     return std::string(noderef()[cskey].val().str).substr(0, noderef()[cskey].val().len);
 }
 
-}   // namespace lom
+}   // namespace westgate

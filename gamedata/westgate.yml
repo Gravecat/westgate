@@ -1,4 +1,4 @@
-# lom.yml -- Just a simple version identifier, so that the game can locate the gamedata folder and check that it's the correct version.
+# westgate.yml -- Just a simple version identifier, so that the game can locate the gamedata folder and check that it's the correct version.
 # There's no need to change this version if *new* data files are added, but it must be changed if the format of old files changes in
 # such a way that older builds of the game can no longer read this data correctly at all.
 
@@ -6,4 +6,4 @@
 # SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-lom_gamedata_version: 1
+westgate_gamedata_version: 1

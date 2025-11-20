@@ -10,7 +10,7 @@
 
 #include "core/global.hpp"
 
-namespace lom {
+namespace westgate {
 
 class ProcNameGen;  // defined in misc/namegen.hpp
 
@@ -26,4 +26,4 @@ private:
 
 Codex&  codex();    // Shortcut instead of using game()->codex()
 
-}   // namespace lom
+}   // namespace westgate

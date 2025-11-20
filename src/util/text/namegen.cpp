@@ -12,7 +12,7 @@
 #include "util/text/namegen.hpp"
 #include "world/entity/entity.hpp"
 
-namespace lom {
+namespace westgate {
 
 // Picks a consonant from the table, for forming atoms.
 std::string ProcNameGen::consonant()
@@ -215,4 +215,4 @@ std::string ProcNameGen::vowel()
     return vowel_block.substr(pos, 1);
 }
 
-}   // namespace gorp
+}   // namespace westgate

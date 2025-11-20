@@ -8,7 +8,7 @@
 
 #include "core/global.hpp"
 
-namespace lom {
+namespace westgate {
 
 enum class Gender : uint8_t;    // defined in world/entity/entity.hpp
 
@@ -46,4 +46,4 @@ private:
     std::string                 vowel_block;        // The vowel letter block, for v1 naming.
 };
 
-}   // namespace lom
+}   // namespace westgate
