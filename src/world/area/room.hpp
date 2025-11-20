@@ -1,4 +1,4 @@
-// world/room.hpp -- The Room class defines a singular place in the game world, connected via links to other Rooms. Entities all exist within Rooms.
+// world/area/room.hpp -- The Room class defines a singular place in the game world, connected via links to other Rooms. Entities all exist within Rooms.
 
 // SPDX-FileType: SOURCE
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
@@ -11,10 +11,9 @@
 #include <vector>
 
 #include "util/math/vector2.hpp"
+#include "world/entity/entity.hpp"
 
 namespace westgate {
-
-class Mobile;   // defined in entity/mobile.hpp
 
 class Room {
 public:

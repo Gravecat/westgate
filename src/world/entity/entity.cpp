@@ -6,8 +6,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 #include "core/core.hpp"
+#include "world/area/room.hpp"
 #include "world/entity/entity.hpp"
-#include "world/room.hpp"
 
 namespace westgate {
 

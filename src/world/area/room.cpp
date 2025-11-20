@@ -1,12 +1,11 @@
-// world/room.cpp -- The Room class defines a singular place in the game world, connected via links to other Rooms. Entities all exist within Rooms.
+// world/area/room.cpp -- The Room class defines a singular place in the game world, connected via links to other Rooms. Entities all exist within Rooms.
 
 // SPDX-FileType: SOURCE
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 #include "core/core.hpp"
-#include "world/entity/mobile.hpp"
-#include "world/room.hpp"
+#include "world/area/room.hpp"
 
 namespace westgate {
 
@@ -52,7 +51,7 @@ void Room::set_world_pos(const Vector2 new_pos)
     world_pos_ = new_pos;
 }
 
-// Transfers a specified Mobile from this Room to a target Room.
+// Transfers a specified Entity from this Room to a target Room.
 void Room::transfer(Entity* entity_ptr, Room* room_ptr)
 {
     // First, sanity checks. These should never happen, but could possibly occur as the result of mistakes in the code.

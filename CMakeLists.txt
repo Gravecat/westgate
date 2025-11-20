@@ -20,8 +20,9 @@ set(WESTGATE_CPPS
   src/util/file/fileutils.cpp
   src/util/file/yaml.cpp
   src/util/text/namegen.cpp
+  src/world/area/region.cpp
+  src/world/area/room.cpp
   src/world/codex.cpp
-  src/world/room.cpp
   src/world/entity/entity.cpp
   src/world/entity/mobile.cpp
 )
