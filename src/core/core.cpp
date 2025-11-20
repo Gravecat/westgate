@@ -50,7 +50,7 @@ void Core::check_stderr()
 // Cleans up all Core-managed objects.
 void Core::cleanup()
 {
-    std::cout << rang::style::reset;    // Reset any lingering ANSI codes.
+    std::cout << rang::style::reset << '\n';    // Reset any lingering ANSI codes.
     std::cout.flush();  // Ensure anything left on the console output buffer (including the reset code we just added) is flushed.
 
     // Release all attached objects.
@@ -71,12 +71,13 @@ void Core::close_log()
     }
 
     // Drop all signal hooks.
-    signal(SIGABRT, SIG_IGN);
-    signal(SIGSEGV, SIG_IGN);
-    signal(SIGILL, SIG_IGN);
-    signal(SIGFPE, SIG_IGN);
+    signal(SIGABRT, SIG_DFL);
+    signal(SIGSEGV, SIG_DFL);
+    signal(SIGILL, SIG_DFL);
+    signal(SIGFPE, SIG_DFL);
+    signal(SIGINT, SIG_DFL);
 #ifdef INVICTUS_TARGET_LINUX
-    signal(SIGBUS, SIG_IGN);
+    signal(SIGBUS, SIG_DFL);
 #endif
 
     this->log("The rest is silence.");
@@ -182,6 +183,7 @@ void Core::hook_signals()
     if (signal(SIGSEGV, core_intercept_signal) == SIG_ERR) halt("Failed to hook segfault signal.");
     if (signal(SIGILL, core_intercept_signal) == SIG_ERR) halt("Failed to hook illegal instruction signal.");
     if (signal(SIGFPE, core_intercept_signal) == SIG_ERR) halt("Failed to hook floating-point exception signal.");
+    if (signal(SIGINT, core_intercept_signal) == SIG_ERR) halt("Failed to hook interrupt signal.");
 #ifdef INVICTUS_TARGET_LINUX
     if (signal(SIGBUS, core_intercept_signal) == SIG_ERR) halt("Failed to hook bus error signal.");
 #endif
@@ -190,11 +192,6 @@ void Core::hook_signals()
 // Sets up the core game classes and data, and the terminal subsystem.
 void Core::init_core(std::vector<std::string> parameters)
 {
-    // Boosts performance on C++ console output (at the cost of not being able to reliably use C console output, e.g. printf, between flushes). This is
-    // especially important for MinGW builds, but should provide a small boost to performance on other platforms too.
-    std::ios_base::sync_with_stdio(false);
-    std::cout.tie(nullptr);
-
     open_log(); // Creates and opens the log.txt file.
     bool set_title = rang::rang_implementation::supportsColor();
 
@@ -242,6 +239,7 @@ void Core::intercept_signal(int sig)
         case SIGFPE: sig_type = "Floating-point exception."; break;
         case SIGILL: sig_type = "Illegal instruction."; break;
         case SIGSEGV: sig_type = "Segmentation fault."; break;
+        case SIGINT: destroy_core(EXIT_SUCCESS); break;
 #ifdef INVICTUS_TARGET_LINUX
         case SIGBUS: sig_type = "Bus error."; break;
 #endif
@@ -249,12 +247,13 @@ void Core::intercept_signal(int sig)
     }
 
     // Disable the signals for now, to stop a cascade.
-    signal(SIGABRT, SIG_IGN);
-    signal(SIGSEGV, SIG_IGN);
-    signal(SIGILL, SIG_IGN);
-    signal(SIGFPE, SIG_IGN);
+    signal(SIGABRT, SIG_DFL);
+    signal(SIGSEGV, SIG_DFL);
+    signal(SIGILL, SIG_DFL);
+    signal(SIGFPE, SIG_DFL);
+    signal(SIGINT, SIG_DFL);
 #ifdef INVICTUS_TARGET_LINUX
-    signal(SIGBUS, SIG_IGN);
+    signal(SIGBUS, SIG_DFL);
 #endif
     halt(sig_type);
 }

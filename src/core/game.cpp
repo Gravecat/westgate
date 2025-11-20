@@ -6,6 +6,7 @@
 
 #include <iostream>
 
+#include "3rdparty/rang/rang.hpp"
 #include "core/core.hpp"
 #include "core/game.hpp"
 #include "core/terminal.hpp"
@@ -49,8 +50,10 @@ void Game::main_loop()
     std::string input;
     while(true)
     {
+        std::cout << '\n' << rang::style::reset << rang::fgB::green << "> ";
         std::getline(std::cin, input);
-        process_input(input);
+        std::cout << rang::style::reset << '\n';
+        if (input.size()) process_input(input);
     }
 }
 
@@ -59,7 +62,7 @@ void Game::new_game() { }
 
 // Processes input from the player.
 void Game::process_input(const std::string &input)
-{ terminal::print("{G}" + input); }
+{ terminal::print("{R}" + input); }
 
 // A shortcut instead of using core().game()
 Game& game() { return core().game(); }
