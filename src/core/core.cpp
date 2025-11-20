@@ -4,7 +4,6 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-#include "3rdparty/rapidyaml/rapidyaml-0.10.0.hpp"  // This MUST be included before anything else, or Visual Studio builds won't work.
 #include "3rdparty/rang/rang.hpp"
 #include "cmake/source.hpp"
 #include "cmake/version.hpp"

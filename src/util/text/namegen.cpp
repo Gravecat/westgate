@@ -5,7 +5,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 #include "3rdparty/fantasyname/namegen.hpp"
-#include "3rdparty/rapidyaml/rapidyaml-0.10.0.hpp"
 #include "core/core.hpp"
 #include "util/file/fileutils.hpp"
 #include "util/file/yaml.hpp"
