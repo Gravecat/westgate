@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "3rdparty/rapidyaml/rapidyaml-0.10.0.hpp"
 #include "core/global.hpp"
+#include "3rdparty/rapidyaml/rapidyaml-0.10.0.hpp"
 
 #include <map>
 
