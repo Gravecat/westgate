@@ -17,7 +17,9 @@ set(WESTGATE_CPPS
   src/core/game.cpp
   src/core/terminal.cpp
   src/util/file/binpath.cpp
+  src/util/file/filereader.cpp
   src/util/file/fileutils.cpp
+  src/util/file/filewriter.cpp
   src/util/file/yaml.cpp
   src/util/text/hash.cpp
   src/util/text/namegen.cpp
