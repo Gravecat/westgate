@@ -9,7 +9,10 @@
 #include <vector>
 
 #if defined(WESTGATE_TARGET_LINUX) || defined(WESTGATE_TARGET_APPLE)
+#include <cstdio>
+#include <cstdlib>
 #include <sys/ioctl.h>
+#include <termios.h>
 #include <unistd.h>
 #endif
 
@@ -24,7 +27,34 @@
 namespace westgate {
 namespace terminal {
 
-    // Gets the width of the console window, in characters.
+// Attempts to get the horizontal position of the 'cursor', where output is being printed. If anything goes wrong, it'll return 0.
+unsigned int get_cursor_x()
+{
+#ifdef WESTGATE_TARGET_WINDOWS
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) return 0;  // error
+    return csbi.dwCursorPosition.X;
+#else
+    struct termios oldt{}, newt{};
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    // Request report
+    std::printf("\033[6n");
+    std::fflush(stdout);
+
+    // Read answer
+    int row, col;
+    if (std::scanf("\033[%d;%dR", &row, &col) != 2) col = -1;
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return (col > 0 ? col - 1 : 0);
+#endif
+}
+
+// Gets the width of the console window, in characters.
 unsigned int get_width()
 {
 #ifdef WESTGATE_TARGET_WINDOWS
@@ -44,9 +74,14 @@ void print(const std::string& text)
     const unsigned int console_width = get_width();
     unsigned int chars_so_far = 0;
 
-    std::function<void(std::string)> print_formatted = [&print_formatted, &console_width, &chars_so_far](const std::string &line)
+    // I KNOW THIS IS A NIGHTMARE OF CODE BUT THERE ARE SO MANY EDGE CASES :(
+    std::function<void(std::string, bool)> print_formatted = [&print_formatted, &console_width, &chars_so_far](const std::string &line,
+        bool recalc_cursor)
     {
         if (!line.size()) return;
+        // This can be computationally expensive to do for every single word, especially on Unix, so we'll only check the 'cursor' position when absolutely
+        // necessary, and keep count ourselves internally for the rest of it.
+        if (recalc_cursor) chars_so_far = get_cursor_x();
 
         // If newlines are specified, break them up and handle them with recursive calls.
         auto new_line = line.find_first_of('\n');
@@ -54,26 +89,43 @@ void print(const std::string& text)
         {
             const std::string before_newline = line.substr(0, new_line);
             const std::string after_newline = line.substr(new_line + 1);
-            print_formatted(before_newline);
+            print_formatted(before_newline, false);
             std::cout << '\n';
             chars_so_far = 0;
-            print_formatted(after_newline);
+            print_formatted(after_newline, false);
             return;
         }
 
         // If there's any spaces, print one word at a time.
         auto space = line.find_first_of(' ');
-        if (space == std::string::npos)
+        if (space == std::string::npos) // If there aren't any spaces, just print what we have as-is.
         {
+            if (chars_so_far + line.size() >= console_width)
+            {
+                std::cout << '\n';
+                chars_so_far = 0;
+            }
             std::cout << line;
             chars_so_far += line.size();
             if (chars_so_far >= console_width) chars_so_far -= console_width;   // Make the best guess for how many characters ended up on the next line.
             return;
         }
+        // Split the text into whatever's before the first space, and whatever's after it. This should let us print one word at a time.
         const std::string before_space = line.substr(0, space);
         const std::string after_space = line.substr(space + 1);
         bool space_after = false;
-        if (chars_so_far + before_space.size() > console_width)
+        // The current word is so long it can't be word-wrapped and is gonna split in half no matter what we do. Hnng. Okay, this is incredibly unlikely to
+        // actually happen, but we've gotta handle it just in case.
+        if (before_space.size() >= console_width)
+        {
+            int available_size = console_width - chars_so_far;
+            const std::string cropped_before = before_space.substr(0, available_size);
+            std::cout << cropped_before << '\n';
+            chars_so_far = 0;
+            print_formatted(before_space.substr(available_size) + " " + after_space, false);
+            return;
+        }
+        if (chars_so_far + before_space.size() > console_width) // If there isn't room for this word, start a new line.
         {
             std::cout << '\n';
             chars_so_far = 0;
@@ -81,7 +133,7 @@ void print(const std::string& text)
         if (after_space.size()) space_after = true;
         std::cout << before_space;
         chars_so_far += before_space.size();
-        if (chars_so_far == console_width)
+        if (chars_so_far == console_width)  // If the word *ends* at the very last column of the console window, insert a new line.
         {
             std::cout << '\n';
             chars_so_far = 0;
@@ -91,8 +143,7 @@ void print(const std::string& text)
             std::cout << ' ';
             chars_so_far++;
         }
-        if (before_space.size() >= console_width) chars_so_far -= console_width;
-        print_formatted(after_space);
+        print_formatted(after_space, false);
     };
 
     std::string output = text;
@@ -103,7 +154,7 @@ void print(const std::string& text)
         auto closer_pos = output.find_first_of('}');    // And a matching closing tag.
         if (opener_pos == std::string::npos || closer_pos == std::string::npos) // If none are found, just print the string as-is and finish.
         {
-            print_formatted(output);
+            print_formatted(output, true);
             break;
         }
 

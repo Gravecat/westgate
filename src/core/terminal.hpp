@@ -11,7 +11,8 @@
 namespace westgate {
 namespace terminal {
 
-unsigned int    get_width();    // Gets the width of the console window, in characters.
+unsigned int    get_cursor_x(); // Attempts to get the horizontal position of the 'cursor', where output is being printed.
+unsigned int    get_width();    // Gets the width of the console window, in characters. If anything goes wrong, it'll return 0.
 void            print(const std::string& text); // Prints a string of text with std::cout, processing ANSI colour tags.
 void            set_window_title(const std::string& new_title); // Attempts to set the title of the console window. May not work on all platforms.
 
