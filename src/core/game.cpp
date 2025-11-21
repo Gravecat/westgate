@@ -92,6 +92,20 @@ void Game::new_game() { create_world(); }
 void Game::process_input(const std::string &input)
 { terminal::print("{R}" + input); }
 
+// Loads an existing saved game.
+void Game::load_game(int save_slot)
+{
+    const std::filesystem::path save_path = BinPath::game_path("userdata/saves/" + std::to_string(save_slot));
+    if (!std::filesystem::exists(save_path))
+    {
+        terminal::print("{R}Saved game file cannot be located.");
+        core().destroy_core(EXIT_SUCCESS);
+    }
+
+    auto new_region = std::make_unique<Region>();
+    new_region->load_from_save(save_slot, 0);
+}
+
 // Every game needs a title screen!
 void Game::title_screen()
 {
@@ -106,10 +120,7 @@ void Game::title_screen()
     switch(terminal::get_number(1, 3))
     {
         case 1: new_game(); break;
-        case 2:
-            terminal::print("{R}Loading saved games is not yet implemented.");
-            core().destroy_core(EXIT_SUCCESS);
-            break;
+        case 2: load_game(0); break;
         case 3:
             terminal::print("{B}Farewell!");
             core().destroy_core(EXIT_SUCCESS);

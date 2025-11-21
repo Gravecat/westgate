@@ -10,6 +10,7 @@
 
 #include "core/core.hpp"
 #include "util/file/binpath.hpp"
+#include "util/file/filereader.hpp"
 #include "util/file/filewriter.hpp"
 #include "util/file/yaml.hpp"
 #include "world/area/region.hpp"
@@ -20,7 +21,7 @@ namespace westgate {
 Region::Region() : id_(0), memory_allocated_(false), name_("Undefined Region") { }
 
 // As above, but also calls set_size() to allocate memory.
-Region::Region(size_t new_size) : memory_allocated_(false), name_("Undefined Region") { set_size(new_size); }
+Region::Region(size_t new_size) : Region() { set_size(new_size); }
 
 // Destructor, cleans up stored data.
 Region::~Region()
@@ -34,6 +35,40 @@ void Region::add_room(std::unique_ptr<Room> new_room)
 {
     if (!new_room) core().nonfatal("Attempted to add null room to region.", Core::CORE_ERROR);
     else rooms_.push_back(std::move(new_room));
+}
+
+// Loads this Region from a saved game file.
+void Region::load_from_save(int save_slot, unsigned int region_id)
+{
+    // Assemble the path, and ensure the file exists.
+    const std::filesystem::path save_path = BinPath::game_path("userdata/saves/" + std::to_string(save_slot) + "/region/" + std::to_string(region_id) + ".dat");
+    if (!std::filesystem::exists(save_path))
+        throw std::runtime_error("Cannot load region " + std::to_string(region_id) + " from save slot " + std::to_string(save_slot) + "!");
+
+    // Create a FileReader to read the data.
+    auto file = std::make_unique<FileReader>(save_path.string());
+
+    // Check the header, save version, and region tag.
+    file->check_header();
+    const uint32_t region_version = file->read_data<uint32_t>();
+    if (region_version != REGION_SAVE_VERSION)
+        throw std::runtime_error("Invalid region save version (" + std::to_string(region_version) + ", expected " + std::to_string(REGION_SAVE_VERSION) + ")");
+    const std::string region_string = file->read_string();
+    if (region_string.compare("REGION")) throw std::runtime_error("Invalid region file!");
+
+    // Get the ID, name and size of the Region.
+    id_ = file->read_data<unsigned int>();
+    name_ = file->read_string();
+    const unsigned int region_size = file->read_data<unsigned int>();
+    set_size(region_size);
+
+    // Create and load the Rooms in this Region.
+    for (unsigned int i = 0; i < region_size; i++)
+        rooms_.push_back(std::make_unique<Room>(file.get()));
+    rebuild_room_id_map();
+
+    // Check for the standard EOF footer.
+    file->check_footer();
 }
 
 // Loads a Region from YAML game data.
@@ -120,7 +155,7 @@ void Region::save(int save_slot)
     // Create the save file, and mark it with a version tag.
     auto file = std::make_unique<FileWriter>(region_save_file.string());
     file->write_header();
-    file->write_data<int>(REGION_SAVE_VERSION);
+    file->write_data<uint32_t>(REGION_SAVE_VERSION);
     file->write_string("REGION");
 
     // Write the ID, name, and size of the region.
