@@ -12,6 +12,7 @@
 namespace westgate {
 
 class Codex;    // defined in world/codex.hpp
+class Region;   // defined in world/area/region.hpp
 
 class Game {
 public:
@@ -23,8 +24,11 @@ public:
     void    process_input(const std::string &input);    // Processes input from the player.
 
 private:
-    std::unique_ptr<Codex>  codex_ptr_; // The Codex object, which stores all the static game data in memory, and generates copies of said data.
+    std::unique_ptr<Codex>  codex_ptr_;     // The Codex object, which stores all the static game data in memory, and generates copies of said data.
+    std::unique_ptr<Region> region_ptr_;    // The currently-loaded Region, the area of the game world the player is interacting with.
+    int     save_id_;       // The current saved-game ID (or -1 for none).
 
+    void    create_world(); // Loads the static YAML data and generates a binary save file for the game world.
     void    main_loop();    // brøether, may i have the lööps
     void    new_game();     // Sets up for a new game!
 };

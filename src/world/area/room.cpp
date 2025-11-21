@@ -5,39 +5,66 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 #include "core/core.hpp"
+#include "util/file/filewriter.hpp"
+#include "util/text/hash.hpp"
 #include "world/area/room.hpp"
 
 namespace westgate {
 
 // Creates a blank Room with default values.
-Room::Room() : desc_("Missing room description."), name_("Undefined Room") { }
+Room::Room(const std::string& new_id) : desc_("Missing room description."), id_(hash::murmur3(new_id)), id_str_(new_id), name_{"Undefined Room", "undefined"}
+{ }
 
 // Retrieves the description of this Room.
 const std::string& Room::desc() const { return desc_; }
 
+// Retrieves the hashed ID of this Room.
+uint32_t Room::id() const { return id_; }
+
 // Retrieves the name of this Room.
-const std::string& Room::name() const { return name_; }
+const std::string& Room::name(bool full_name) const { return name_[full_name ? 0 : 1]; }
+
+// Saves this Room to a specified save file. Should only be called by a parent Region.
+void Room::save(FileWriter* file)
+{
+    // Write the save version for this Room.
+    file->write_data<int>(ROOM_SAVE_VERSION);
+
+    // Write the Room's IDs, both string and hashed versions.
+    file->write_data<uint32_t>(id_);
+    file->write_string(id_str_);
+
+    // Write the Room's name and description.
+    file->write_string(name_[0]);
+    file->write_string(name_[1]);
+    file->write_string(desc_);
+}
 
 // Sets the description of this Room.
 void Room::set_desc(const std::string& new_desc)
 {
     if (!new_desc.size())
     {
-        core().nonfatal("Attempt to set blank description on room (" + name_ + ")", Core::CORE_ERROR);
+        core().nonfatal("Attempt to set blank description on room (" + name_[0] + ")", Core::CORE_ERROR);
         desc_ = "Missing room description.";
     }
     else desc_ = new_desc;
 }
 
 // Sets the name of this Room.
-void Room::set_name(const std::string& new_name)
+void Room::set_name(const std::string& new_full_name, const std::string& new_short_name)
 {
-    if (!new_name.size())
+    if (!new_full_name.size() || !new_short_name.size())
     {
         core().nonfatal("Attempt to set blank name on room.", Core::CORE_ERROR);
-        name_ = "Undefined Room";
+        name_[0] = "Undefined Room";
+        name_[1] = "undefined";
     }
-    else name_ = new_name;
+    else
+    {
+        name_[0] = new_full_name;
+        name_[1] = new_short_name;
+    }
 }
 
 // Transfers a specified Entity from this Room to a target Room.
@@ -46,25 +73,25 @@ void Room::transfer(Entity* entity_ptr, Room* room_ptr)
     // First, sanity checks. These should never happen, but could possibly occur as the result of mistakes in the code.
     if (room_ptr == this)
     {
-        if (!entity_ptr) core().nonfatal("Attempt to transfer null entity from " + name_ + " to itself.", Core::CORE_ERROR);
-        else core().nonfatal("Attempt to transfer enity (" + entity_ptr->name() + ") from " + name_ + " to itself.", Core::CORE_ERROR);
+        if (!entity_ptr) core().nonfatal("Attempt to transfer null entity from " + name_[0] + " to itself.", Core::CORE_ERROR);
+        else core().nonfatal("Attempt to transfer enity (" + entity_ptr->name() + ") from " + name_[0] + " to itself.", Core::CORE_ERROR);
         return;
     }
     if (!entity_ptr)
     {
-        if (!room_ptr) core().nonfatal("Attempt to transfer null entity from " + name_ + " to null room.", Core::CORE_ERROR);
-        else core().nonfatal("Attempt to transfer null entity from " + name_ + " to " + room_ptr->name() + ".", Core::CORE_ERROR);
+        if (!room_ptr) core().nonfatal("Attempt to transfer null entity from " + name_[0] + " to null room.", Core::CORE_ERROR);
+        else core().nonfatal("Attempt to transfer null entity from " + name_[0] + " to " + room_ptr->name(true) + ".", Core::CORE_ERROR);
         return;
     }
     if (!room_ptr)
     {
-        if (!entity_ptr) core().nonfatal("Attempt to transfer null entity from " + name_ + " to null room.", Core::CORE_ERROR);
-        else core().nonfatal("Attempt to transfer entity (" + entity_ptr->name() + ") from " + name_ + " to null room.", Core::CORE_ERROR);
+        if (!entity_ptr) core().nonfatal("Attempt to transfer null entity from " + name_[0] + " to null room.", Core::CORE_ERROR);
+        else core().nonfatal("Attempt to transfer entity (" + entity_ptr->name() + ") from " + name_[0] + " to null room.", Core::CORE_ERROR);
         return;
     }
     if (entity_ptr->parent_room() != this)
     {
-        core().nonfatal("Attempt to transfer entity (" + entity_ptr->name() + ") from " + name_ + " to " + room_ptr->name() +
+        core().nonfatal("Attempt to transfer entity (" + entity_ptr->name() + ") from " + name_[0] + " to " + room_ptr->name(true) +
             " while entity is not correctly parented to this room.", Core::CORE_ERROR);
         return;
     }
@@ -83,7 +110,7 @@ void Room::transfer(Entity* entity_ptr, Room* room_ptr)
     }
     if (!source_found)
     {
-        core().nonfatal("Attempt to transfer entity (" + entity_ptr->name() + ") from " + name_ + " to " + room_ptr->name() +
+        core().nonfatal("Attempt to transfer entity (" + entity_ptr->name() + ") from " + name_[0] + " to " + room_ptr->name(true) +
             ", while entity is not contained within the parent room.", Core::CORE_ERROR);
         return;
     }

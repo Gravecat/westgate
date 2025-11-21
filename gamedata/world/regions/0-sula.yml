@@ -1,0 +1,13 @@
+# world/regions/0-sula.yml -- The Floating Island of Sula, a testing/development area not intended for regular gameplay.
+
+# SPDX-FileType: SOURCE
+# SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+REGION_IDENTIFIER:
+  name: The Floating Island of Sula
+  version: 1
+
+SULA_PLAINS:
+  desc: "Blind to what you'll soon become. The mirror lies, the whole world's wrong."
+  name: [ Grassy Plains, plains ]

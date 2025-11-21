@@ -4,22 +4,28 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#include <filesystem>
 #include <iostream>
 
 #include "3rdparty/rang/rang.hpp"
 #include "core/core.hpp"
 #include "core/game.hpp"
 #include "core/terminal.hpp"
+#include "util/file/binpath.hpp"
+#include "world/area/region.hpp"
 #include "world/codex.hpp"
 
 namespace westgate {
 
 // Constructor, sets up the game manager.
-Game::Game() : codex_ptr_(nullptr) { }
+Game::Game() : codex_ptr_(nullptr), region_ptr_(nullptr), save_id_(-1) { }
 
 // Destructor, cleans up attached classes.
 Game::~Game()
-{ codex_ptr_.reset(nullptr); }
+{
+    codex_ptr_.reset(nullptr);
+    region_ptr_.reset(nullptr);
+}
 
 // Starts the game, in the form of a title screen followed by the main game loop.
 void Game::begin()
@@ -27,6 +33,7 @@ void Game::begin()
     // Except there is no title screen yet. That'll come later.
 
     codex_ptr_ = std::make_unique<Codex>();
+    create_world();
     new_game();
     main_loop();
 }
@@ -36,6 +43,44 @@ Codex& Game::codex() const
 {
     if (!codex_ptr_) throw std::runtime_error("Attempt to access null Codex pointer!");
     return *codex_ptr_;
+}
+
+// Loads the static YAML data and generates a binary save file for the game world.
+void Game::create_world()
+{
+    // This can be replaced with something better later.
+    terminal::print();
+    terminal::print("{Y}Generating game world from static data...");
+
+    // Create a game saves folder, if one doesn't already exist.
+    const std::filesystem::path userdata_saves_path = BinPath::game_path("userdata/saves");
+    if (!std::filesystem::is_directory(userdata_saves_path)) std::filesystem::create_directory(userdata_saves_path);
+
+    // Right now, we're hard-coding save slot 0. Later in development, we'll let the user choose multiple save slots.
+    save_id_ = 0;
+
+    // This early in development, we're gonna just delete the save folder each time. It'll become more permanent later.
+    const std::filesystem::path save_dir = userdata_saves_path.string() + "/" + std::to_string(save_id_);
+    std::filesystem::remove_all(save_dir);
+    std::filesystem::create_directory(save_dir);
+
+    // Determine how many region files are in the game's data files.
+    const std::filesystem::path regions_folder = core().datafile("world/regions");
+    std::vector<std::filesystem::path> regions;
+    for (const auto& file : std::filesystem::directory_iterator(regions_folder))
+        if (file.is_regular_file()) regions.push_back(file.path().filename());
+
+    // One at a time, load each region into memory.
+    for (unsigned int i = 0; i < regions.size(); i++)
+    {
+        terminal::print("{C}Processing region file {G}" + std::to_string(i + 1) + " {C}of {G}" + std::to_string(regions.size()) + "{C}...");
+        std::filesystem::path region_file = regions.at(i);
+        std::unique_ptr<Region> new_region = std::make_unique<Region>();
+        new_region->load_from_gamedata(region_file.string());
+        new_region->save(save_id_);
+    }
+    terminal::print("{Y}World generation complete!");
+    terminal::print();
 }
 
 // Shuts things down cleanly and exits the game.

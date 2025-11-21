@@ -80,7 +80,7 @@ void Core::close_log()
     signal(SIGBUS, SIG_DFL);
 #endif
 
-    this->log("The rest is silence.");
+    this->log("Be seeing you!");
     syslog_.close();
 }
 
@@ -335,9 +335,9 @@ void Core::open_log()
     if (std::filesystem::exists(logfile_path)) std::filesystem::remove(logfile_path);
     syslog_.open(logfile_path);
     if (!syslog_.is_open()) throw std::runtime_error("Cannot open " + logfile_path.string());
+    this->log("Welcome to Westgate " + version::VERSION_STRING + " build " + version::BUILD_TIMESTAMP);
     hook_signals();
     stderr_old_ = std::cerr.rdbuf(stderr_buffer_.rdbuf());
-    this->log("Welcome to Westgate " + version::VERSION_STRING + " build " + version::BUILD_TIMESTAMP);
     this->log("Logging and error-handling system is online.");
 }
 
