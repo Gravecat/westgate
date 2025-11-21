@@ -60,22 +60,4 @@ void Entity::set_parent_room(Room* new_room_parent)
     if (new_room_parent) set_parent_entity(nullptr);    // An Entity can only have one parent.
 }
 
-// Retrieves the world coordinates of the parent of this Entity, or {0,0} if no parent is defined.
-const Vector2 Entity::world_pos() const
-{
-    if (parent_room_) return parent_room_->world_pos();
-    else if (parent_entity_)
-    {
-        // Sanity check to avoid an infinite loop. This will only really be possible if something was badly broken in the code, but it'll help with debugging.
-        // It should be impossible for this to happen, but hey, it's such a simple quick check that'll avoid some nasty infinite recursion.
-        if (parent_entity_ == this)
-        {
-            core().nonfatal("Attempt to check world position of Entity parented to itself (" + name_ + ")", Core::CORE_ERROR);
-            return {0,0};
-        }
-        return parent_entity_->world_pos();
-    }
-    else return {0,0};
-}
-
 }   // namespace westgate

@@ -10,7 +10,7 @@
 namespace westgate {
 
 // Creates a blank Room with default values.
-Room::Room() : desc_("Missing room description."), name_("Undefined Room"), world_pos_({0,0}) { }
+Room::Room() : desc_("Missing room description."), name_("Undefined Room") { }
 
 // Retrieves the description of this Room.
 const std::string& Room::desc() const { return desc_; }
@@ -38,17 +38,6 @@ void Room::set_name(const std::string& new_name)
         name_ = "Undefined Room";
     }
     else name_ = new_name;
-}
-
-// Sets the new world coordinates for this Room.
-void Room::set_world_pos(const Vector2 new_pos)
-{
-    if (!new_pos)
-    {
-        core().nonfatal("Attempt to set {0,0} coordinates on room (" + name_ + ")", Core::CORE_ERROR);
-        return;
-    }
-    world_pos_ = new_pos;
 }
 
 // Transfers a specified Entity from this Room to a target Room.
@@ -105,13 +94,6 @@ void Room::transfer(Entity* entity_ptr, Room* room_ptr)
     entities_.erase(entities_.begin() + source_id);
     // ...and finally, update the Entity's parent Room pointer.
     entity_ptr->set_parent_room(room_ptr);
-}
-
-// Retrieves the world coordinates of this Room.
-const Vector2 Room::world_pos() const
-{
-    if (!world_pos_) core().nonfatal("Coordinate lookup for room at {0,0} (" + name_ + ")", Core::CORE_WARN);
-    return world_pos_;
 }
 
 }   // namespace westgate

@@ -10,8 +10,6 @@
 #include <cstdint>
 #include <string>
 
-#include "util/math/vector2.hpp"
-
 namespace westgate {
 
 class Room; // defined in world/room.hpp
@@ -31,7 +29,6 @@ public:
     void                set_name(const std::string& new_name);  // Sets the name of this Entity.
     void                set_parent_entity(Entity* new_entity_parent = nullptr); // Sets a new Entity as the parent of this Entity, or nullptr for none.
     void                set_parent_room(Room* new_room_parent = nullptr);       // Sets a new Room as the parent of this Entity, or nullptr for none.
-    const Vector2       world_pos() const;  // Retrieves the world coordinates of the parent of this Entity, or {0,0} if no parent is defined.
 
 protected:
     Gender      gender_;        // The gender of this Entity, if any.
