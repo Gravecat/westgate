@@ -11,5 +11,5 @@
 namespace westgate {
 namespace version {
 static const std::string BUILD_TIMESTAMP =  "@BUILD_TIMESTAMP@";
-static const std::string VERSION_STRING =   "@LOM_VERSION@";
+static const std::string VERSION_STRING =   "@WESTGATE_VERSION@";
 } }
