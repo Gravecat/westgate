@@ -19,6 +19,7 @@ set(WESTGATE_CPPS
   src/util/file/binpath.cpp
   src/util/file/fileutils.cpp
   src/util/file/yaml.cpp
+  src/util/text/hash.cpp
   src/util/text/namegen.cpp
   src/world/area/region.cpp
   src/world/area/room.cpp
