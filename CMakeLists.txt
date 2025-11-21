@@ -5,7 +5,7 @@
 # SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.15)
 project(westgate LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
