@@ -31,7 +31,7 @@ public:
         return result;
     }
 
-protected:
+private:
     std::vector<char>   data_;          // The data file loaded into memory.
     uint32_t            read_index_;    // The current read position in the file.
 };

@@ -14,16 +14,17 @@ namespace westgate {
 
 class FileWriter {
 public:
-    void    close_file();                           // Closes the binary file.
-    void    open_file(std::string filename);        // Opens a file for writing.
-    void    write_char_vec(std::vector<char> vec);  // Writes binary data (in the form of an std::vector<char>) to the binary file.
-    void    write_string(std::string str);          // Writes a string to the file.
+            FileWriter() = delete;                      // No default constructor.
+            FileWriter(const std::string& filename);    // Constructor, opens a binary file.
+            ~FileWriter();                              // Destructor, closes any open binary files.
+    void    write_char_vec(std::vector<char> vec);      // Writes binary data (in the form of an std::vector<char>) to the binary file.
+    void    write_string(std::string str);              // Writes a string to the file.
 
     // Writes a basic data type (integer, float, etc.) to the file.
     template<typename T> void   write_data(T data)
     { file_out_.write(reinterpret_cast<const char*>(&data), sizeof(T)); }
 
-protected:
+private:
     std::ofstream   file_out_;  // File handle for writing into the binary data file.
 };
 

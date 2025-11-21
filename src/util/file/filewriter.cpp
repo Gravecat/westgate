@@ -13,16 +13,16 @@
 
 namespace westgate {
 
-// Closes the binary file.
-void FileWriter::close_file() { file_out_.close(); }
-
-// Opens a file for writing.
-void FileWriter::open_file(std::string filename)
+// Constructor, opens a binary file.
+FileWriter::FileWriter(const std::string& filename)
 {
-    filename = BinPath::game_path(filename);
-    std::filesystem::remove(filename);
-    file_out_.open(filename.c_str(), std::ios::binary | std::ios::out);
+    const std::string bp_filename = BinPath::game_path(filename);
+    std::filesystem::remove(bp_filename);
+    file_out_.open(bp_filename.c_str(), std::ios::binary | std::ios::out);
 }
+
+// Destructor, closes any open binary files.
+FileWriter::~FileWriter() { file_out_.close(); }
 
 // Writes binary data (in the form of an std::vector<char>) to the binary file.
 void FileWriter::write_char_vec(std::vector<char> vec)
