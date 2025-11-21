@@ -44,8 +44,9 @@ void Game::leave_game() { core().destroy_core(EXIT_SUCCESS); }
 // brøether, may i have the lööps
 void Game::main_loop()
 {
-    terminal::print("{C}Hello, world!");
-    terminal::print("This is a test string {B}i{G}ncorporating {R}ANSI {Y}colour {C}tags{0}! Let's see how it works.{M}");
+    terminal::print("{R}Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ultricies, felis et ultricies malesuada, quam felis bibendum nulla, in gravida nulla orci quis purus. Nullam sollicitudin id mi sed fermentum. Proin at dolor aliquam, fermentum arcu quis, commodo nisl. In a est elit. Proin egestas nibh eget viverra commodo. Aenean vitae tristique justo. Aliquam tincidunt aliquam neque, eu suscipit ante. Integer vel quam lacinia, viverra erat ac, tincidunt risus.");
+    terminal::print("{Y}Cras luctus purus vitae semper vulputate. Aliquam congue lorem rhoncus pharetra commodo. Donec aliquam enim lacus, sit amet pulvinar purus tristique vel. Duis mattis mollis accumsan. Donec metus metus, mollis nec lectus ac, elementum efficitur enim. Nam sodales viverra purus, quis aliquet tortor lobortis quis. Aenean varius vel erat tincidunt faucibus. Aliquam eleifend nec justo sed lobortis. Morbi id maximus odio. Mauris id auctor arcu. Mauris mattis consectetur magna eget tincidunt. Maecenas fringilla felis sit amet velit tristique, sit amet consectetur odio vulputate. Cras tempus faucibus ex non egestas.");
+    terminal::print("{G}In augue nulla, imperdiet eu faucibus vel, cursus elementum felis. Curabitur lacus ligula, pellentesque sit amet libero sit amet, tempor interdum justo. Duis eleifend nunc eu urna fringilla, eu molestie ipsum commodo. Suspendisse in purus dui. In hendrerit orci leo, quis consequat mi aliquet sit amet. Mauris neque risus, tempus sed nisi ac, varius accumsan erat. Pellentesque sagittis nulla ipsum, sed tristique erat fringilla at. Vestibulum ipsum sem, feugiat at congue sit amet, venenatis in arcu. Maecenas vel mi a est mollis accumsan. Mauris convallis justo interdum, pretium ligula ut, posuere tortor. Aenean sollicitudin sem ac auctor rhoncus. ");
 
     std::string input;
     while(true)

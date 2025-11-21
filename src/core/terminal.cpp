@@ -4,8 +4,14 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#include <functional>
 #include <iostream>
 #include <vector>
+
+#if defined(WESTGATE_TARGET_LINUX) || defined(WESTGATE_TARGET_APPLE)
+#include <sys/ioctl.h>
+#include <unistd.h>
+#endif
 
 #ifdef WESTGATE_TARGET_WINDOWS
 #include <windows.h>
@@ -18,9 +24,77 @@
 namespace westgate {
 namespace terminal {
 
+    // Gets the width of the console window, in characters.
+unsigned int get_width()
+{
+#ifdef WESTGATE_TARGET_WINDOWS
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+#else
+    winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    return w.ws_col;
+#endif
+}
+
 // Prints a string of text with std::cout, processing ANSI colour tags.
 void print(const std::string& text)
 {
+    const unsigned int console_width = get_width();
+    unsigned int chars_so_far = 0;
+
+    std::function<void(std::string)> print_formatted = [&print_formatted, &console_width, &chars_so_far](const std::string &line)
+    {
+        if (!line.size()) return;
+
+        // If newlines are specified, break them up and handle them with recursive calls.
+        auto new_line = line.find_first_of('\n');
+        if (new_line != std::string::npos)
+        {
+            const std::string before_newline = line.substr(0, new_line);
+            const std::string after_newline = line.substr(new_line + 1);
+            print_formatted(before_newline);
+            std::cout << '\n';
+            chars_so_far = 0;
+            print_formatted(after_newline);
+            return;
+        }
+
+        // If there's any spaces, print one word at a time.
+        auto space = line.find_first_of(' ');
+        if (space == std::string::npos)
+        {
+            std::cout << line;
+            chars_so_far += line.size();
+            if (chars_so_far >= console_width) chars_so_far -= console_width;   // Make the best guess for how many characters ended up on the next line.
+            return;
+        }
+        const std::string before_space = line.substr(0, space);
+        const std::string after_space = line.substr(space + 1);
+        bool space_after = false;
+        if (chars_so_far + before_space.size() > console_width)
+        {
+            std::cout << '\n';
+            chars_so_far = 0;
+        }
+        if (after_space.size()) space_after = true;
+        std::cout << before_space;
+        chars_so_far += before_space.size();
+        if (chars_so_far == console_width)
+        {
+            std::cout << '\n';
+            chars_so_far = 0;
+        }
+        else if (space_after)
+        {
+            std::cout << ' ';
+            chars_so_far++;
+        }
+        if (before_space.size() >= console_width) chars_so_far -= console_width;
+        print_formatted(after_space);
+    };
+
     std::string output = text;
     std::vector<std::string> invalid_tags;
     while(output.size())
@@ -29,7 +103,7 @@ void print(const std::string& text)
         auto closer_pos = output.find_first_of('}');    // And a matching closing tag.
         if (opener_pos == std::string::npos || closer_pos == std::string::npos) // If none are found, just print the string as-is and finish.
         {
-            std::cout << output;
+            print_formatted(output);
             break;
         }
 
