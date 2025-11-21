@@ -4,19 +4,21 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#include <cstdlib>
 #include <functional>
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 
 #if defined(WESTGATE_TARGET_LINUX) || defined(WESTGATE_TARGET_APPLE)
 #include <cstdio>
-#include <cstdlib>
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
 #endif
 
 #ifdef WESTGATE_TARGET_WINDOWS
+#include <fstream>
 #include <windows.h>
 #endif
 
@@ -52,6 +54,44 @@ unsigned int get_cursor_x()
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     return (col > 0 ? col - 1 : 0);
 #endif
+}
+
+// Prints a standard cursor and waits for non-zero input from the player.
+const std::string get_input()
+{
+    std::cout << '\n' << rang::style::reset << rang::fgB::green << "> ";
+    std::string input;
+    do { std::getline(std::cin, input); } while(!input.size());
+    std::cout << rang::style::reset << '\n';
+    return input;
+}
+
+// As with get_input(), but requires the user to enter an integer number.
+int get_number(int lowest, int highest)
+{
+    int result = 0;
+    std::string input;
+    while(true)
+    {
+        input = get_input();
+        if (!input.size()) continue;
+
+        try { result = std::stol(input); }
+        catch(const std::invalid_argument&)
+        {
+            terminal::print("{Y}I'm sorry, that's not a valid number. Please only enter a number, without any symbols or letters.");
+            continue;
+        }
+        catch(const std::out_of_range&)
+        {
+            terminal::print("{Y}That number is far too large, or invalid. Please try to be reasonable.");
+            continue;
+        }
+
+        if (result < lowest || result > highest) terminal::print("{Y}Please enter a number between {R}" + std::to_string(lowest) + " {Y}and {R}" +
+            std::to_string(highest) + ".");
+        else return result;
+    }
 }
 
 // Gets the width of the console window, in characters.

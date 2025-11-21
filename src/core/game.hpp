@@ -31,6 +31,7 @@ private:
     void    create_world(); // Loads the static YAML data and generates a binary save file for the game world.
     void    main_loop();    // brøether, may i have the lööps
     void    new_game();     // Sets up for a new game!
+    void    title_screen(); // Every game needs a title screen!
 };
 
 Game&   game(); // A shortcut instead of using core().game()
