@@ -4,22 +4,52 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#include <stdexcept>
+
 #include "core/core.hpp"
+#include "util/file/filereader.hpp"
 #include "util/file/filewriter.hpp"
 #include "util/text/hash.hpp"
 #include "world/area/room.hpp"
 
 namespace westgate {
 
-// Creates a blank Room with default values.
-Room::Room(const std::string& new_id) : desc_("Missing room description."), id_(hash::murmur3(new_id)), id_str_(new_id), name_{"Undefined Room", "undefined"}
-{ }
+// Creates a blank Room with default values and no ID.
+Room::Room() : desc_("Missing room description."), id_(0), name_{"Undefined Room", "undefined"} { }
+
+// Creates a Room with a specified ID.
+Room::Room(const std::string& new_id) : Room()
+{
+    id_str_ = new_id;
+    id_ = hash::murmur3(new_id);
+}
+
+// Creates a blank Room, then loads its data from the specified FileReader.
+Room::Room(FileReader* file) : Room() { load(file); }
 
 // Retrieves the description of this Room.
 const std::string& Room::desc() const { return desc_; }
 
 // Retrieves the hashed ID of this Room.
 uint32_t Room::id() const { return id_; }
+
+// Loads a Room's data from the specified FileReader, overwriting existing data.
+void Room::load(FileReader* file)
+{
+    // Check that the save file version matches.
+    const uint32_t save_version = file->read_data<uint32_t>();
+    if (save_version != ROOM_SAVE_VERSION) throw std::runtime_error("Invalid room version in saved data (" + std::to_string(save_version) + ", expected " +
+        std::to_string(ROOM_SAVE_VERSION) + ")");
+
+    // Read the new Room IDs.
+    id_ = file->read_data<uint32_t>();
+    id_str_ = file->read_string();
+
+    // Read the Room's name and description.
+    name_[0] = file->read_string();
+    name_[1] = file->read_string();
+    desc_ = file->read_string();
+}
 
 // Retrieves the name of this Room.
 const std::string& Room::name(bool full_name) const { return name_[full_name ? 0 : 1]; }
@@ -28,7 +58,7 @@ const std::string& Room::name(bool full_name) const { return name_[full_name ? 0
 void Room::save(FileWriter* file)
 {
     // Write the save version for this Room.
-    file->write_data<int>(ROOM_SAVE_VERSION);
+    file->write_data<uint32_t>(ROOM_SAVE_VERSION);
 
     // Write the Room's IDs, both string and hashed versions.
     file->write_data<uint32_t>(id_);
