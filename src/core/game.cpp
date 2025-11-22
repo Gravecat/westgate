@@ -128,17 +128,17 @@ void Game::load_game(int save_slot)
 void Game::main_loop() { while(true) { parser::process_input(terminal::get_input()); } }
 
 // Sets up for a new game!
-void Game::new_game()
+void Game::new_game(const uint32_t starting_region, const std::string& starting_room)
 {
     create_world(); // In the beginning, there was darkness.
 
     // Create a new Region in memory, then load it from disk.
     region_ptr_ = std::make_unique<Region>();
-    region_ptr_->load_from_save(save_id_, 0);
+    region_ptr_->load_from_save(save_id_, starting_region);
 
     // Create the player character, assign them to a starting room, then transfer ownership.
     auto player = std::make_unique<Player>(nullptr);
-    Room* start_room = region_ptr_->find_room("SULA_PLAINS");
+    Room* start_room = region_ptr_->find_room(starting_room);
     start_room->add_entity(std::move(player));
 
     // Save the game silently, to store the player character.
@@ -201,7 +201,7 @@ void Game::title_screen()
 
     switch(terminal::get_number(1, 3))
     {
-        case 1: new_game(); break;
+        case 1: new_game(0, "SULA_PLAINS"); break;
         case 2: load_game(0); break;
         case 3:
             terminal::print("{B}Farewell!");

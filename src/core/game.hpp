@@ -35,7 +35,7 @@ private:
     void    create_world();     // Loads the static YAML data and generates a binary save file for the game world.
     void    load_game(int save_slot);   // Loads an existing saved game.
     void    main_loop();        // brøether, may i have the lööps
-    void    new_game();         // Sets up for a new game!
+    void    new_game(const uint32_t starting_region, const std::string& starting_room); // Sets up for a new game!
     void    save_metadata();    // Saves a metadata save file, which contains basic info like the current region and save file version.
     void    title_screen();     // Every game needs a title screen!
 };
