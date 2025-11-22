@@ -10,21 +10,26 @@
 #include "util/file/fileutils.hpp"
 #include "util/file/filewriter.hpp"
 
+using std::ios;
+using std::string;
+using std::vector;
+namespace fs = std::filesystem;
+
 namespace westgate {
 
 // Constructor, opens a binary file.
-FileWriter::FileWriter(const std::string& filename)
+FileWriter::FileWriter(const string& filename)
 {
-    const std::string bp_filename = BinPath::game_path(filename);
-    std::filesystem::remove(bp_filename);
-    file_out_.open(bp_filename.c_str(), std::ios::binary | std::ios::out);
+    const string bp_filename = BinPath::game_path(filename);
+    fs::remove(bp_filename);
+    file_out_.open(bp_filename.c_str(), ios::binary | ios::out);
 }
 
 // Destructor, closes any open binary files.
 FileWriter::~FileWriter() { file_out_.close(); }
 
 // Writes binary data (in the form of an std::vector<char>) to the binary file.
-void FileWriter::write_char_vec(std::vector<char> vec)
+void FileWriter::write_char_vec(vector<char> vec)
 {
     write_data<uint32_t>(vec.size());
     file_out_.write(vec.data(), vec.size());
@@ -46,7 +51,7 @@ void FileWriter::write_header()
 }
 
 // Writes a string to the file.
-void FileWriter::write_string(std::string str)
+void FileWriter::write_string(string str)
 {
     uint32_t len = str.size();
     write_data<uint32_t>(len);

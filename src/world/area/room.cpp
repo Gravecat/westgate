@@ -13,13 +13,19 @@
 #include "world/entity/mobile.hpp"
 #include "world/entity/player.hpp"
 
+using std::make_unique;
+using std::runtime_error;
+using std::string;
+using std::to_string;
+using std::unique_ptr;
+
 namespace westgate {
 
 // Creates a blank Room with default values and no ID.
 Room::Room() : desc_("Missing room description."), id_(0), name_{"Undefined Room", "undefined"} { }
 
 // Creates a Room with a specified ID.
-Room::Room(const std::string& new_id) : Room()
+Room::Room(const string& new_id) : Room()
 {
     id_str_ = new_id;
     id_ = hash::murmur3(new_id);
@@ -29,14 +35,14 @@ Room::Room(const std::string& new_id) : Room()
 Room::Room(FileReader* file) : Room() { load(file); }
 
 // Adds an Entity to this room directly. Use transfer() to move Entities between rooms.
-void Room::add_entity(std::unique_ptr<Entity> entity)
+void Room::add_entity(unique_ptr<Entity> entity)
 {
     entity->set_parent_room(this);
     entities_.push_back(std::move(entity));
 }
 
 // Retrieves the description of this Room.
-const std::string& Room::desc() const { return desc_; }
+const string& Room::desc() const { return desc_; }
 
 // Retrieves the hashed ID of this Room.
 uint32_t Room::id() const { return id_; }
@@ -46,8 +52,8 @@ void Room::load(FileReader* file)
 {
     // Check that the save file version matches.
     const uint32_t save_version = file->read_data<uint32_t>();
-    if (save_version != ROOM_SAVE_VERSION) throw std::runtime_error("Invalid room version in saved data (" + std::to_string(save_version) + ", expected " +
-        std::to_string(ROOM_SAVE_VERSION) + ")");
+    if (save_version != ROOM_SAVE_VERSION) throw runtime_error("Invalid room version in saved data (" + to_string(save_version) + ", expected " +
+        to_string(ROOM_SAVE_VERSION) + ")");
 
     // Read the new Room IDs.
     id_ = file->read_data<uint32_t>();
@@ -66,10 +72,10 @@ void Room::load(FileReader* file)
         EntityType type = file->read_data<EntityType>();
         switch(type)
         {
-            case EntityType::ENTITY: add_entity(std::make_unique<Entity>(file)); break;
-            case EntityType::MOBILE: add_entity(std::make_unique<Mobile>(file)); break;
-            case EntityType::PLAYER: add_entity(std::make_unique<Player>(file)); break;
-            default: throw std::runtime_error("Attempt to load unknown entity type: " + std::to_string(static_cast<int>(type)));
+            case EntityType::ENTITY: add_entity(make_unique<Entity>(file)); break;
+            case EntityType::MOBILE: add_entity(make_unique<Mobile>(file)); break;
+            case EntityType::PLAYER: add_entity(make_unique<Player>(file)); break;
+            default: throw runtime_error("Attempt to load unknown entity type: " + to_string(static_cast<int>(type)));
         }
     }
 }
@@ -82,7 +88,7 @@ void Room::look() const
 }
 
 // Retrieves the name of this Room.
-const std::string& Room::name(bool full_name) const { return name_[full_name ? 0 : 1]; }
+const string& Room::name(bool full_name) const { return name_[full_name ? 0 : 1]; }
 
 // Saves this Room to a specified save file. Should only be called by a parent Region.
 void Room::save(FileWriter* file)
@@ -106,7 +112,7 @@ void Room::save(FileWriter* file)
 }
 
 // Sets the description of this Room.
-void Room::set_desc(const std::string& new_desc)
+void Room::set_desc(const string& new_desc)
 {
     if (!new_desc.size())
     {
@@ -117,7 +123,7 @@ void Room::set_desc(const std::string& new_desc)
 }
 
 // Sets the name of this Room.
-void Room::set_name(const std::string& new_full_name, const std::string& new_short_name)
+void Room::set_name(const string& new_full_name, const string& new_short_name)
 {
     if (!new_full_name.size() || !new_short_name.size())
     {

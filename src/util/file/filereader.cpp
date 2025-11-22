@@ -11,20 +11,26 @@
 #include "util/file/filereader.hpp"
 #include "util/file/fileutils.hpp"
 
+using std::ios;
+using std::runtime_error;
+using std::string;
+using std::vector;
+namespace fs = std::filesystem;
+
 namespace westgate {
 
 // Loads a data file into memory.
-FileReader::FileReader(std::string filename, bool allow_missing_file) : read_index_(0)
+FileReader::FileReader(string filename, bool allow_missing_file) : read_index_(0)
 {   
-    if (!std::filesystem::exists(filename))
+    if (!fs::exists(filename))
     {
         if (allow_missing_file) return;
-        else throw std::runtime_error("Cannot load file: " + filename);
+        else throw runtime_error("Cannot load file: " + filename);
     }
-    std::ifstream file(filename, std::ios::binary | std::ios::ate);
-    if (!file.is_open()) throw std::runtime_error("Cannot load file: " + filename);
+    std::ifstream file(filename, ios::binary | ios::ate);
+    if (!file.is_open()) throw runtime_error("Cannot load file: " + filename);
     std::streampos file_size = file.tellg();
-    file.seekg(0, std::ios::beg);
+    file.seekg(0, ios::beg);
     data_.resize(static_cast<size_t>(file_size));
     file.read(data_.data(), file_size);
     file.close();
@@ -49,19 +55,19 @@ bool FileReader::check_header()
 }
 
 // Reads a blob of binary data, in the form of a std::vector<char>
-std::vector<char> FileReader::read_char_vec()
+vector<char> FileReader::read_char_vec()
 {
     const uint32_t size = read_data<uint32_t>();
-    std::vector<char> buffer(data_.begin() + read_index_, data_.begin() + read_index_ + size);
+    vector<char> buffer(data_.begin() + read_index_, data_.begin() + read_index_ + size);
     read_index_ += size;
     return buffer;
 }
 
 // Reads a string from the loaded file.
-std::string FileReader::read_string()
+string FileReader::read_string()
 {
     uint32_t len = read_data<uint32_t>();
-    std::string result(data_.begin() + read_index_, data_.begin() + read_index_ + len);
+    string result(data_.begin() + read_index_, data_.begin() + read_index_ + len);
     read_index_ += len;
     return result;
 }

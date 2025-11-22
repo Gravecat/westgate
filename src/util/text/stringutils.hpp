@@ -11,7 +11,7 @@ namespace westgate {
 namespace stringutils {
 
 std::string                 str_tolower(std::string str);   // Converts a string to lower-case.
-std::vector<std::string>    string_explode(std::string str, const std::string &separator = " ");    // String split/explode function.
+std::vector<std::string>    string_explode(std::string str, const std::string& separator = " ");    // String split/explode function.
 std::string                 strip_trailing_newlines(std::string str);   // Strips trailing newlines from a given string.
 
 } } // stringutils, westgate namespaces

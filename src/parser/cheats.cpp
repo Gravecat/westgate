@@ -7,6 +7,9 @@
 #include "core/terminal.hpp"
 #include "parser/cheats.hpp"
 
+using std::to_string;
+using westgate::terminal::print;
+
 namespace westgate {
 namespace parser {
 namespace cheats {
@@ -16,10 +19,10 @@ void hash(PARSER_FUNCTION)
 {
     if (words.size() < 2)
     {
-        terminal::print("{Y}Please specify a word to be hashed.");
+        print("{Y}Please specify a word to be hashed.");
         return;
     }
-    terminal::print("The hashed version of {C}" + words.at(1) + " {w}is {C}" + std::to_string(words_hashed.at(1)));
+    print("The hashed version of {C}" + words.at(1) + " {w}is {C}" + to_string(words_hashed.at(1)));
 }
 
 } } }   // cheats, parser, westgate namespaces

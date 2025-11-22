@@ -23,6 +23,11 @@
 #include "core/core.hpp"
 #include "core/terminal.hpp"
 
+using std::cout;
+using std::string;
+using std::to_string;
+using std::vector;
+
 namespace westgate {
 namespace terminal {
 
@@ -54,12 +59,12 @@ unsigned int get_cursor_x()
 }
 
 // Prints a standard cursor and waits for non-zero input from the player.
-const std::string get_input()
+const string get_input()
 {
-    std::cout << '\n' << rang::style::reset << rang::fgB::green << "> ";
-    std::string input;
+    cout << '\n' << rang::style::reset << rang::fgB::green << "> ";
+    string input;
     do { std::getline(std::cin, input); } while(!input.size());
-    std::cout << rang::style::reset << '\n';
+    cout << rang::style::reset << '\n';
     return input;
 }
 
@@ -67,7 +72,7 @@ const std::string get_input()
 int get_number(int lowest, int highest)
 {
     int result = 0;
-    std::string input;
+    string input;
     while(true)
     {
         input = get_input();
@@ -76,17 +81,17 @@ int get_number(int lowest, int highest)
         try { result = std::stol(input); }
         catch(const std::invalid_argument&)
         {
-            terminal::print("{Y}I'm sorry, that's not a valid number. Please only enter a number, without any symbols or letters.");
+            print("{Y}I'm sorry, that's not a valid number. Please only enter a number, without any symbols or letters.");
             continue;
         }
         catch(const std::out_of_range&)
         {
-            terminal::print("{Y}That number is far too large, or invalid. Please try to be reasonable.");
+            print("{Y}That number is far too large, or invalid. Please try to be reasonable.");
             continue;
         }
 
-        if (result < lowest || result > highest) terminal::print("{Y}Please enter a number between {R}" + std::to_string(lowest) + " {Y}and {R}" +
-            std::to_string(highest) + ".");
+        if (result < lowest || result > highest) print("{Y}Please enter a number between {R}" + to_string(lowest) + " {Y}and {R}" +
+            to_string(highest) + ".");
         else return result;
     }
 }
@@ -106,12 +111,12 @@ unsigned int get_width()
 }
 
 // Prints a string of text with std::cout, processing ANSI colour tags.
-void print(const std::string& text, bool newline)
+void print(const string& text, bool newline)
 {
     // Handle blank text by just printing a newline.
     if (!text.size())
     {
-        if (newline) std::cout << '\n';
+        if (newline) cout << '\n';
         return;
     }
 
@@ -119,7 +124,7 @@ void print(const std::string& text, bool newline)
     unsigned int chars_so_far = 0;
 
     // I KNOW THIS IS A NIGHTMARE OF CODE BUT THERE ARE SO MANY EDGE CASES :(
-    std::function<void(std::string, bool)> print_formatted = [&print_formatted, &console_width, &chars_so_far](const std::string &line,
+    std::function<void(string, bool)> print_formatted = [&print_formatted, &console_width, &chars_so_far](const string &line,
         bool recalc_cursor)
     {
         if (!line.size()) return;
@@ -129,12 +134,12 @@ void print(const std::string& text, bool newline)
 
         // If newlines are specified, break them up and handle them with recursive calls.
         auto new_line = line.find_first_of('\n');
-        if (new_line != std::string::npos)
+        if (new_line != string::npos)
         {
-            const std::string before_newline = line.substr(0, new_line);
-            const std::string after_newline = line.substr(new_line + 1);
+            const string before_newline = line.substr(0, new_line);
+            const string after_newline = line.substr(new_line + 1);
             print_formatted(before_newline, false);
-            std::cout << '\n';
+            cout << '\n';
             chars_so_far = 0;
             print_formatted(after_newline, false);
             return;
@@ -142,138 +147,138 @@ void print(const std::string& text, bool newline)
 
         // If there's any spaces, print one word at a time.
         auto space = line.find_first_of(' ');
-        if (space == std::string::npos) // If there aren't any spaces, just print what we have as-is.
+        if (space == string::npos) // If there aren't any spaces, just print what we have as-is.
         {
             if (chars_so_far + line.size() >= console_width)
             {
-                std::cout << '\n';
+                cout << '\n';
                 chars_so_far = 0;
             }
-            std::cout << line;
+            cout << line;
             chars_so_far += line.size();
             if (chars_so_far >= console_width) chars_so_far -= console_width;   // Make the best guess for how many characters ended up on the next line.
             return;
         }
         // Split the text into whatever's before the first space, and whatever's after it. This should let us print one word at a time.
-        const std::string before_space = line.substr(0, space);
-        const std::string after_space = line.substr(space + 1);
+        const string before_space = line.substr(0, space);
+        const string after_space = line.substr(space + 1);
         bool space_after = false;
         // The current word is so long it can't be word-wrapped and is gonna split in half no matter what we do. Hnng. Okay, this is incredibly unlikely to
         // actually happen, but we've gotta handle it just in case.
         if (before_space.size() >= console_width)
         {
             int available_size = static_cast<int>(console_width) - chars_so_far;
-            const std::string cropped_before = before_space.substr(0, available_size);
-            std::cout << cropped_before << '\n';
+            const string cropped_before = before_space.substr(0, available_size);
+            cout << cropped_before << '\n';
             chars_so_far = 0;
             print_formatted(before_space.substr(available_size) + " " + after_space, false);
             return;
         }
         if (chars_so_far + before_space.size() > console_width) // If there isn't room for this word, start a new line.
         {
-            std::cout << '\n';
+            cout << '\n';
             chars_so_far = 0;
         }
         if (after_space.size()) space_after = true;
-        std::cout << before_space;
+        cout << before_space;
         chars_so_far += before_space.size();
         if (chars_so_far == console_width)  // If the word *ends* at the very last column of the console window, insert a new line.
         {
-            std::cout << '\n';
+            cout << '\n';
             chars_so_far = 0;
         }
         else if (space_after)
         {
-            std::cout << ' ';
+            cout << ' ';
             chars_so_far++;
         }
         print_formatted(after_space, false);
     };
 
-    std::string output = text;
-    std::vector<std::string> invalid_tags;
+    string output = text;
+    vector<string> invalid_tags;
     while(output.size())
     {
         auto opener_pos = output.find_first_of('{');    // Try to find an opening tag for an ANSI colour.
         auto closer_pos = output.find_first_of('}');    // And a matching closing tag.
-        if (opener_pos == std::string::npos || closer_pos == std::string::npos) // If none are found, just print the string as-is and finish.
+        if (opener_pos == string::npos || closer_pos == string::npos) // If none are found, just print the string as-is and finish.
         {
             print_formatted(output, true);
             break;
         }
 
         // Clip out the text before, during, and after the colour tag.
-        std::string untagged = output.substr(0, opener_pos);
-        std::string tag = output.substr(opener_pos + 1, closer_pos - opener_pos - 1);
+        string untagged = output.substr(0, opener_pos);
+        string tag = output.substr(opener_pos + 1, closer_pos - opener_pos - 1);
         output = output.substr(closer_pos + 1);
 
         // Print any text before the next ANSI tag. If there's an existing tag already in play, it'll cause this text to be coloured.
-        if (untagged.size()) std::cout << untagged;
+        if (untagged.size()) cout << untagged;
 
         // Process the ANSI codes from the tag.
         bool invalid_tag = false;
         if (tag.size() >= 1) switch(tag[0])
         {
-            case 'k': std::cout << rang::fg::black; break;
-            case 'r': std::cout << rang::fg::red; break;
-            case 'g': std::cout << rang::fg::green; break;
-            case 'y': std::cout << rang::fg::yellow; break;
-            case 'b': std::cout << rang::fg::blue; break;
-            case 'm': std::cout << rang::fg::magenta; break;
-            case 'c': std::cout << rang::fg::cyan; break;
-            case 'w': std::cout << rang::fg::gray; break;
-            case 'K': std::cout << rang::fgB::black; break;
-            case 'R': std::cout << rang::fgB::red; break;
-            case 'G': std::cout << rang::fgB::green; break;
-            case 'Y': std::cout << rang::fgB::yellow; break;
-            case 'B': std::cout << rang::fgB::blue; break;
-            case 'M': std::cout << rang::fgB::magenta; break;
-            case 'C': std::cout << rang::fgB::cyan; break;
-            case 'W': std::cout << rang::fgB::gray; break;
+            case 'k': cout << rang::fg::black; break;
+            case 'r': cout << rang::fg::red; break;
+            case 'g': cout << rang::fg::green; break;
+            case 'y': cout << rang::fg::yellow; break;
+            case 'b': cout << rang::fg::blue; break;
+            case 'm': cout << rang::fg::magenta; break;
+            case 'c': cout << rang::fg::cyan; break;
+            case 'w': cout << rang::fg::gray; break;
+            case 'K': cout << rang::fgB::black; break;
+            case 'R': cout << rang::fgB::red; break;
+            case 'G': cout << rang::fgB::green; break;
+            case 'Y': cout << rang::fgB::yellow; break;
+            case 'B': cout << rang::fgB::blue; break;
+            case 'M': cout << rang::fgB::magenta; break;
+            case 'C': cout << rang::fgB::cyan; break;
+            case 'W': cout << rang::fgB::gray; break;
             case '0':
-                if (tag.size() >= 2) std::cout << rang::fg::reset;
-                else std::cout << rang::style::reset;
+                if (tag.size() >= 2) cout << rang::fg::reset;
+                else cout << rang::style::reset;
                 break;
             default: invalid_tag = true; break;
         }
         if (tag.size() >= 2) switch(tag[1])
         {
-            case 'k': std::cout << rang::bg::black; break;
-            case 'r': std::cout << rang::bg::red; break;
-            case 'g': std::cout << rang::bg::green; break;
-            case 'y': std::cout << rang::bg::yellow; break;
-            case 'b': std::cout << rang::bg::blue; break;
-            case 'm': std::cout << rang::bg::magenta; break;
-            case 'c': std::cout << rang::bg::cyan; break;
-            case 'w': std::cout << rang::bg::gray; break;
-            case 'K': std::cout << rang::bgB::black; break;
-            case 'R': std::cout << rang::bgB::red; break;
-            case 'G': std::cout << rang::bgB::green; break;
-            case 'Y': std::cout << rang::bgB::yellow; break;
-            case 'B': std::cout << rang::bgB::blue; break;
-            case 'M': std::cout << rang::bgB::magenta; break;
-            case 'C': std::cout << rang::bgB::cyan; break;
-            case 'W': std::cout << rang::bgB::gray; break;
-            case '0': std::cout << rang::bg::reset; break;
+            case 'k': cout << rang::bg::black; break;
+            case 'r': cout << rang::bg::red; break;
+            case 'g': cout << rang::bg::green; break;
+            case 'y': cout << rang::bg::yellow; break;
+            case 'b': cout << rang::bg::blue; break;
+            case 'm': cout << rang::bg::magenta; break;
+            case 'c': cout << rang::bg::cyan; break;
+            case 'w': cout << rang::bg::gray; break;
+            case 'K': cout << rang::bgB::black; break;
+            case 'R': cout << rang::bgB::red; break;
+            case 'G': cout << rang::bgB::green; break;
+            case 'Y': cout << rang::bgB::yellow; break;
+            case 'B': cout << rang::bgB::blue; break;
+            case 'M': cout << rang::bgB::magenta; break;
+            case 'C': cout << rang::bgB::cyan; break;
+            case 'W': cout << rang::bgB::gray; break;
+            case '0': cout << rang::bg::reset; break;
             default: invalid_tag = true; break;
         }
         if (tag.size() > 2 || !tag.size()) invalid_tag = true;
         if (invalid_tag) invalid_tags.push_back(tag);
     }
 
-    if (newline) std::cout << rang::style::reset << '\n';   // Reset any ANSI tags and end the line, if requested.
+    if (newline) cout << rang::style::reset << '\n';   // Reset any ANSI tags and end the line, if requested.
 
     for (auto tag : invalid_tags)
         core().nonfatal("Invalid colour tag: {" + tag + "}", Core::CORE_WARN);
 }
 
 // Attempts to set the title of the console window. May not work on all platforms.
-void set_window_title(const std::string& new_title)
+void set_window_title(const string& new_title)
 {
 #ifdef WESTGATE_TARGET_WINDOWS
     SetConsoleTitleA(new_title.c_str());
 #else
-    std::cout << "\033]2;" << new_title << "\007" << std::flush;
+    cout << "\033]2;" << new_title << "\007" << std::flush;
 #endif
 }
 

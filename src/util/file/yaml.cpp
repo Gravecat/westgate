@@ -7,39 +7,44 @@
 #include "util/file/fileutils.hpp"
 #include "util/file/yaml.hpp"
 
+using std::map;
+using std::runtime_error;
+using std::string;
+using std::vector;
+
 namespace westgate {
 
 // Blank constructor.
 YAML::YAML() : ref_(nullptr) { }
 
 // Calls load_file() when constructing.
-YAML::YAML(const std::string& filename, bool allow_backslash) { load_file(filename, allow_backslash); }
+YAML::YAML(const string& filename, bool allow_backslash) { load_file(filename, allow_backslash); }
 
 // Creates a new YAML object from a parent tree.
 YAML::YAML(const ryml::Tree tree, ryml::ConstNodeRef new_ref) : ref_(new_ref), tree_(tree) { }
 
 // Retrieves a value from a sequence, as a string.
-std::string YAML::get(size_t index) const
+string YAML::get(size_t index) const
 {
-    if (!is_seq()) throw std::runtime_error("Not a sequence!");
-    if (index >= size()) throw std::runtime_error("Invalid sequence index!");
-    return std::string(noderef()[index].val().str).substr(0, noderef()[index].val().len);
+    if (!is_seq()) throw runtime_error("Not a sequence!");
+    if (index >= size()) throw runtime_error("Invalid sequence index!");
+    return string(noderef()[index].val().str).substr(0, noderef()[index].val().len);
 }
 
 // Retrieves a child of this tree.
-YAML YAML::get_child(const std::string& key) const
+YAML YAML::get_child(const string& key) const
 {
     YAML new_yaml(tree_, ref_[ryml::to_csubstr(key)]);
     return new_yaml;
 }
 
 // Retrieves all values of a sequence.
-std::vector<std::string> YAML::get_seq(const std::string &key) const
+vector<string> YAML::get_seq(const string& key) const
 {
-    if (!key_exists(key)) throw std::runtime_error("Missing YAML key: " + key);
+    if (!key_exists(key)) throw runtime_error("Missing YAML key: " + key);
     YAML yaml = get_child(key);
-    if (!yaml.is_seq()) throw std::runtime_error("Invalid YAML key (not a sequence): " + key);
-    std::vector<std::string> vec(yaml.size());
+    if (!yaml.is_seq()) throw runtime_error("Invalid YAML key (not a sequence): " + key);
+    vector<string> vec(yaml.size());
     for (size_t i = 0; i < yaml.size(); i++)
         vec.at(i) = yaml.get(i);
     return vec;
@@ -52,43 +57,43 @@ bool YAML::is_map() const { return noderef().is_map(); }
 bool YAML::is_seq() const { return noderef().is_seq(); }
 
 // Checks if a given key exists.
-bool YAML::key_exists(const std::string& key) const
+bool YAML::key_exists(const string& key) const
 {
-    if (!is_map()) throw std::runtime_error("Not a map!");
+    if (!is_map()) throw runtime_error("Not a map!");
     return noderef().has_child(ryml::to_csubstr(key));
 }
 
 // Retrieves the key values of a map.
-std::vector<std::string> YAML::keys() const
+vector<string> YAML::keys() const
 {
-    if (!is_map()) throw std::runtime_error("Not a map!");
+    if (!is_map()) throw runtime_error("Not a map!");
     ryml::ConstNodeRef::children_view children = noderef().children();
-    std::vector<std::string> vec_out;
+    vector<string> vec_out;
     for (auto child : children)
-        vec_out.push_back(std::string(child.key().str).substr(0, child.key().len));
+        vec_out.push_back(string(child.key().str).substr(0, child.key().len));
     return vec_out;
 }
 
 // Retrieves the key/value pairs of a map.
-std::map<std::string, std::string> YAML::keys_vals() const
+map<string, string> YAML::keys_vals() const
 {
-    if (!is_map()) throw std::runtime_error("Not a map!");
+    if (!is_map()) throw runtime_error("Not a map!");
     ryml::ConstNodeRef::children_view children = noderef().children();
-    std::map<std::string, std::string> map_out;
+    map<string, string> map_out;
     for (auto child : children)
     {
-        std::string key_str = (std::string(child.key().str).substr(0, child.key().len));
-        if (!child.has_val()) throw std::runtime_error("No values!");
-        std::string val_str = (std::string(child.val().str).substr(0, child.val().len));
-        map_out.insert(std::pair<std::string, std::string>(key_str, val_str));
+        string key_str = (string(child.key().str).substr(0, child.key().len));
+        if (!child.has_val()) throw runtime_error("No values!");
+        string val_str = (string(child.val().str).substr(0, child.val().len));
+        map_out.insert(std::pair<string, string>(key_str, val_str));
     }
     return map_out;
 }
 
 // Loads a YAML file into memory and parse it.
-void YAML::load_file(const std::string& filename, bool allow_backslash)
+void YAML::load_file(const string& filename, bool allow_backslash)
 {
-    std::string file_string = fileutils::file_to_string(filename.c_str());
+    string file_string = fileutils::file_to_string(filename.c_str());
     // If we don't care about using backslash for... whatever rapidYAML does with them, just turn them into double-backslashes so they're treated as a
     // string literal of \ instead of... I don't know, it's probably used for writing hex or octal or some shit.
     if (!allow_backslash)
@@ -113,10 +118,10 @@ ryml::ConstNodeRef YAML::noderef() const { return ref_; }
 size_t YAML::size() const { return static_cast<size_t>(noderef().num_children()); }
 
 // Returns the value of a key, as a string.
-std::string YAML::val(const std::string& key) const
+string YAML::val(const string& key) const
 {
     auto cskey = ryml::to_csubstr(key);
-    return std::string(noderef()[cskey].val().str).substr(0, noderef()[cskey].val().len);
+    return string(noderef()[cskey].val().str).substr(0, noderef()[cskey].val().len);
 }
 
 }   // namespace westgate
