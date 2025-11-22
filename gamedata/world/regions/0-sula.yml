@@ -9,5 +9,7 @@ REGION_IDENTIFIER:
   version: 1
 
 SULA_PLAINS:
-  desc: "Blind to what you'll soon become. The mirror lies, the whole world's wrong."
+  desc: >
+    A wide field of grassy plains surrounds you, occasional bright flowers punctuating the green with a flash of colour. The sun shines brightly overhead, the
+    sky a clear blue with a few wisps of clouds.
   name: [ Grassy Plains, plains ]
