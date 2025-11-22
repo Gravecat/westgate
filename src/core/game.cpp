@@ -122,12 +122,25 @@ void Game::new_game()
     Room* start_room = region_ptr_->find_room("SULA_PLAINS");
     start_room->add_entity(std::move(player));
 
-    // Save the current region, to store the player character.
-    region_ptr_->save(save_id_);
+    // Save the game silently, to store the player character.
+    save(false);
 }
 
 // Returns a reference to the Player object.
 Player& Game::player() const { return *player_ptr_; }
+
+// Save the game, if there's a game in progress.
+void Game::save(bool chatty)
+{
+    if (!region_ptr_)
+    {
+        if (chatty) terminal::print("{R}There is no game in progress!");
+        return;
+    }
+    if (chatty) terminal::print("{B}Saving the game...", false);
+    region_ptr_->save(save_id_);
+    if (chatty) terminal::print(" Done!");
+}
 
 // Sets the Player pointer. Use with caution.
 void Game::set_player(Player* player_ptr)

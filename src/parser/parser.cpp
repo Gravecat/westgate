@@ -31,6 +31,7 @@ static const std::map<uint32_t, std::function<void(std::vector<uint32_t>&, std::
     { 1253391317, parser::silly::magic_word },  // plugh
     { 1533866676, parser::silly::magic_word },  // plover
     { 3289483580, parser::meta::quit },         // quit
+    { 1633956953, parser::meta::save },         // save
     { 42193550, parser::silly::magic_word }     // xyzzy
 };
 

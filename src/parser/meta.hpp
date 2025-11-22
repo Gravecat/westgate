@@ -14,5 +14,6 @@ namespace parser {
 namespace meta {
 
 void    quit(PARSER_FUNCTION);  // Quits the game.
+void    save(PARSER_FUNCTION);  // Saves the game.
 
 } } }   // meta, parser, westgate namespaces
