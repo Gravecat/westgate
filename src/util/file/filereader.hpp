@@ -8,6 +8,7 @@
 
 #include <cstdint>
 #include <cstring>  // std::memcpy
+#include <stdexcept>
 #include <string>
 #include <vector>
 
