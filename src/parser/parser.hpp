@@ -1,4 +1,4 @@
-// src/core/parser.hpp -- The parser processes input from the player and converts it into commands in the game world.
+// src/parser/parser.hpp -- The parser processes input from the player and converts it into commands in the game world.
 
 // SPDX-FileType: SOURCE
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
