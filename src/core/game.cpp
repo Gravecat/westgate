@@ -50,7 +50,7 @@ Codex& Game::codex() const
 void Game::create_world()
 {
     // This can be replaced with something better later.
-    terminal::print("{Y}Generating game world from static data...");
+    terminal::print("{c}Generating game world from static data...");
 
     // Create a game saves folder, if one doesn't already exist.
     const std::filesystem::path userdata_saves_path = BinPath::game_path("userdata/saves");
@@ -73,13 +73,13 @@ void Game::create_world()
     // One at a time, load each region into memory.
     for (unsigned int i = 0; i < regions.size(); i++)
     {
-        terminal::print("{C}Processing region file {G}" + std::to_string(i + 1) + " {C}of {G}" + std::to_string(regions.size()) + "{C}...");
+        terminal::print("{c}Processing region file {C}" + std::to_string(i + 1) + " {c}of {C}" + std::to_string(regions.size()) + "{c}...");
         std::filesystem::path region_file = regions.at(i);
         std::unique_ptr<Region> new_region = std::make_unique<Region>();
         new_region->load_from_gamedata(region_file.string());
         new_region->save(save_id_);
     }
-    terminal::print("{Y}World generation complete!");
+    terminal::print("{c}World generation complete!");
 }
 
 // Shuts things down cleanly and exits the game.
