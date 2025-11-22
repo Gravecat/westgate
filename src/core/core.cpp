@@ -91,7 +91,7 @@ Core& Core::core()
 }
 
 // Returns the full path to a specified game data file.
-std::string Core::datafile(const std::string file)
+const std::string Core::datafile(const std::string file)
 {
     if (!gamedata_location_.size()) throw std::runtime_error("Could not locate valid gamedata folder!");
     return BinPath::merge_paths(gamedata_location_, file);

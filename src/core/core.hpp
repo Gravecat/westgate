@@ -22,18 +22,18 @@ public:
     static constexpr int    CORE_ERROR =    2;  // Serious errors. Shit is going down.
     static constexpr int    CORE_CRITICAL = 3;  // Critical system failure.
 
-    void            check_stderr();                 // Checks stderr for any updates, puts them in the log if any exist.
-    static Core&    core();                         // Returns a reference to the singleton Core object.
-    std::string     datafile(const std::string file);   // Returns the full path to a specified game data file.
-    void            destroy_core(int exit_code);    // Destroys the singleton Core object and ends execution.
-    void            find_gamedata();                // Attempts to locate the gamedata folder.
-    Game&           game() const;                   // Returns a reference to the Game manager object.
-    void            halt(std::string error);        // Stops the game and displays an error messge.
-    void            halt(const std::exception &e);  // As above, but with an exception instead of a string.
-    void            init_core(std::vector<std::string> parameters);   // Sets up the core game classes and data, and the terminal subsystem.
-    void            intercept_signal(int sig);      // Catches a segfault or other fatal signal.
-    void            log(std::string msg, int type = CORE_INFO); // Logs a message in the system log file.
-    void            nonfatal(std::string error, int type);  // Reports a non-fatal error, which will be logged but won't halt execution unless it cascades.
+    void                check_stderr();                 // Checks stderr for any updates, puts them in the log if any exist.
+    static Core&        core();                         // Returns a reference to the singleton Core object.
+    const std::string   datafile(const std::string file);   // Returns the full path to a specified game data file.
+    void                destroy_core(int exit_code);    // Destroys the singleton Core object and ends execution.
+    void                find_gamedata();                // Attempts to locate the gamedata folder.
+    Game&               game() const;                   // Returns a reference to the Game manager object.
+    void                halt(std::string error);        // Stops the game and displays an error messge.
+    void                halt(const std::exception &e);  // As above, but with an exception instead of a string.
+    void                init_core(std::vector<std::string> parameters);   // Sets up the core game classes and data, and the terminal subsystem.
+    void                intercept_signal(int sig);      // Catches a segfault or other fatal signal.
+    void                log(std::string msg, int type = CORE_INFO); // Logs a message in the system log file.
+    void                nonfatal(std::string error, int type);  // Reports a non-fatal error, which will be logged but won't halt execution unless it cascades.
 
 private:
     static constexpr int        ERROR_CASCADE_THRESHOLD =       25; // The amount cascade_count can reach within CASCADE_TIMEOUT seconds before it triggers abort.
