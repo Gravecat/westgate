@@ -127,7 +127,7 @@ void Game::new_game()
 }
 
 // Returns a pointer to the Player object.
-const Player* Game::player() const { return player_ptr_; }
+Player& Game::player() const { return *player_ptr_; }
 
 // Sets the Player pointer. Use with caution.
 void Game::set_player(Player* player_ptr)

@@ -16,7 +16,7 @@ namespace world {
 // Look around you. Just look around you.
 void look(PARSER_FUNCTION)
 { PARSER_NO_WORDS PARSER_NO_HASHED
-    player()->parent_room()->look();
+    player().parent_room()->look();
 }
 
 } } }   // world, parser, westgate namespaces
