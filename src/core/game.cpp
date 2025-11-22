@@ -126,7 +126,7 @@ void Game::new_game()
     region_ptr_->save(save_id_);
 }
 
-// Returns a pointer to the Player object.
+// Returns a reference to the Player object.
 Player& Game::player() const { return *player_ptr_; }
 
 // Sets the Player pointer. Use with caution.

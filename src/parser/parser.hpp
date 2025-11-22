@@ -12,5 +12,6 @@ namespace westgate {
 namespace parser {
 
 void    process_input(const std::string& input);    // Processes input from the player.
+bool    yes_no();   // Displays a yes/no prompt for the player, returns their choice.
 
 } } // parser, westgate namespaces

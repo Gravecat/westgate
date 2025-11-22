@@ -50,4 +50,13 @@ void process_input(const std::string& input)
     else result->second(word_hashes, words);
 }
 
+// Displays a yes/no prompt for the player, returns their choice.
+bool yes_no()
+{
+    terminal::print("Please select one of the following options:");
+    terminal::print("{K}[{G}0{K}] {w}No");
+    terminal::print("{K}[{G}1{K}] {w}Yes");
+    return (terminal::get_number(0, 1) == 1);
+}
+
 } } // parser, westgate namespaces

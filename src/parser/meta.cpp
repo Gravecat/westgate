@@ -7,6 +7,7 @@
 #include "core/core.hpp"
 #include "core/terminal.hpp"
 #include "parser/meta.hpp"
+#include "parser/parser.hpp"
 
 namespace westgate {
 namespace parser {
@@ -15,8 +16,13 @@ namespace meta {
 // Quits the game.
 void quit(PARSER_FUNCTION)
 { PARSER_NO_WORDS PARSER_NO_HASHED
-    terminal::print("{B}Farewell!");
-    core().destroy_core(EXIT_SUCCESS);
+    terminal::print("Are you sure you want to quit the game? {R}Your progress will not be saved.");
+    if (parser::yes_no())
+    {
+        terminal::print("{B}Farewell!");
+        core().destroy_core(EXIT_SUCCESS);
+    }
+    terminal::print("{B}Your adventure continues...");
 }
 
 } } }   // meta, parser, westgate namespaces
