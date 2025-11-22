@@ -18,8 +18,8 @@ class FileReader {
 public:
                         FileReader() = delete;  // No default constructor.
                         FileReader(std::string filename, bool allow_missing_file = false);  // Loads a data file into memory.
-    bool                check_footer();     // Reads two bytes and compares them to the standard footer.
-    bool                check_header();     // Reads three bytes and compares them to the standard header.
+    [[nodiscard]] bool  check_footer();     // Reads two bytes and compares them to the standard footer.
+    [[nodiscard]] bool  check_header();     // Reads three bytes and compares them to the standard header.
     std::vector<char>   read_char_vec();    // Reads a blob of binary data, in the form of a std::vector<char>
     std::string         read_string();      // Reads a string from the loaded file.
 

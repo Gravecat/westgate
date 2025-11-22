@@ -14,6 +14,8 @@
 #include "core/terminal.hpp"
 #include "parser/parser.hpp"
 #include "util/file/binpath.hpp"
+#include "util/file/filereader.hpp"
+#include "util/file/filewriter.hpp"
 #include "world/area/region.hpp"
 #include "world/codex.hpp"
 #include "world/entity/player.hpp"
@@ -97,8 +99,27 @@ void Game::load_game(int save_slot)
         core().destroy_core(EXIT_SUCCESS);
     }
 
+    // Load the metadata file.
+    const std::filesystem::path meta_path = BinPath::merge_paths(save_path.string(), "meta.dat");
+    if (!std::filesystem::exists(meta_path)) throw std::runtime_error("Could not locate saved game metadata!");
+    auto file = std::make_unique<FileReader>(meta_path.string());
+
+    // Check the metadata headers and version.
+    if (!file->check_header()) throw std::runtime_error("Invalid metadata header!");
+    const uint32_t meta_version = file->read_data<uint32_t>();
+    if (meta_version != METADATA_SAVE_VERSION) throw std::runtime_error("Invalid metadata version (" + std::to_string(meta_version) + ", expected " +
+        std::to_string(METADATA_SAVE_VERSION) + ")");
+    if (file->read_string() != "METADATA") throw std::runtime_error("Invalid metadata header!");
+
+    // Check the currently-loaded Region.
+    const uint32_t current_region = file->read_data<uint32_t>();
+
+    // Finally, check the footer before closing the file.
+    if (!file->check_footer()) throw std::runtime_error("Invalid metadata footer!");
+    file.reset(nullptr);
+
     auto new_region = std::make_unique<Region>();
-    new_region->load_from_save(save_slot, 0);
+    new_region->load_from_save(save_slot, current_region);
     if (!player_ptr_) throw std::runtime_error("Could not locate player character in saved region!");
     region_ptr_ = std::move(new_region);
 
@@ -138,8 +159,28 @@ void Game::save(bool chatty)
         return;
     }
     if (chatty) terminal::print("{B}Saving the game...", false);
+    save_metadata();
     region_ptr_->save(save_id_);
     if (chatty) terminal::print(" Done!");
+}
+
+// Saves a metadata save file, which contains basic info like the current region and save file version.
+void Game::save_metadata()
+{
+    const std::filesystem::path save_path = BinPath::game_path("userdata/saves/" + std::to_string(save_id_) + "/meta.dat");
+    if (std::filesystem::exists(save_path)) std::filesystem::remove(save_path);
+    auto file = std::make_unique<FileWriter>(save_path.string());
+
+    // Write the standard header, then the metadata version, and the metadata string tag.
+    file->write_header();
+    file->write_data<uint32_t>(METADATA_SAVE_VERSION);
+    file->write_string("METADATA");
+
+    // The only other thing to write for now is the region's ID.
+    file->write_data<uint32_t>(region_ptr_->id());
+
+    // And the EOF footer, of course.
+    file->write_footer();
 }
 
 // Sets the Player pointer. Use with caution.
