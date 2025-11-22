@@ -24,6 +24,7 @@ set(WESTGATE_CPPS
   src/util/file/yaml.cpp
   src/util/text/hash.cpp
   src/util/text/namegen.cpp
+  src/util/text/stringutils.cpp
   src/world/area/region.cpp
   src/world/area/room.cpp
   src/world/codex.cpp
