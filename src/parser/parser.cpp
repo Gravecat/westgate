@@ -18,10 +18,14 @@
 #include "util/text/hash.hpp"
 #include "util/text/stringutils.hpp"
 
+using std::string;
+using std::vector;
+using westgate::terminal::print;
+
 namespace westgate {
 namespace parser {
 
-static const std::map<uint32_t, std::function<void(std::vector<uint32_t>&, std::vector<std::string>&)>> parser_verbs = {
+static const std::map<uint32_t, std::function<void(vector<uint32_t>&, vector<string>&)>> parser_verbs = {
     { 2252282012, parser::cheats::hash },       // #hash
     { 3693685262, parser::silly::magic_word },  // frotz
     { 1214476199, parser::world::look },        // l
@@ -34,27 +38,27 @@ static const std::map<uint32_t, std::function<void(std::vector<uint32_t>&, std::
 };
 
 // Processes input from the player.
-void process_input(const std::string& input)
+void process_input(const string& input)
 {
     if (!input.size()) return;  // Nothing to do here.
 
     // Split the input into multiple words. We're mostly gonna be using a 'verb noun' structure here, but it might get more complex later.
-    std::vector<std::string> words = stringutils::string_explode(input);
-    std::vector<uint32_t> word_hashes;
+    vector<string> words = stringutils::string_explode(input);
+    vector<uint32_t> word_hashes;
     for (auto word : words)
         word_hashes.push_back(hash::murmur3(stringutils::str_tolower(word)));
 
     auto result = parser_verbs.find(word_hashes.at(0));
-    if (result == parser_verbs.end()) terminal::print("{Y}I don't know that word.");
+    if (result == parser_verbs.end()) print("{Y}I don't know that word.");
     else result->second(word_hashes, words);
 }
 
 // Displays a yes/no prompt for the player, returns their choice.
 bool yes_no()
 {
-    terminal::print("Please select one of the following options:");
-    terminal::print("{K}[{G}0{K}] {w}No");
-    terminal::print("{K}[{G}1{K}] {w}Yes");
+    print("Please select one of the following options:");
+    print("{K}[{G}0{K}] {w}No");
+    print("{K}[{G}1{K}] {w}Yes");
     return (terminal::get_number(0, 1) == 1);
 }
 

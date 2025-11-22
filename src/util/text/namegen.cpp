@@ -4,6 +4,8 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#include <cctype>
+
 #include "3rdparty/fantasyname/namegen.hpp"
 #include "core/core.hpp"
 #include "util/file/fileutils.hpp"
@@ -12,10 +14,15 @@
 #include "util/text/namegen.hpp"
 #include "world/entity/entity.hpp"
 
+using std::runtime_error;
+using std::string;
+using std::tolower;
+using std::toupper;
+
 namespace westgate {
 
 // Picks a consonant from the table, for forming atoms.
-std::string ProcNameGen::consonant()
+string ProcNameGen::consonant()
 {
     const size_t pos = random::get<size_t>(0, consonant_block.size() - 1);
     return consonant_block.substr(pos, 1);
@@ -30,12 +37,12 @@ void ProcNameGen::load_namelists()
     names_s_b = fileutils::file_to_vec(core().datafile("namegen/surname-b.txt"));
 
     YAML yaml(core().datafile("namegen/namegen-strings.yml"));
-    if (!yaml.is_map()) throw std::runtime_error("namegen-strings.yml: Invalid file format");
-    if (!yaml.key_exists("consonant_block")) throw std::runtime_error("namegen-strings.yml: consonant_block missing");
+    if (!yaml.is_map()) throw runtime_error("namegen-strings.yml: Invalid file format");
+    if (!yaml.key_exists("consonant_block")) throw runtime_error("namegen-strings.yml: consonant_block missing");
     consonant_block = yaml.val("consonant_block");
-    if (!yaml.key_exists("vowel_block")) throw std::runtime_error("namegen-strings.yml: vowel_block missing");
+    if (!yaml.key_exists("vowel_block")) throw runtime_error("namegen-strings.yml: vowel_block missing");
     consonant_block = yaml.val("vowel_block");
-    if (!yaml.key_exists("v4_template")) throw std::runtime_error("namegen-strings.yml: v4_template missing");
+    if (!yaml.key_exists("v4_template")) throw runtime_error("namegen-strings.yml: v4_template missing");
     consonant_block = yaml.val("v4_template");
     pv3_c = yaml.get_seq("pv3_c");
     pv3_d = yaml.get_seq("pv3_d");
@@ -48,15 +55,15 @@ void ProcNameGen::load_namelists()
 }
 
 // Returns a random feminine name.
-std::string ProcNameGen::name_f() { return names_f[random::get<unsigned int>(0, names_f.size() - 1)]; }
+string ProcNameGen::name_f() { return names_f[random::get<unsigned int>(0, names_f.size() - 1)]; }
 
 // Returns a random masculine name.
-std::string ProcNameGen::name_m() { return names_m[random::get<unsigned int>(0, names_m.size() - 1)]; }
+string ProcNameGen::name_m() { return names_m[random::get<unsigned int>(0, names_m.size() - 1)]; }
 
 // Generates a random name (v1 code, Elite-style).
-std::string ProcNameGen::namegen_v1()
+string ProcNameGen::namegen_v1()
 {
-    std::string name, atom;
+    string name, atom;
 
     // Construct a max-length name to begin with.
     for (int i = 0; i < 4; i++)
@@ -84,9 +91,9 @@ std::string ProcNameGen::namegen_v1()
 }
 
 // Generates a name with the v4 generator (front-end to Skeeto's fantasy name generator).
-std::string ProcNameGen::namegen_v4(const std::string& pattern, unsigned int max_len, unsigned int min_len)
+string ProcNameGen::namegen_v4(const string& pattern, unsigned int max_len, unsigned int min_len)
 {
-    std::string result;
+    string result;
     do
     {
         NameGen::Generator ng(pattern);
@@ -96,9 +103,9 @@ std::string ProcNameGen::namegen_v4(const std::string& pattern, unsigned int max
 }
 
 // Generates a random NPC name, using a combination of the other systems.
-std::string ProcNameGen::npc_name(Gender gender, bool with_surname)
+string ProcNameGen::npc_name(Gender gender, bool with_surname)
 {
-    const std::string surname_str = (with_surname ? " " + surname() : "");
+    const string surname_str = (with_surname ? " " + surname() : "");
 
     // 1 in 10 chance of using a pre-existing name list.
     if (random::get<bool>(0.1f) && (gender == Gender::HE || gender == Gender::SHE))
@@ -112,11 +119,11 @@ std::string ProcNameGen::npc_name(Gender gender, bool with_surname)
     }
 
     // Otherwise, we'll use one of the name generators.
-    auto sounds_feminine = [](std::string to_check)
+    auto sounds_feminine = [](string to_check)
     {
         int vowel_count = 0;
         bool ends_in_vowel = false;
-        to_check[0] = std::tolower(to_check[0]);
+        to_check[0] = tolower(to_check[0]);
         for (size_t i = 0; i < to_check.size(); i++)
         {
             const char ch = to_check[i];
@@ -131,7 +138,7 @@ std::string ProcNameGen::npc_name(Gender gender, bool with_surname)
         else return false;
     };
 
-    std::string chosen_name;
+    string chosen_name;
     unsigned int attempts = 0;
     while (true)
     {
@@ -164,16 +171,16 @@ std::string ProcNameGen::npc_name(Gender gender, bool with_surname)
 }
 
 // Ends of words.
-std::string ProcNameGen::pv3_t()
+string ProcNameGen::pv3_t()
 {
     if (random::get<bool>()) return pv3_v[random::get<int>(0, pv3_v.size() - 1)] + pv3_f[random::get<int>(0, pv3_f.size() - 1)];
     else return pv3_v[random::get<int>(0, pv3_v.size() - 1)] + pv3_e[random::get<int>(0, pv3_e.size() - 1)] + "e";
 }
 
 // Generates a random word.
-std::string ProcNameGen::random_word(bool cap)
+string ProcNameGen::random_word(bool cap)
 {
-    std::string gen_name;
+    string gen_name;
     switch(random::get(1, 8))
     {
         case 1: case 2: gen_name = pv3_c[random::get<int>(0, pv3_c.size() - 1)] + pv3_t(); break;
@@ -187,29 +194,29 @@ std::string ProcNameGen::random_word(bool cap)
         case 8: gen_name = pv3_k[random::get<int>(0, pv3_k.size() - 1)] + pv3_v[random::get<int>(0, pv3_v.size() - 1)] +
             pv3_k[random::get<int>(0, pv3_k.size() - 1)] + pv3_v[random::get<int>(0, pv3_v.size() - 1)]; break;
     }
-    if (cap) gen_name[0] = std::toupper(gen_name[0]);
+    if (cap) gen_name[0] = toupper(gen_name[0]);
     return gen_name;
 }
 
 // Generates a random surname.
-std::string ProcNameGen::surname()
+string ProcNameGen::surname()
 {
-    std::string part_a = names_s_a[random::get<int>(0, names_s_a.size() - 1)], part_b;
+    string part_a = names_s_a[random::get<int>(0, names_s_a.size() - 1)], part_b;
     do
     {
         part_b = names_s_b[random::get<int>(0, names_s_b.size() - 1)];
     } while (part_a == part_b || part_a[part_a.size() - 1] == part_b[0]);
-    part_a[0] = std::toupper(part_a[0]);
+    part_a[0] = toupper(part_a[0]);
     if (random::get<bool>(0.333f))
     {
-        part_b[0] = std::toupper(part_b[0]);
+        part_b[0] = toupper(part_b[0]);
         return part_a + "-" + part_b;
     }
     else return part_a + part_b;
 }
 
 // Picks a vowel from the table, for forming atoms.
-std::string ProcNameGen::vowel()
+string ProcNameGen::vowel()
 {
     const size_t pos = random::get<size_t>(0, vowel_block.size() - 1);
     return vowel_block.substr(pos, 1);

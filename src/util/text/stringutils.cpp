@@ -8,25 +8,28 @@
 
 #include "util/text/stringutils.hpp"
 
+using std::string;
+using std::vector;
+
 namespace westgate {
 namespace stringutils {
 
 // Converts a string to lower-case.
-std::string str_tolower(std::string str)
+string str_tolower(string str)
 {
     std::transform(str.begin(), str.end(), str.begin(), ::tolower);
     return str;
 }
 
 // String split/explode function.
-std::vector<std::string> string_explode(std::string str, const std::string &separator)
+vector<string> string_explode(string str, const string& separator)
 {
-    std::vector<std::string> results;
+    vector<string> results;
 
-    std::string::size_type pos = str.find(separator, 0);
+    string::size_type pos = str.find(separator, 0);
     const size_t pit = separator.length();
 
-    while(pos != std::string::npos)
+    while(pos != string::npos)
     {
         if (pos == 0) results.push_back("");
         else results.push_back(str.substr(0, pos));
@@ -39,7 +42,7 @@ std::vector<std::string> string_explode(std::string str, const std::string &sepa
 }
 
 // Strips trailing newlines from a given string.
-std::string strip_trailing_newlines(std::string str)
+string strip_trailing_newlines(string str)
 {
     while (!str.empty() && (str.back() == '\n' || str.back() == '\r'))
         str.pop_back();

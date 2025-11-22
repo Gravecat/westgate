@@ -30,12 +30,14 @@
 
 #include "util/file/binpath.hpp"
 
+using std::string;
+
 namespace westgate {
 
-std::string BinPath::exe_dir;   // The path to the binary.
+string BinPath::exe_dir;   // The path to the binary.
 
 // Given a path or filename, combines it with the current executable path and returns the combined, full path. At least, that's the hope.
-std::string BinPath::game_path(const std::string &path)
+string BinPath::game_path(const string &path)
 {
     if (!exe_dir.size()) exe_dir = get_executable_dir();
     return merge_paths(exe_dir, path);
@@ -43,16 +45,16 @@ std::string BinPath::game_path(const std::string &path)
 
 #ifdef WESTGATE_TARGET_WINDOWS
 // Platform-agnostic way to find this binary's runtime path.
-std::string BinPath::get_executable_path()
+string BinPath::get_executable_path()
 {
     char rawPathName[MAX_PATH];
     GetModuleFileNameA(NULL, rawPathName, MAX_PATH);
-    return std::string(rawPathName);
+    return string(rawPathName);
 }
 
-std::string BinPath::get_executable_dir()
+string BinPath::get_executable_dir()
 {
-    std::string executablePath = get_executable_path();
+    string executablePath = get_executable_path();
     char* exePath = new char[executablePath.length() + 1];
 #ifdef WESTGATE_TARGET_MINGW
     strcpy(exePath, executablePath.c_str());
@@ -60,17 +62,17 @@ std::string BinPath::get_executable_dir()
     strcpy_s(exePath, executablePath.length() + 1, executablePath.c_str());
 #endif
     PathRemoveFileSpecA(exePath);
-    std::string directory = std::string(exePath);
+    string directory = string(exePath);
     delete[] exePath;
     return directory;
 }
 
 // Merges two path strings together.
-std::string BinPath::merge_paths(const std::string &pathA, const std::string &pathB)
+string BinPath::merge_paths(const string &pathA, const string &pathB)
 {
     char combined[MAX_PATH];
     PathCombineA(combined, pathA.c_str(), pathB.c_str());
-    std::string merged_path(combined);
+    string merged_path(combined);
     if (merged_path.size() && merged_path[0] == '/')    // Special check for Windows WSL, where it may be a Linux path.
         std::replace(merged_path.begin(), merged_path.end(), '\\', '/');
     else    // If not, replace any / in the paths with \.
@@ -80,30 +82,30 @@ std::string BinPath::merge_paths(const std::string &pathA, const std::string &pa
 #endif  // WESTGATE_TARGET_WINDOWS
 
 #ifdef WESTGATE_TARGET_LINUX
-std::string BinPath::get_executable_path()
+string BinPath::get_executable_path()
 {
     char rawPathName[PATH_MAX];
     char* rp = realpath(PROC_SELF_EXE, rawPathName);
-    if (rp) return std::string(rawPathName);
+    if (rp) return string(rawPathName);
     else return "";
 }
 
-std::string BinPath::get_executable_dir()
+string BinPath::get_executable_dir()
 {
-    const std::string& executablePath = get_executable_path();
+    const string& executablePath = get_executable_path();
     char *executablePathStr = new char[executablePath.length() + 1];
     strcpy(executablePathStr, executablePath.c_str());
     char* executableDir = dirname(executablePathStr);
-    const std::string exec_dir = std::string(executableDir);
+    const string exec_dir = string(executableDir);
     delete[] executablePathStr;
     return exec_dir;
 }
 
-std::string BinPath::merge_paths(const std::string &pathA, const std::string &pathB) { return pathA + "/" + pathB; }
+string BinPath::merge_paths(const string &pathA, const string &pathB) { return pathA + "/" + pathB; }
 #endif  // WESTGATE_TARGET_LINUX
 
 #ifdef WESTGATE_TARGET_APPLE
-std::string BinPath::get_executable_path()
+string BinPath::get_executable_path()
 {
     char rawPathName[PATH_MAX];
     char realPathName[PATH_MAX];
@@ -111,22 +113,22 @@ std::string BinPath::get_executable_path()
 
     char* rp = nullptr;
     if(!_NSGetExecutablePath(rawPathName, &rawPathSize)) rp = realpath(rawPathName, realPathName);
-    if (rp) return std::string(realPathName);
+    if (rp) return string(realPathName);
     else return "";
 }
 
-std::string BinPath::get_executable_dir()
+string BinPath::get_executable_dir()
 {
-    const std::string& executablePath = get_executable_path();
+    const string& executablePath = get_executable_path();
     char *executablePathStr = new char[executablePath.length() + 1];
     strcpy(executablePathStr, executablePath.c_str());
     char* executableDir = dirname(executablePathStr);
-    const std::string exec_dir = std::string(executableDir);
+    const string exec_dir = string(executableDir);
     delete[] executablePathStr;
     return exec_dir;
 }
 
-std::string BinPath::merge_paths(const std::string& pathA, const std::string& pathB) { return pathA + "/" + pathB; }
+string BinPath::merge_paths(const string& pathA, const string& pathB) { return pathA + "/" + pathB; }
 #endif  // WESTGATE_TARGET_APPLE
 
 }   // namespace westgate

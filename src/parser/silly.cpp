@@ -8,6 +8,8 @@
 #include "parser/cheats.hpp"
 #include "util/math/random.hpp"
 
+using westgate::terminal::print;
+
 namespace westgate {
 namespace parser {
 namespace silly {
@@ -15,9 +17,9 @@ namespace silly {
 // You are likely to be eaten by a grue.
 void magic_word(PARSER_FUNCTION)
 { PARSER_NO_WORDS PARSER_NO_HASHED
-    if (random::get<int>(1, 50) == 1) terminal::print("{K}A hollow voice says, \"Plugh.\"");
-    else if (random::get<int>(1, 20) == 1) terminal::print("{K}Something happens.");
-    else terminal::print("{K}Nothing happens.");
+    if (random::get<int>(1, 50) == 1) print("{K}A hollow voice says, \"Plugh.\"");
+    else if (random::get<int>(1, 20) == 1) print("{K}Something happens.");
+    else print("{K}Nothing happens.");
 }
 
 } } }   // silly, parser, westgate namespaces

@@ -9,10 +9,13 @@
 #include "util/text/namegen.hpp"
 #include "world/codex.hpp"
 
+using std::make_unique;
+using std::runtime_error;
+
 namespace westgate {
 
 // Loads the static data from the gorp.k10 datafile.
-Codex::Codex() : namegen_ptr_(std::make_unique<ProcNameGen>())
+Codex::Codex() : namegen_ptr_(make_unique<ProcNameGen>())
 {
     core().log("Loading static data into the codex...");
     namegen_ptr_->load_namelists();
@@ -24,7 +27,7 @@ Codex::~Codex() { namegen_ptr_.reset(nullptr); }
 // Returns a reference to the procedural name generator object.
 ProcNameGen& Codex::namegen() const
 {
-    if (!namegen_ptr_) throw std::runtime_error("Attempt to access null ProcNameGen object!");
+    if (!namegen_ptr_) throw runtime_error("Attempt to access null ProcNameGen object!");
     return *namegen_ptr_;
 }
 
