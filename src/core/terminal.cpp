@@ -109,12 +109,12 @@ unsigned int get_width()
 }
 
 // Prints a string of text with std::cout, processing ANSI colour tags.
-void print(const std::string& text)
+void print(const std::string& text, bool newline)
 {
     // Handle blank text by just printing a newline.
     if (!text.size())
     {
-        std::cout << '\n';
+        if (newline) std::cout << '\n';
         return;
     }
 
@@ -264,7 +264,7 @@ void print(const std::string& text)
         if (invalid_tag) invalid_tags.push_back(tag);
     }
 
-    std::cout << rang::style::reset << '\n';    // Reset any ANSI tags and end the line.
+    if (newline) std::cout << rang::style::reset << '\n';   // Reset any ANSI tags and end the line, if requested.
 
     for (auto tag : invalid_tags)
         core().nonfatal("Invalid colour tag: {" + tag + "}", Core::CORE_WARN);
