@@ -6,6 +6,7 @@
 
 #include <cstdlib>
 #include <filesystem>
+#include <stdexcept>
 
 #include "cmake/version.hpp"
 #include "core/core.hpp"
@@ -14,11 +15,12 @@
 #include "util/file/binpath.hpp"
 #include "world/area/region.hpp"
 #include "world/codex.hpp"
+#include "world/entity/player.hpp"
 
 namespace westgate {
 
 // Constructor, sets up the game manager.
-Game::Game() : codex_ptr_(nullptr), region_ptr_(nullptr), save_id_(-1) { }
+Game::Game() : codex_ptr_(nullptr), player_ptr_(nullptr), region_ptr_(nullptr), save_id_(-1) { }
 
 // Destructor, cleans up attached classes.
 Game::~Game()
@@ -82,19 +84,10 @@ void Game::create_world()
 // Shuts things down cleanly and exits the game.
 void Game::leave_game() { core().destroy_core(EXIT_SUCCESS); }
 
-// brøether, may i have the lööps
-void Game::main_loop() { while(true) { process_input(terminal::get_input()); } }
-
-// Sets up for a new game!
-void Game::new_game() { create_world(); }
-
-// Processes input from the player.
-void Game::process_input(const std::string &input)
-{ terminal::print("{R}" + input); }
-
 // Loads an existing saved game.
 void Game::load_game(int save_slot)
 {
+    player_ptr_ = nullptr;
     const std::filesystem::path save_path = BinPath::game_path("userdata/saves/" + std::to_string(save_slot));
     if (!std::filesystem::exists(save_path))
     {
@@ -104,6 +97,39 @@ void Game::load_game(int save_slot)
 
     auto new_region = std::make_unique<Region>();
     new_region->load_from_save(save_slot, 0);
+    if (!player_ptr_) throw std::runtime_error("Could not locate player character in saved region!");
+}
+
+// brøether, may i have the lööps
+void Game::main_loop() { while(true) { process_input(terminal::get_input()); } }
+
+// Sets up for a new game!
+void Game::new_game()
+{
+    create_world(); // In the beginning, there was darkness.
+
+    // Create a new Region in memory, then load it from disk.
+    region_ptr_ = std::make_unique<Region>();
+    region_ptr_->load_from_save(save_id_, 0);
+
+    // Create the player character, assign them to a starting room, then transfer ownership.
+    auto player = std::make_unique<Player>(nullptr);
+    Room* start_room = region_ptr_->find_room("SULA_PLAINS");
+    start_room->add_entity(std::move(player));
+
+    // Save the current region, to store the player character.
+    region_ptr_->save(save_id_);
+}
+
+// Processes input from the player.
+void Game::process_input(const std::string& input)
+{ terminal::print("{R}" + input); }
+
+// Sets the Player pointer. Use with caution.
+void Game::set_player(Player* player_ptr)
+{
+    if (!player_ptr) throw std::runtime_error("Attempt to set null player pointer!");
+    player_ptr_ = player_ptr;
 }
 
 // Every game needs a title screen!

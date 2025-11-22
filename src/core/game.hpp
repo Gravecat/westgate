@@ -12,6 +12,7 @@
 namespace westgate {
 
 class Codex;    // defined in world/codex.hpp
+class Player;   // defined in world/entity/player.hpp
 class Region;   // defined in world/area/region.hpp
 
 class Game {
@@ -21,10 +22,12 @@ public:
     void    begin();        // Starts the game, in the form of a title screen followed by the main game loop.
     Codex&  codex() const;  // Returns a reference to the Codex object.
     void    leave_game();   // Shuts things down cleanly and exits the game.
-    void    process_input(const std::string &input);    // Processes input from the player.
+    void    process_input(const std::string& input);    // Processes input from the player.
+    void    set_player(Player* player_ptr); // Sets the Player pointer. Use with caution.
 
 private:
     std::unique_ptr<Codex>  codex_ptr_;     // The Codex object, which stores all the static game data in memory, and generates copies of said data.
+    Player*                 player_ptr_;    // Pointer to the player-character object. Ownership of the object lies with the Room they're in.
     std::unique_ptr<Region> region_ptr_;    // The currently-loaded Region, the area of the game world the player is interacting with.
     int     save_id_;       // The current saved-game ID (or -1 for none).
 

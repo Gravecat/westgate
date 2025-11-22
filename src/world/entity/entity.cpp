@@ -5,14 +5,32 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#include <stdexcept>
+
 #include "core/core.hpp"
+#include "util/file/filereader.hpp"
+#include "util/file/filewriter.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/entity.hpp"
 
 namespace westgate {
 
-// Creates a blank Entity with default values.
-Entity::Entity() : gender_(Gender::NONE), name_("undefined entity"), parent_entity_(nullptr), parent_room_(nullptr) { }
+// Creates a blank Entity, then loads its data from a FileReader.
+Entity::Entity(FileReader* file) : gender_(Gender::NONE), name_("undefined entity"), parent_entity_(nullptr), parent_room_(nullptr)
+{
+    if (!file) return;
+
+    // Check the save version for this Entity.
+    const uint32_t save_version = file->read_data<uint32_t>();
+    if (save_version != ENTITY_SAVE_VERSION)
+        throw std::runtime_error("Invalid entity save version (" + std::to_string(save_version) + " (expected " + std::to_string(ENTITY_SAVE_VERSION) + ")");
+
+    // Retrieve the Entity's name and gender.
+    name_ = file->read_string();
+    gender_ = file->read_data<Gender>();
+
+    core().log("Loaded Entity");
+}
 
 // Retrieves the gender (if any) of this Entity.
 Gender Entity::gender() const { return gender_; }
@@ -25,6 +43,20 @@ const Entity* Entity::parent_entity() const { return parent_entity_; }
 
 // Retrieves the Room (if any) containing this Entity.
 const Room* Entity::parent_room() const { return parent_room_; }
+
+// Saves this Entity to a save game file.
+void Entity::save(FileWriter* file)
+{
+    // Write this Entity's type identifier. This will be critical when loading Entities later.
+    file->write_data<EntityType>(type());
+
+    // Write the save version for this Entity.
+    file->write_data<uint32_t>(ENTITY_SAVE_VERSION);
+
+    // Write the Entity's name and gender.
+    file->write_string(name_);
+    file->write_data<Gender>(gender_);
+}
 
 // Sets the gender of this Entity.
 void Entity::set_gender(Gender new_gender)

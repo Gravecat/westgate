@@ -11,6 +11,8 @@
 #include "util/file/filewriter.hpp"
 #include "util/text/hash.hpp"
 #include "world/area/room.hpp"
+#include "world/entity/mobile.hpp"
+#include "world/entity/player.hpp"
 
 namespace westgate {
 
@@ -26,6 +28,13 @@ Room::Room(const std::string& new_id) : Room()
 
 // Creates a blank Room, then loads its data from the specified FileReader.
 Room::Room(FileReader* file) : Room() { load(file); }
+
+// Adds an Entity to this room directly. Use transfer() to move Entities between rooms.
+void Room::add_entity(std::unique_ptr<Entity> entity)
+{
+    entity->set_parent_room(this);
+    entities_.push_back(std::move(entity));
+}
 
 // Retrieves the description of this Room.
 const std::string& Room::desc() const { return desc_; }
@@ -49,6 +58,21 @@ void Room::load(FileReader* file)
     name_[0] = file->read_string();
     name_[1] = file->read_string();
     desc_ = file->read_string();
+
+    // Load any Entities in this Room.
+    const uint32_t entity_count = file->read_data<uint32_t>();
+    entities_.reserve(entity_count);
+    for (unsigned int i = 0; i < entity_count; i++)
+    {
+        EntityType type = file->read_data<EntityType>();
+        switch(type)
+        {
+            case EntityType::ENTITY: entities_.push_back(std::make_unique<Entity>(file)); break;
+            case EntityType::MOBILE: entities_.push_back(std::make_unique<Mobile>(file)); break;
+            case EntityType::PLAYER: entities_.push_back(std::make_unique<Player>(file)); break;
+            default: throw std::runtime_error("Attempt to load unknown entity type: " + std::to_string(static_cast<int>(type)));
+        }
+    }
 }
 
 // Retrieves the name of this Room.
@@ -68,6 +92,11 @@ void Room::save(FileWriter* file)
     file->write_string(name_[0]);
     file->write_string(name_[1]);
     file->write_string(desc_);
+
+    // Save any Entities in this Room.
+    file->write_data<uint32_t>(entities_.size());
+    for (auto &entity : entities_)
+        entity->save(file);
 }
 
 // Sets the description of this Room.

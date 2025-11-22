@@ -13,6 +13,7 @@
 #include "util/file/filereader.hpp"
 #include "util/file/filewriter.hpp"
 #include "util/file/yaml.hpp"
+#include "util/text/hash.hpp"
 #include "world/area/region.hpp"
 
 namespace westgate {
@@ -35,6 +36,22 @@ void Region::add_room(std::unique_ptr<Room> new_room)
 {
     if (!new_room) core().nonfatal("Attempted to add null room to region.", Core::CORE_ERROR);
     else rooms_.push_back(std::move(new_room));
+}
+
+// Attempts to find a room by its string ID.
+Room* Region::find_room(const std::string& id)
+{ return find_room(hash::murmur3(id)); }
+
+// Attempts to find a room by its hashed ID.
+Room* Region::find_room(uint32_t id)
+{
+    auto result = room_ids_.find(id);
+    if (result == room_ids_.end())
+    {
+        core().nonfatal("Failed attempt to look up room (ID " + std::to_string(id) + ")", Core::CORE_ERROR);
+        return nullptr;
+    }
+    return result->second;
 }
 
 // Loads this Region from a saved game file.

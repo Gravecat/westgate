@@ -13,10 +13,11 @@ namespace westgate {
 
 class Mobile : public Entity {
 public:
-            Mobile();   // Creates a blank Mobile with default values.
-    virtual ~Mobile() = default;    // Virtual destructor, in case Mobile is used by a further derived class in the future.
-
-private:
+                        Mobile() = delete;  // No default constructor; use nullptr on the constructor below.
+                        Mobile(FileReader* file);   // Creates a blank Mobile, then loads its data from a FileReader.
+    virtual             ~Mobile() = default;    // Virtual destructor, in case Mobile is used by a further derived class in the future.
+    virtual void        save(FileWriter* file) override;    // Saves this Mobile to a save game file.
+    virtual EntityType  type() const override { return EntityType::MOBILE; }    // Self-identifies this Entity's derived class.
 };
 
 }   // namespace westgate

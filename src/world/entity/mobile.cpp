@@ -5,12 +5,22 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#include "util/file/filereader.hpp"
+#include "util/file/filewriter.hpp"
 #include "world/entity/mobile.hpp"
 
 namespace westgate {
 
-// Creates a blank Mobile with default values.
-Mobile::Mobile() : Entity()
-{ name_ = "undefined mobile"; }
+// Creates a blank Mobile, then loads its data from a FileReader.
+Mobile::Mobile(FileReader* file) : Entity(file)
+{
+    name_ = "undefined mobile";
+
+    if (!file) return;
+    // file loading code goes here
+}
+
+// Saves this Mobile to a save game file.
+void Mobile::save(FileWriter* file) { Entity::save(file); }
 
 }   // namespace westgate

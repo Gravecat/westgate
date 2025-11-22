@@ -24,6 +24,8 @@ public:
             Region(size_t new_size);    // As above, but also calls set_size() to allocate memory.
             ~Region();                  // Destructor, cleans up stored data.
     void    add_room(std::unique_ptr<Room> new_room);   // Adds a new Room to this Region. Must be called with std::move.
+    Room*   find_room(const std::string& id);   // Attempts to find a room by its string ID.
+    Room*   find_room(uint32_t id);     // Attempts to find a room by its hashed ID.
     void    load_from_gamedata(const std::string& filename);        // Loads a Region from YAML game data.
     void    load_from_save(int save_slot, unsigned int region_id);  // Loads this Region from a saved game file.
     void    save(int save_slot);        // Saves the Region to a saved game file.

@@ -28,6 +28,7 @@ set(WESTGATE_CPPS
   src/world/codex.cpp
   src/world/entity/entity.cpp
   src/world/entity/mobile.cpp
+  src/world/entity/player.cpp
 )
 
 # Third-party code being built as separate object files.
