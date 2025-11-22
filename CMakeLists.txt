@@ -19,6 +19,7 @@ set(WESTGATE_CPPS
   src/parser/cheats.cpp
   src/parser/meta.cpp
   src/parser/parser.cpp
+  src/parser/silly.cpp
   src/util/file/binpath.cpp
   src/util/file/filereader.cpp
   src/util/file/fileutils.cpp
