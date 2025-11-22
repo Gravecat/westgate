@@ -23,4 +23,6 @@ public:
     uint32_t        room_;      // The Room ID the Player is in.    
 };
 
+const Player* player(); // A shortcut instead of using game().player()
+
 }   // namespace westgate

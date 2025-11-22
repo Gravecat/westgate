@@ -79,7 +79,7 @@ void Room::load(FileReader* file)
 // Look around you. Just look around you.
 void Room::look() const
 {
-    terminal::print("\n{C}" + name_[0]);
+    terminal::print("{C}" + name_[0]);
     terminal::print(desc_);
 }
 

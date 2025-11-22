@@ -35,6 +35,7 @@ void Game::begin()
 {
     codex_ptr_ = std::make_unique<Codex>();
     title_screen();
+    terminal::print();
     player_ptr_->parent_room()->look();
     main_loop();
 }
@@ -124,6 +125,9 @@ void Game::new_game()
     // Save the current region, to store the player character.
     region_ptr_->save(save_id_);
 }
+
+// Returns a pointer to the Player object.
+const Player* Game::player() const { return player_ptr_; }
 
 // Sets the Player pointer. Use with caution.
 void Game::set_player(Player* player_ptr)

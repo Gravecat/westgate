@@ -16,6 +16,7 @@
 #include "parser/parser.hpp"
 #include "parser/parser-macros.hpp"
 #include "parser/silly.hpp"
+#include "parser/world.hpp"
 #include "util/text/hash.hpp"
 #include "util/text/stringutils.hpp"
 
@@ -23,12 +24,14 @@ namespace westgate {
 namespace parser {
 
 static const std::map<uint32_t, std::function<void(std::vector<uint32_t>&, std::vector<std::string>&)>> parser_verbs = {
-    { 2252282012, cheats::hash },       // #hash
-    { 3693685262, silly::magic_word },  // frotz
-    { 1253391317, silly::magic_word },  // plugh
-    { 1533866676, silly::magic_word },  // plover
-    { 3289483580, meta::quit },         // quit
-    { 42193550, silly::magic_word }     // xyzzy
+    { 2252282012, parser::cheats::hash },       // #hash
+    { 3693685262, parser::silly::magic_word },  // frotz
+    { 1214476199, parser::world::look },        // l
+    { 365823675, parser::world::look },         // look
+    { 1253391317, parser::silly::magic_word },  // plugh
+    { 1533866676, parser::silly::magic_word },  // plover
+    { 3289483580, parser::meta::quit },         // quit
+    { 42193550, parser::silly::magic_word }     // xyzzy
 };
 
 // Processes input from the player.

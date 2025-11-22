@@ -25,4 +25,7 @@ Player::Player(FileReader* file) : Mobile(file)
 // Saves this Player to a save game file.
 void Player::save(FileWriter* file) { Mobile::save(file); }
 
+// A shortcut instead of using game().player()
+const Player* player() { return game().player(); }
+
 }   // namespace westgate
