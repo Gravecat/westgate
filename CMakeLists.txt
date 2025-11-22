@@ -15,6 +15,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(WESTGATE_CPPS
   src/core/core.cpp
   src/core/game.cpp
+  src/core/parser.cpp
   src/core/terminal.cpp
   src/util/file/binpath.cpp
   src/util/file/filereader.cpp

@@ -22,7 +22,6 @@ public:
     void    begin();        // Starts the game, in the form of a title screen followed by the main game loop.
     Codex&  codex() const;  // Returns a reference to the Codex object.
     void    leave_game();   // Shuts things down cleanly and exits the game.
-    void    process_input(const std::string& input);    // Processes input from the player.
     void    set_player(Player* player_ptr); // Sets the Player pointer. Use with caution.
 
 private:

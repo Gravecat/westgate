@@ -11,6 +11,7 @@
 #include "cmake/version.hpp"
 #include "core/core.hpp"
 #include "core/game.hpp"
+#include "core/parser.hpp"
 #include "core/terminal.hpp"
 #include "util/file/binpath.hpp"
 #include "world/area/region.hpp"
@@ -104,7 +105,7 @@ void Game::load_game(int save_slot)
 }
 
 // brøether, may i have the lööps
-void Game::main_loop() { while(true) { process_input(terminal::get_input()); } }
+void Game::main_loop() { while(true) { parser::process_input(terminal::get_input()); } }
 
 // Sets up for a new game!
 void Game::new_game()
@@ -123,10 +124,6 @@ void Game::new_game()
     // Save the current region, to store the player character.
     region_ptr_->save(save_id_);
 }
-
-// Processes input from the player.
-void Game::process_input(const std::string& input)
-{ terminal::print("{R}" + input); }
 
 // Sets the Player pointer. Use with caution.
 void Game::set_player(Player* player_ptr)
