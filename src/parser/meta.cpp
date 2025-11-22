@@ -5,6 +5,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 #include "core/core.hpp"
+#include "core/game.hpp"
 #include "core/terminal.hpp"
 #include "parser/meta.hpp"
 #include "parser/parser.hpp"
@@ -23,6 +24,12 @@ void quit(PARSER_FUNCTION)
         core().destroy_core(EXIT_SUCCESS);
     }
     terminal::print("{B}Your adventure continues...");
+}
+
+// Saves the game.
+void save(PARSER_FUNCTION)
+{ PARSER_NO_WORDS PARSER_NO_HASHED
+    game().save(true);
 }
 
 } } }   // meta, parser, westgate namespaces
