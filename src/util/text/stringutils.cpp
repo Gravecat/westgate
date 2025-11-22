@@ -38,4 +38,12 @@ std::vector<std::string> string_explode(std::string str, const std::string &sepa
     return results;
 }
 
+// Strips trailing newlines from a given string.
+std::string strip_trailing_newlines(std::string str)
+{
+    while (!str.empty() && (str.back() == '\n' || str.back() == '\r'))
+        str.pop_back();
+    return str;
+}
+
 } } // stringutils, westgate namespaces

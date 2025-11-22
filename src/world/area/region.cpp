@@ -14,6 +14,7 @@
 #include "util/file/filewriter.hpp"
 #include "util/file/yaml.hpp"
 #include "util/text/hash.hpp"
+#include "util/text/stringutils.hpp"
 #include "world/area/region.hpp"
 
 namespace westgate {
@@ -136,7 +137,7 @@ void Region::load_from_gamedata(const std::string& filename)
         room_ptr->set_name(name_vec.at(0), name_vec.at(1));
 
         if (!room_yaml.key_exists("desc")) throw std::runtime_error(error_str + "Missing room description.");
-        room_ptr->set_desc(room_yaml.val("desc"));
+        room_ptr->set_desc(stringutils::strip_trailing_newlines(room_yaml.val("desc")));
 
         // Add the Room to the Region.
         rooms_.push_back(std::move(room_ptr));
