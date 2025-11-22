@@ -70,7 +70,7 @@ void Game::create_world()
     save_id_ = 0;
 
     // This early in development, we're gonna just delete the save folder each time. It'll become more permanent later.
-    const fs::path save_dir = userdata_saves_path.string() + "/" + to_string(save_id_);
+    const fs::path save_dir = BinPath::merge_paths(userdata_saves_path.string(), to_string(save_id_));
     fs::remove_all(save_dir);
     fs::create_directory(save_dir);
 

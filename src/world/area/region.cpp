@@ -178,7 +178,7 @@ void Region::save(int save_slot)
     if (!fs::exists(region_saves_path)) fs::create_directory(region_saves_path);
 
     // Delete any old data if it's currently there.
-    const fs::path region_save_file = region_saves_path.string() + "/" + to_string(id_) + ".dat";
+    const fs::path region_save_file = BinPath::merge_paths(region_saves_path.string(), to_string(id_) + ".dat");
     if (fs::exists(region_save_file)) fs::remove(region_save_file);
 
     // Create the save file, and mark it with a version tag.
