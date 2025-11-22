@@ -55,8 +55,11 @@ Room* Region::find_room(uint32_t id)
     return result->second;
 }
 
+// Retrieves this Region's unique ID.
+uint32_t Region::id() const { return id_; }
+
 // Loads this Region from a saved game file.
-void Region::load_from_save(int save_slot, unsigned int region_id)
+void Region::load_from_save(int save_slot, uint32_t region_id)
 {
     // Assemble the path, and ensure the file exists.
     const std::filesystem::path save_path = BinPath::game_path("userdata/saves/" + std::to_string(save_slot) + "/region/" + std::to_string(region_id) + ".dat");
@@ -67,7 +70,7 @@ void Region::load_from_save(int save_slot, unsigned int region_id)
     auto file = std::make_unique<FileReader>(save_path.string());
 
     // Check the header, save version, and region tag.
-    file->check_header();
+    if (!file->check_header()) throw std::runtime_error("Invalid region file header!");
     const uint32_t region_version = file->read_data<uint32_t>();
     if (region_version != REGION_SAVE_VERSION)
         throw std::runtime_error("Invalid region save version (" + std::to_string(region_version) + ", expected " + std::to_string(REGION_SAVE_VERSION) + ")");
@@ -75,7 +78,7 @@ void Region::load_from_save(int save_slot, unsigned int region_id)
     if (region_string.compare("REGION")) throw std::runtime_error("Invalid region file!");
 
     // Get the ID, name and size of the Region.
-    id_ = file->read_data<unsigned int>();
+    id_ = file->read_data<uint32_t>();
     name_ = file->read_string();
     const unsigned int region_size = file->read_data<unsigned int>();
     set_size(region_size);
@@ -86,7 +89,7 @@ void Region::load_from_save(int save_slot, unsigned int region_id)
     rebuild_room_id_map();
 
     // Check for the standard EOF footer.
-    file->check_footer();
+    if (!file->check_footer()) throw std::runtime_error("Invalid region file footer!");
 }
 
 // Loads a Region from YAML game data.
@@ -177,7 +180,7 @@ void Region::save(int save_slot)
     file->write_string("REGION");
 
     // Write the ID, name, and size of the region.
-    file->write_data<unsigned int>(id_);
+    file->write_data<uint32_t>(id_);
     file->write_string(name_);
     file->write_data<unsigned int>(rooms_.size());
 
