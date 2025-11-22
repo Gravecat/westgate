@@ -85,11 +85,9 @@ std::string BinPath::merge_paths(const std::string &pathA, const std::string &pa
 std::string BinPath::get_executable_path()
 {
     char rawPathName[PATH_MAX];
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-result"
-    realpath(PROC_SELF_EXE, rawPathName);
-#pragma GCC diagnostic pop
-    return std::string(rawPathName);
+    char* rp = realpath(PROC_SELF_EXE, rawPathName);
+    if (rp) return std::string(rawPathName);
+    else return "";
 }
 
 std::string BinPath::get_executable_dir()
@@ -113,11 +111,10 @@ std::string BinPath::get_executable_path()
     char realPathName[PATH_MAX];
     uint32_t rawPathSize = (uint32_t)sizeof(rawPathName);
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-result"
-    if(!_NSGetExecutablePath(rawPathName, &rawPathSize)) realpath(rawPathName, realPathName);
-#pragma GCC diagnostic pop
-    return std::string(realPathName);
+    char* rp = nullptr;
+    if(!_NSGetExecutablePath(rawPathName, &rawPathSize)) rp = realpath(rawPathName, realPathName);
+    if (rp) return std::string(realPathName);
+    else return "";
 }
 
 std::string BinPath::get_executable_dir()
