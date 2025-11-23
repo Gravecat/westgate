@@ -1,6 +1,10 @@
 name: Ubuntu (Latest) CI
 
-on: [push, pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main, testing]
 
 jobs:
   ubuntu-latest:
@@ -10,7 +14,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+      - name: Conditional check for code changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            src:
+              - '**/*.c'
+              - '**/*.cpp'
+              - '**/*.h'
+              - '**/*.hpp'
+              - '**/*.hpp.in'
+              - '**/*.rc.in'
+              - '**/CMakeLists.txt'
+              - '.github/workflows/**'
       - name: CMake build
+        if: steps.changes.outputs.src == 'true'
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Debug -DWARNINGS_AS_ERRORS=ON
           cmake --build build --config Debug -j
