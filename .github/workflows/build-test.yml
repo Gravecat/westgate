@@ -1,12 +1,6 @@
 name: Build Test
 
-on:
-  pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
-  push:
-    branches:
-        - main
-        - indev
+on: [push, pull_request]
 
 permissions:
   contents: read
