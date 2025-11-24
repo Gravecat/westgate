@@ -12,7 +12,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Conditional check for code changes
         uses: dorny/paths-filter@v3
         id: changes
