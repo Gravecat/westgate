@@ -14,6 +14,27 @@ using std::vector;
 namespace westgate {
 namespace stringutils {
 
+// Converts a vector to a comma-separated list.
+string comma_list(vector<string> vec, uint8_t mode)
+{
+    string plus = ", ";
+    if (mode == CL_MODE_USE_AND) plus = " and ";
+    else if (mode == CL_MODE_USE_OR) plus = " or ";
+    else if (vec.size() == 2) return vec.at(0) + plus + vec.at(1);
+
+    string str;
+    for (unsigned int i = 0; i < vec.size(); i++)
+    {
+        str += vec.at(i);
+        if (i < vec.size() - 1)
+        {
+            if (i == vec.size() - 2) str += plus;
+            else str += ", ";
+        }
+    }
+    return str;
+}
+
 // Converts a string to lower-case.
 string str_tolower(string str)
 {

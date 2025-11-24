@@ -17,6 +17,7 @@
 #include "parser/world.hpp"
 #include "util/text/hash.hpp"
 #include "util/text/stringutils.hpp"
+#include "world/area/room.hpp"
 
 using std::string;
 using std::vector;
@@ -24,6 +25,19 @@ using westgate::terminal::print;
 
 namespace westgate {
 namespace parser {
+
+static const std::map<uint32_t, Direction> parser_directions = {
+    { 1081869984, Direction::NORTH }, { 4254119393, Direction::NORTH },
+    { 1897786808, Direction::NORTHEAST }, { 3641754167, Direction::NORTHEAST },
+    { 717260451, Direction::EAST }, { 4163295959, Direction::EAST },
+    { 1457891302, Direction::SOUTHEAST }, { 3801532777, Direction::SOUTHEAST },
+    { 819466240, Direction::SOUTH }, { 3627942915, Direction::SOUTH },
+    { 2626121188, Direction::SOUTHWEST }, { 656258893, Direction::SOUTHWEST },
+    { 3976103327, Direction::WEST }, { 3359274028, Direction::WEST },
+    { 320024672, Direction::NORTHWEST }, { 4257653048, Direction::NORTHWEST },
+    { 367575389, Direction::UP }, { 2399778729, Direction::UP },
+    { 715181085, Direction::DOWN }, { 2573673949, Direction::DOWN },
+};
 
 static const std::map<uint32_t, std::function<void(vector<uint32_t>&, vector<string>&)>> parser_verbs = {
     { 2252282012, parser::cheats::hash },       // #hash
@@ -36,6 +50,14 @@ static const std::map<uint32_t, std::function<void(vector<uint32_t>&, vector<str
     { 1633956953, parser::meta::save },         // save
     { 42193550, parser::silly::magic_word }     // xyzzy
 };
+
+// Parses a hashed string into a Direction enum.
+Direction parse_direction(uint32_t hash)
+{
+    auto result = parser_directions.find(hash);
+    if (result == parser_directions.end()) return Direction::NONE;
+    else return result->second;
+}
 
 // Processes input from the player.
 void process_input(const string& input)

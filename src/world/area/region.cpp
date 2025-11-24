@@ -9,6 +9,7 @@
 
 #include "core/core.hpp"
 #include "core/game.hpp"
+#include "parser/parser.hpp"
 #include "util/file/binpath.hpp"
 #include "util/file/filereader.hpp"
 #include "util/file/filewriter.hpp"
@@ -170,10 +171,22 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
         const vector<string> name_vec = room_yaml.get_seq("name");
         if (name_vec.size() != 2) throw runtime_error(error_str + "Name data not correctly set (expected sequence of length 2, got " +
             to_string(name_vec.size()) + ".");
-        room_ptr->set_name(name_vec.at(0), name_vec.at(1));
+        room_ptr->set_name(name_vec.at(0), name_vec.at(1), false);
 
         if (!room_yaml.key_exists("desc")) throw runtime_error(error_str + "Missing room description.");
-        room_ptr->set_desc(stringutils::strip_trailing_newlines(room_yaml.val("desc")));
+        room_ptr->set_desc(stringutils::strip_trailing_newlines(room_yaml.val("desc")), false);
+
+        // If the Room has any exits, process them here.
+        if (room_yaml.key_exists("exits"))
+        {
+            auto room_exits = room_yaml.get_child("exits").keys_vals();
+            for (auto &exit : room_exits)
+            {
+                Direction dir = parser::parse_direction(hash::murmur3(exit.first));
+                if (dir == Direction::NONE) throw runtime_error(error_str + "Invalid room exits.");
+                room_ptr->set_exit(dir, hash::murmur3(exit.second));
+            }
+        }
 
         // If requested, update World's lookup table for Rooms and Regions.
         if (update_world) world().add_room_to_region(room_ptr->id(), id_);

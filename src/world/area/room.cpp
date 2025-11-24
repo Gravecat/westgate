@@ -4,12 +4,15 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#include <vector>
+
 #include "core/core.hpp"
 #include "core/game.hpp"
 #include "core/terminal.hpp"
 #include "util/file/filereader.hpp"
 #include "util/file/filewriter.hpp"
 #include "util/text/hash.hpp"
+#include "util/text/stringutils.hpp"
 #include "world/area/region.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/mobile.hpp"
@@ -21,8 +24,16 @@ using std::runtime_error;
 using std::string;
 using std::to_string;
 using std::unique_ptr;
+using std::vector;
 
 namespace westgate {
+
+// Static map that converts a Direction enum into string names.
+std::map<Direction, std::string> Room::direction_names_ = {
+    { Direction::NORTH, "north" }, { Direction::NORTHEAST, "northeast" }, { Direction::EAST, "east" }, { Direction::SOUTHEAST, "southeast" },
+    { Direction::SOUTH, "south" }, { Direction::SOUTHWEST, "southwest"}, { Direction::WEST, "west" }, { Direction::NORTHWEST, "northwest "},
+    { Direction::UP, "up" }, { Direction::DOWN, "down" }, { Direction::NONE, "" }
+};
 
 // Creates a blank Room with default values and no ID.
 Room::Room() : desc_("Missing room description."), exits_{}, id_(0), name_{"Undefined Room", "undefined"} { }
@@ -43,6 +54,18 @@ void Room::add_entity(unique_ptr<Entity> entity)
 
 // Retrieves the description of this Room.
 const string& Room::desc() const { return desc_; }
+
+// Gets the string name of a Direction enum.
+const std::string& Room::direction_name(Direction dir) const
+{
+    auto result = direction_names_.find(dir);
+    if (result == direction_names_.end())
+    {
+        core().nonfatal("Unable to parse direction enum.", Core::CORE_ERROR);
+        return direction_names_.find(Direction::NONE)->second;
+    }
+    return result->second;
+}
 
 // Gets the Room linked in the specified direction, or nullptr if none is linked.
 Room* Room::get_link(Direction dir)
@@ -90,7 +113,16 @@ void Room::load_delta(FileReader* file)
 void Room::look() const
 {
     terminal::print("{C}" + name_[0]);
-    terminal::print(desc_);
+    terminal::print("  " + desc_);
+
+    vector<string> exits_list;
+    for (int i = 0; i < 10; i++)
+    {
+        const uint32_t exit = exits_[i];
+        if (!exit) continue;
+        exits_list.push_back(direction_name(static_cast<Direction>(i)));
+    }
+    if (exits_list.size()) terminal::print("\n{C}[Exits: " + stringutils::comma_list(exits_list, stringutils::CL_MODE_USE_AND) + "]");
 }
 
 // Retrieves the name of this Room.
@@ -120,8 +152,10 @@ void Room::save_delta(FileWriter* file)
 }
 
 // Sets the description of this Room.
-void Room::set_desc(const string& new_desc)
+void Room::set_desc(const string& new_desc, bool mark_delta)
 {
+    (void)mark_delta;   // We'll use this later.
+
     if (!new_desc.size())
     {
         core().nonfatal("Attempt to set blank description on room (" + id_str_ + ")", Core::CORE_ERROR);
@@ -130,9 +164,20 @@ void Room::set_desc(const string& new_desc)
     else desc_ = new_desc;
 }
 
-// Sets the name of this Room.
-void Room::set_name(const string& new_full_name, const string& new_short_name)
+// Sets an exit link from this Room to another.
+void Room::set_exit(Direction dir, uint32_t new_exit, bool mark_delta)
 {
+    (void)mark_delta;   // We'll use this later.
+
+    if (dir == Direction::NONE || dir > Direction::DOWN) throw std::runtime_error("Invalid direction on set_exit call (" + id_str_ + ")");
+    exits_[static_cast<uint8_t>(dir)] = new_exit;
+}
+
+// Sets the name of this Room.
+void Room::set_name(const string& new_full_name, const string& new_short_name, bool mark_delta)
+{
+    (void)mark_delta;   // We'll use this later.
+
     if (!new_full_name.size() || !new_short_name.size())
     {
         core().nonfatal("Attempt to set blank name on room.", Core::CORE_ERROR);

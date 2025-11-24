@@ -8,9 +8,13 @@
 #include "core/pch.hpp" // Precompiled header
 
 namespace westgate {
+
+enum class Direction : uint8_t; // defined in world/area/room.hpp
+
 namespace parser {
 
-void    process_input(const std::string& input);    // Processes input from the player.
-bool    yes_no();   // Displays a yes/no prompt for the player, returns their choice.
+Direction   parse_direction(uint32_t hash); // Parses a hashed string into a Direction enum.
+void        process_input(const std::string& input);    // Processes input from the player.
+bool        yes_no();   // Displays a yes/no prompt for the player, returns their choice.
 
 } } // parser, westgate namespaces
