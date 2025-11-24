@@ -181,7 +181,10 @@ void Room::look() const
     {
         const uint32_t exit = exits_[i];
         if (!exit) continue;
-        exits_list.push_back(direction_name(static_cast<Direction>(i + 1)));
+        std::string exit_name = direction_name(static_cast<Direction>(i + 1));
+        const Room* target_room = world().find_room(exit);
+        if (target_room->tag(RoomTag::Explored)) exit_name += " {c}(" + target_room->name(false) + "){C}";
+        exits_list.push_back(exit_name);
     }
     if (exits_list.size()) terminal::print("\n{C}[Exits: " + stringutils::comma_list(exits_list, stringutils::CL_MODE_USE_AND) + "]");
 }

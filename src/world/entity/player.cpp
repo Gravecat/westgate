@@ -55,6 +55,7 @@ void Player::set_parent_room(Room* new_room_parent)
 {
     Mobile::set_parent_room(new_room_parent);
     region_ = new_room_parent->region();
+    new_room_parent->set_tag(RoomTag::Explored);
 }
 
 }   // namespace westgate

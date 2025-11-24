@@ -23,10 +23,13 @@ enum class Direction : uint8_t { NONE, NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH,
 
 enum class RoomTag : uint16_t {
     // Tags regarding changes made to this Room.
-    ChangedTags =   1,  // The RoomTags on this Room have been changed.
-    ChangedDesc =   2,  // The Room's description has been changed.
-    ChangedExits =  3,  // One or more exits in this Room have changed.
-    ChangedName =   4,  // The name of this Room has been changed.
+    ChangedTags =   1,      // The RoomTags on this Room have been changed.
+    ChangedDesc =   2,      // The Room's description has been changed.
+    ChangedExits =  3,      // One or more exits in this Room have changed.
+    ChangedName =   4,      // The name of this Room has been changed.
+
+    // Basic room attributes.
+    Explored =      100,    // Has the player visited this Room before?
 };
 
 class Room {
