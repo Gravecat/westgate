@@ -27,8 +27,8 @@ public:
     virtual             ~Entity() = default;    // Virtual destructor. Nothing here yet.
     Gender              gender() const; // Retrieves the gender (if any) of this Entity.
     const std::string&  name() const;   // Retrieves the name of this Entity.
-    const Entity*       parent_entity() const;  // Retrieves the Entity (if any) containing this Entity.
-    const Room*         parent_room() const;    // Retrieves the Room (if any) containing this Entity.
+    Entity*             parent_entity() const;  // Retrieves the Entity (if any) containing this Entity.
+    Room*               parent_room() const;    // Retrieves the Room (if any) containing this Entity.
     virtual void        save(FileWriter* file); // Saves this Entity to a save game file.
     void                set_gender(Gender new_gender);  // Sets the gender of this Entity.
     void                set_name(const std::string& new_name);  // Sets the name of this Entity.

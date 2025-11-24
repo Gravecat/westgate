@@ -56,7 +56,7 @@ void Room::add_entity(unique_ptr<Entity> entity)
 const string& Room::desc() const { return desc_; }
 
 // Gets the string name of a Direction enum.
-const std::string& Room::direction_name(Direction dir) const
+const std::string& Room::direction_name(Direction dir)
 {
     auto result = direction_names_.find(dir);
     if (result == direction_names_.end())
@@ -120,7 +120,7 @@ void Room::look() const
     {
         const uint32_t exit = exits_[i];
         if (!exit) continue;
-        exits_list.push_back(direction_name(static_cast<Direction>(i)));
+        exits_list.push_back(direction_name(static_cast<Direction>(i + 1)));
     }
     if (exits_list.size()) terminal::print("\n{C}[Exits: " + stringutils::comma_list(exits_list, stringutils::CL_MODE_USE_AND) + "]");
 }
@@ -170,7 +170,7 @@ void Room::set_exit(Direction dir, uint32_t new_exit, bool mark_delta)
     (void)mark_delta;   // We'll use this later.
 
     if (dir == Direction::NONE || dir > Direction::DOWN) throw std::runtime_error("Invalid direction on set_exit call (" + id_str_ + ")");
-    exits_[static_cast<uint8_t>(dir)] = new_exit;
+    exits_[static_cast<uint8_t>(dir) - 1] = new_exit;
 }
 
 // Sets the name of this Room.

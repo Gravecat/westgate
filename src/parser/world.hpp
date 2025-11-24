@@ -14,6 +14,7 @@ namespace westgate {
 namespace parser {
 namespace world {
 
-void    look(PARSER_FUNCTION);  // Look around you. Just look around you.
+void    look(PARSER_FUNCTION);      // Look around you. Just look around you.
+void    travel(PARSER_FUNCTION);    // Travels in a specific direction.
 
 } } }   // world, parser, westgate namespaces

@@ -6,6 +6,7 @@
 
 #include <functional>
 #include <map>
+#include <unordered_map>
 
 #include "core/core.hpp"
 #include "core/terminal.hpp"
@@ -39,15 +40,38 @@ static const std::map<uint32_t, Direction> parser_directions = {
     { 715181085, Direction::DOWN }, { 2573673949, Direction::DOWN },
 };
 
-static const std::map<uint32_t, std::function<void(vector<uint32_t>&, vector<string>&)>> parser_verbs = {
+static const std::unordered_map<uint32_t, std::function<void(vector<uint32_t>&, vector<string>&)>> parser_verbs = {
     { 2252282012, parser::cheats::hash },       // #hash
+    { 2573673949, parser::world::travel },      // d
+    { 715181085, parser::world::travel },       // down
+    { 4163295959, parser::world::travel },      // e
+    { 717260451, parser::world::travel },       // east
     { 3693685262, parser::silly::magic_word },  // frotz
+    { 93100650, parser::world::travel },        // go
     { 1214476199, parser::world::look },        // l
     { 365823675, parser::world::look },         // look
+    { 1337450370, parser::world::travel },      // move
+    { 4254119393, parser::world::travel },      // n
+    { 3641754167, parser::world::travel },      // ne
+    { 1081869984, parser::world::travel },      // north
+    { 1897786808, parser::world::travel },      // northeast
+    { 320024672, parser:: world::travel },      // northwest
+    { 4257653048, parser::world::travel },      // nw
     { 1253391317, parser::silly::magic_word },  // plugh
     { 1533866676, parser::silly::magic_word },  // plover
     { 3289483580, parser::meta::quit },         // quit
+    { 627942915, parser::world::travel },       // s
     { 1633956953, parser::meta::save },         // save
+    { 3801532777, parser::world::travel },      // se
+    { 819466240, parser::world::travel },       // south
+    { 1457891302, parser::world::travel },      // southeast
+    { 2626121188, parser::world::travel },      // southwest
+    { 656258893, parser::world::travel },       // sw
+    { 1908976648, parser::world::travel },      // travel
+    { 2399778729, parser::world::travel },      // u
+    { 367575389, parser::world::travel },       // up
+    { 3359274028, parser::world::travel },      // w
+    { 3976103327, parser::world::travel },      // west
     { 42193550, parser::silly::magic_word }     // xyzzy
 };
 

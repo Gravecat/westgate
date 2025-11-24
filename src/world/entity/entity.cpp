@@ -39,10 +39,10 @@ Gender Entity::gender() const { return gender_; }
 const string& Entity::name() const { return name_; }
 
 // Retrieves the Entity (if any) containing this Entity.
-const Entity* Entity::parent_entity() const { return parent_entity_; }
+Entity* Entity::parent_entity() const { return parent_entity_; }
 
 // Retrieves the Room (if any) containing this Entity.
-const Room* Entity::parent_room() const { return parent_room_; }
+Room* Entity::parent_room() const { return parent_room_; }
 
 // Saves this Entity to a save game file.
 void Entity::save(FileWriter* file)

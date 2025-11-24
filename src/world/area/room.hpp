@@ -27,7 +27,6 @@ public:
                 Room(const std::string& new_id);    // Creates a Room with a specified ID.
     void        add_entity(std::unique_ptr<Entity> entity); // Adds an Entity to this room directly. Use transfer() to move Entities between rooms.
     const std::string&  desc() const;   // Retrieves the description of this Room.
-    const std::string&  direction_name(Direction dir) const;    // Gets the string name of a Direction enum.
     Room*       get_link(Direction dir);    // Gets the Room linked in the specified direction, or nullptr if none is linked.
     uint32_t    id() const;     // Retrieves the hashed ID of this Room.
     const std::string&  id_str() const; // Retrieves the string ID of this Room.
@@ -40,6 +39,8 @@ public:
     void        set_exit(Direction dir, uint32_t new_exit, bool mark_delta = true); // Sets an exit link from this Room to another.
     void        set_name(const std::string& new_full_name, const std::string& new_short_name, bool mark_delta = true);  // Sets the name of this Room.
     void        transfer(Entity* entity_ptr, Room* room_ptr);   // Transfers a specified Entity from this Room to a target Room.
+
+    static const std::string&   direction_name(Direction dir);  // Gets the string name of a Direction enum.
 
 protected:
     std::vector<std::unique_ptr<Entity>>    entities_;  // Entities that exist within this Room.
