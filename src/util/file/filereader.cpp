@@ -10,10 +10,12 @@
 #include "core/core.hpp"
 #include "util/file/filereader.hpp"
 #include "util/file/fileutils.hpp"
+#include "util/text/stringutils.hpp"
 
 using std::ios;
 using std::runtime_error;
 using std::string;
+using std::to_string;
 using std::vector;
 namespace fs = std::filesystem;
 
@@ -70,6 +72,15 @@ string FileReader::read_string()
     string result(data_.begin() + read_index_, data_.begin() + read_index_ + len);
     read_index_ += len;
     return result;
+}
+
+// Throws a std::runtime_error exception with a standardized error string.
+void FileReader::standard_error(const std::string &err, int64_t data, int64_t expected_data, std::vector<std::string> error_sources)
+{
+    string error_str = err;
+    if (data != expected_data) error_str += " (" + to_string(data) + ", expected " + to_string(expected_data) + ")";
+    if (error_sources.size()) error_str += " [" + stringutils::comma_list(error_sources) + "]";
+    throw runtime_error(error_str);
 }
 
 }   // namespace westgate

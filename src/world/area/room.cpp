@@ -91,8 +91,7 @@ void Room::load_delta(FileReader* file)
 {
     // Load any Entities in this Room.
     const uint32_t entity_tag = file->read_data<uint32_t>();
-    if (entity_tag != ROOM_DELTA_ENTITIES) throw runtime_error("Invalid delta tag in room data (" + to_string(entity_tag) + ", expected " +
-        to_string(ROOM_DELTA_ENTITIES) + ")");
+    if (entity_tag != ROOM_DELTA_ENTITIES) FileReader::standard_error("Invalid delta tag in room data", entity_tag, ROOM_DELTA_ENTITIES, {id_str_});
 
     const size_t entity_count = file->read_data<size_t>();
     entities_.reserve(entity_count);

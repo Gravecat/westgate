@@ -27,8 +27,7 @@ Player::Player(FileReader* file) : Mobile(file)
 
     // Check the save version for this Player.
     const uint32_t save_version = file->read_data<uint32_t>();
-    if (save_version != PLAYER_SAVE_VERSION)
-        throw runtime_error("Invalid player save version (" + to_string(save_version) + " (expected " + to_string(PLAYER_SAVE_VERSION) + ")");
+    if (save_version != PLAYER_SAVE_VERSION) FileReader::standard_error("Invalid player save version", save_version, PLAYER_SAVE_VERSION);
 }
 
 // Saves this Player to a save game file.

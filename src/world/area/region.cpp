@@ -99,11 +99,10 @@ void Region::load_delta(int save_slot)
     auto file = make_unique<FileReader>(save_file);
     if (!file->check_header()) throw runtime_error("Invalid region deltas" + err_file);
     const uint32_t delta_ver = file->read_data<uint32_t>();
-    if (delta_ver != REGION_SAVE_VERSION) throw runtime_error("Invalid region deltas save version (" + to_string(delta_ver) + ", expected " +
-        to_string(REGION_SAVE_VERSION) + err_file);
+    if (delta_ver != REGION_SAVE_VERSION) FileReader::standard_error("Invalid region deltas save version" + err_file, delta_ver, REGION_SAVE_VERSION);
     if (file->read_string().compare("REGION_DELTA")) throw runtime_error("Invalid region deltas" + err_file);
     const uint32_t delta_id = file->read_data<uint32_t>();
-    if (delta_id != id_) throw runtime_error("Mismatched region delta ID " + to_string(delta_id) + ", expected " + to_string(id_) + err_file);
+    if (delta_id != id_) FileReader::standard_error("Mismatched region delta ID" + err_file, delta_id, id_);
 
     // Load the Room deltas, if any.
     while(true)
@@ -113,8 +112,7 @@ void Region::load_delta(int save_slot)
         else if (delta_tag == REGION_DELTA_ROOM)
         {
             const uint32_t room_ver = file->read_data<uint32_t>();
-            if (room_ver != Room::ROOM_SAVE_VERSION) throw runtime_error("Invalid region room version (" + to_string(room_ver) + "), expected " +
-                to_string(Room::ROOM_SAVE_VERSION));
+            if (room_ver != Room::ROOM_SAVE_VERSION) FileReader::standard_error("Invalid region room version", room_ver, Room::ROOM_SAVE_VERSION);
             const uint32_t room_id = file->read_data<uint32_t>();
             auto result = rooms_.find(room_id);
             if (result == rooms_.end()) throw std::runtime_error("Could not locate room " + to_string(room_id) + " in region " + to_string(id_));
@@ -151,8 +149,7 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
     uint32_t region_version;
     try { region_version = stoul(region_id.val("version")); }
     catch (invalid_argument&) { throw runtime_error(filename + ": Invalid region version identifier!"); }
-    if (region_version != REGION_YAML_VERSION) throw runtime_error(filename + ": Invalid region version (" + to_string(region_version) +
-        ", expected " + to_string(REGION_YAML_VERSION) + ")");
+    if (region_version != REGION_YAML_VERSION) FileReader::standard_error("Invalid region version", region_version, REGION_YAML_VERSION, {filename});
     if (!region_id.key_exists("name")) throw runtime_error(filename + ": Missing region name in identifier data!");
     name_ = region_id.val("name");
 
@@ -169,8 +166,7 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
         if (!room_yaml.key_exists("name")) throw runtime_error(error_str + "Missing name data.");
         if (!room_yaml.get_child("name").is_seq()) throw runtime_error(error_str + "Name data not correctly set (expected sequence).");
         const vector<string> name_vec = room_yaml.get_seq("name");
-        if (name_vec.size() != 2) throw runtime_error(error_str + "Name data not correctly set (expected sequence of length 2, got " +
-            to_string(name_vec.size()) + ".");
+        if (name_vec.size() != 2) FileReader::standard_error("Name data sequence length incorrect", 2, name_vec.size());
         room_ptr->set_name(name_vec.at(0), name_vec.at(1), false);
 
         if (!room_yaml.key_exists("desc")) throw runtime_error(error_str + "Missing room description.");

@@ -27,20 +27,17 @@ Entity::Entity(FileReader* file) : gender_(Gender::NONE), name_("undefined entit
 
     // Check the save version for this Entity.
     const uint32_t save_version = file->read_data<uint32_t>();
-    if (save_version != ENTITY_SAVE_VERSION)
-        throw runtime_error("Invalid entity save version (" + to_string(save_version) + " (expected " + to_string(ENTITY_SAVE_VERSION) + ")");
+    if (save_version != ENTITY_SAVE_VERSION) FileReader::standard_error("Invalid entity save version", save_version, ENTITY_SAVE_VERSION);
 
     // Retrieve the Entity's name and gender.
     const uint32_t props_tag = file->read_data<uint32_t>();
-    if (props_tag != ENTITY_SAVE_PROPS) throw std::runtime_error("Invalid tag in entity save data (" + to_string(props_tag) + ", expected " +
-        to_string(ENTITY_SAVE_PROPS) + ")");
+    if (props_tag != ENTITY_SAVE_PROPS) FileReader::standard_error("Invalid tag in entity save data", props_tag, ENTITY_SAVE_PROPS);
     name_ = file->read_string();
     gender_ = file->read_data<Gender>();
 
     // Load the Entity's tags, if any.
     const uint32_t tags_tag = file->read_data<uint32_t>();
-    if (tags_tag != ENTITY_SAVE_TAGS) throw std::runtime_error("Invalid tag in entity save data (" + to_string(tags_tag) + ", expected " +
-        to_string(ENTITY_SAVE_TAGS) + ")");
+    if (tags_tag != ENTITY_SAVE_TAGS) FileReader::standard_error("Invalid tag in entity save data", tags_tag, ENTITY_SAVE_TAGS);
     size_t tag_count = file->read_data<size_t>();
     for (size_t t = 0; t < tag_count; t++)
         set_tag(file->read_data<EntityTag>());

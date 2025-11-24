@@ -73,8 +73,7 @@ void Game::load_game(int save_slot)
     // Check the metadata headers and version.
     if (!file->check_header()) throw runtime_error("Invalid metadata header!");
     const uint32_t meta_version = file->read_data<uint32_t>();
-    if (meta_version != METADATA_SAVE_VERSION) throw runtime_error("Invalid metadata version (" + to_string(meta_version) + ", expected " +
-        to_string(METADATA_SAVE_VERSION) + ")");
+    if (meta_version != METADATA_SAVE_VERSION) FileReader::standard_error("Invalid metadata version", meta_version, METADATA_SAVE_VERSION);
     if (file->read_string() != "METADATA") throw runtime_error("Invalid metadata header!");
 
     // Check what Region the player is in.
