@@ -194,6 +194,13 @@ void Room::look() const
     const unsigned int minimap_width = (automap_enabled ? 11 : 0);
     const unsigned int desc_width = term_width - minimap_width;
 
+    if (automap_enabled && !player().player_tag(PlayerTag::TutorialAutomap))
+    {
+        player().set_player_tag(PlayerTag::TutorialAutomap);
+        print("{c}An automatically-generated map of the nearby area will be displayed next to the room description. If you wish to disable this feature, "
+            "simply type: {C}automap off\n");
+    }
+
     vector<string> room_desc = stringutils::ansi_vector_split(desc_, desc_width);
 
     vector<string> exits_list;

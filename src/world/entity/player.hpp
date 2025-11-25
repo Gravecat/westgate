@@ -14,6 +14,9 @@ namespace westgate {
 enum class PlayerTag : uint16_t {
     // Tags for features the player has explicitly enabled or disabled.
     AutomapOff =    1,  // The player has disabled the auto-generating minimap.
+
+    // Tags for tutorial messages that will only appear once per game.
+    TutorialAutomap =   100,    // The player has seen the automap tutorial message.
 };
 
 class Player : public Mobile {

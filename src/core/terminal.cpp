@@ -170,6 +170,8 @@ void print(const string& text, bool newline)
         const string before_space = line.substr(0, space);
         const string after_space = line.substr(space + 1);
         bool space_after = false;
+        if (line.at(line.size() - 1) == ' ' && !after_space.size()) space_after = true;
+
         // The current word is so long it can't be word-wrapped and is gonna split in half no matter what we do. Hnng. Okay, this is incredibly unlikely to
         // actually happen, but we've gotta handle it just in case.
         if (before_space.size() >= console_width)
@@ -220,7 +222,7 @@ void print(const string& text, bool newline)
         output = output.substr(closer_pos + 1);
 
         // Print any text before the next ANSI tag. If there's an existing tag already in play, it'll cause this text to be coloured.
-        if (untagged.size()) cout << untagged;
+        if (untagged.size()) print_formatted(untagged, false);
 
         // Process the ANSI codes from the tag.
         bool invalid_tag = false;
