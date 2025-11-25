@@ -16,6 +16,7 @@
 #include "util/file/yaml.hpp"
 #include "util/text/hash.hpp"
 #include "util/text/stringutils.hpp"
+#include "world/area/automap.hpp"
 #include "world/area/region.hpp"
 #include "world/world.hpp"
 
@@ -165,11 +166,8 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
         const string error_str = filename + " [" + key + "]: ";
         unique_ptr<Room> room_ptr = make_unique<Room>(key);
 
-        if (!room_yaml.key_exists("name")) throw runtime_error(error_str + "Missing name data.");
-        if (!room_yaml.get_child("name").is_seq()) throw runtime_error(error_str + "Name data not correctly set (expected sequence).");
-        const vector<string> name_vec = room_yaml.get_seq("name");
-        if (name_vec.size() != 2) FileReader::standard_error("Name data sequence length incorrect", 2, name_vec.size(), {key});
-        room_ptr->set_name(name_vec.at(0), name_vec.at(1), false);
+        if (!room_yaml.key_exists("short_name")) throw runtime_error(error_str + "Missing short_name data.");
+        room_ptr->set_short_name(room_yaml.val("short_name"), false);
 
         if (!room_yaml.key_exists("desc")) throw runtime_error(error_str + "Missing room description.");
         room_ptr->set_desc(stringutils::strip_trailing_newlines(room_yaml.val("desc")), false);
@@ -190,6 +188,9 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
         }
         room_ptr->set_coords(Vector3(coord_int_vec.at(0), coord_int_vec.at(1), coord_int_vec.at(2)));
 
+        if (!room_yaml.key_exists("map")) throw runtime_error(error_str + "Missing map character.");
+        room_ptr->set_map_char(room_yaml.val("map"), false);
+
         // If the Room has any exits, process them here.
         if (room_yaml.key_exists("exits"))
         {
@@ -202,8 +203,12 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
             }
         }
 
-        // If requested, update World's lookup table for Rooms and Regions.
-        if (update_world) world().add_room_to_region(room_ptr->id(), id_);
+        // If requested, update the lookup tables for Rooms and Regions.
+        if (update_world)
+        {
+            world().add_room_to_region(room_ptr->id(), id_);
+            world().automap().add_room_vec(room_ptr->id(), room_ptr->coords());
+        }
 
         // Add the Room to the Region.
         rooms_.insert({room_ptr->id(), std::move(room_ptr)});

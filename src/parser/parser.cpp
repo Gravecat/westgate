@@ -60,7 +60,7 @@ static const std::unordered_map<uint32_t, std::function<void(vector<uint32_t>&, 
     { 1253391317, parser::silly::magic_word },  // plugh
     { 1533866676, parser::silly::magic_word },  // plover
     { 3289483580, parser::meta::quit },         // quit
-    { 627942915, parser::world::travel },       // s
+    { 3627942915, parser::world::travel },       // s
     { 1633956953, parser::meta::save },         // save
     { 3801532777, parser::world::travel },      // se
     { 819466240, parser::world::travel },       // south

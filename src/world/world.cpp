@@ -13,6 +13,7 @@
 #include "util/file/binpath.hpp"
 #include "util/text/hash.hpp"
 #include "util/text/namegen.hpp"
+#include "world/area/automap.hpp"
 #include "world/area/region.hpp"
 #include "world/entity/player.hpp"
 #include "world/world.hpp"
@@ -28,7 +29,7 @@ namespace fs = std::filesystem;
 namespace westgate {
 
 // Sets up the World object and loads static data into memory.
-World::World() : namegen_ptr_(make_unique<ProcNameGen>())
+World::World() : automap_ptr_(make_unique<Automap>()), namegen_ptr_(make_unique<ProcNameGen>())
 {
     core().log("Loading static data into memory.");
     namegen_ptr_->load_namelists();
@@ -40,6 +41,13 @@ World::~World() { namegen_ptr_.reset(nullptr); }
 // Updates the room_regions_ map to keep track of what Region each Room is in.
 void World::add_room_to_region(uint32_t room_id, uint32_t region_id)
 { room_regions_.insert({room_id, region_id}); }
+
+// Returns a reference to the automap object.
+Automap& World::automap() const
+{
+    if (!automap_ptr_) throw runtime_error("Attempt to access null Automap object!");
+    return *automap_ptr_;
+}
 
 // Loads region data from YAML, and saves it as a new save file in the specified slot.
 void World::create_region_saves(int save_slot)

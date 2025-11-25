@@ -13,6 +13,7 @@
 #include "util/file/filewriter.hpp"
 #include "util/text/hash.hpp"
 #include "util/text/stringutils.hpp"
+#include "world/area/automap.hpp"
 #include "world/area/region.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/mobile.hpp"
@@ -34,12 +35,12 @@ namespace westgate {
 // Static map that converts a Direction enum into string names.
 map<Direction, string> Room::direction_names_ = {
     { Direction::NORTH, "north" }, { Direction::NORTHEAST, "northeast" }, { Direction::EAST, "east" }, { Direction::SOUTHEAST, "southeast" },
-    { Direction::SOUTH, "south" }, { Direction::SOUTHWEST, "southwest"}, { Direction::WEST, "west" }, { Direction::NORTHWEST, "northwest "},
+    { Direction::SOUTH, "south" }, { Direction::SOUTHWEST, "southwest" }, { Direction::WEST, "west" }, { Direction::NORTHWEST, "northwest" },
     { Direction::UP, "up" }, { Direction::DOWN, "down" }, { Direction::NONE, "" }
 };
 
 // Creates a blank Room with default values and no ID.
-Room::Room() : coords_{0,0,-10000}, desc_("Missing room description."), exits_{}, id_(0), name_{"Undefined Room", "undefined"} { }
+Room::Room() : coords_{0,0,-10000}, desc_("Missing room description."), exits_{}, id_(0), map_char_("{M}?"), short_name_("undefined") { }
 
 // Creates a Room with a specified ID.
 Room::Room(const string& new_id) : Room()
@@ -165,11 +166,17 @@ void Room::load_delta(FileReader* file)
                 break;
             }
 
-            case ROOM_DELTA_NAME:
+            case ROOM_DELTA_SHORT_NAME:
             {
-                // Replace the room name with the save file data.
-                name_[0] = file->read_string();
-                name_[1] = file->read_string();
+                // Replace the short room name with the save file data.
+                short_name_ = file->read_string();
+                break;
+            }
+
+            case ROOM_DELTA_MAP_CHAR:
+            {
+                // Replace the map character with the save file data.
+                map_char_ = file->read_string();
                 break;
             }
 
@@ -182,25 +189,44 @@ void Room::load_delta(FileReader* file)
 // Look around you. Just look around you.
 void Room::look() const
 {
-    print("{C}" + name_[0]);
-    print("  " + desc_);
+    const unsigned int term_width = terminal::get_width();
+    const unsigned int minimap_width = 11;
+    const unsigned int desc_width = term_width - minimap_width;
+
+    vector<string> room_desc = stringutils::ansi_vector_split(desc_, desc_width);
 
     vector<string> exits_list;
+    string exits_list_str;
     for (int i = 0; i < 10; i++)
     {
         const uint32_t exit = exits_[i];
         if (!exit) continue;
         string exit_name = "{C}" + direction_name(static_cast<Direction>(i + 1)) + "{c}";
         const Room* target_room = world().find_room(exit);
-        if (target_room->tag(RoomTag::Explored)) exit_name += " (" + target_room->name(false) + ")";
+        if (target_room->tag(RoomTag::Explored)) exit_name += " (" + target_room->short_name() + ")";
         exits_list.push_back(exit_name);
     }
-    if (exits_list.size()) print(string("{c}There ") + (exits_list.size() > 1 ? "are " : "is ") + stringutils::number_to_text(exits_list.size()) +
-        " obvious exit" + (exits_list.size() > 1 ? "s" : "") + ": " + stringutils::comma_list(exits_list, stringutils::CL_MODE_USE_AND) + ".");
+    if (exits_list.size()) exits_list_str = string("{c}There ") + (exits_list.size() > 1 ? "are " : "is ") + stringutils::number_to_text(exits_list.size()) +
+        " obvious exit" + (exits_list.size() > 1 ? "s" : "") + ": " + stringutils::comma_list(exits_list, stringutils::CL_MODE_USE_AND) + ".";
+    exits_list = stringutils::ansi_vector_split(exits_list_str, desc_width);
+    room_desc.insert(room_desc.end(), exits_list.begin(), exits_list.end());
+
+    vector<string> room_map = world().automap().generate_map(this);
+    bool desc_longer = room_desc.size() > room_map.size();
+    for (size_t i = 0; i < (desc_longer ? room_map.size() : room_desc.size()); i++)
+        room_map.at(i) += room_desc.at(i);
+    if (desc_longer)
+    {
+        for (size_t i = room_map.size(); i < room_desc.size(); i++)
+            room_map.push_back("           " + room_desc.at(i));
+    }
+
+    for (auto str : room_map)
+        print(str);
 }
 
-// Retrieves the name of this Room.
-const string& Room::name(bool full_name) const { return name_[full_name ? 0 : 1]; }
+// Retrieves the map character for this Room.
+const std::string Room::map_char() const { return map_char_ + "{0}"; }
 
 // Returns the ID of the Region this Room belongs to.
 uint32_t Room::region() const
@@ -214,8 +240,9 @@ void Room::save_delta(FileWriter* file)
     const bool tags_changed = tag(RoomTag::ChangedTags);
     const bool desc_changed = tag(RoomTag::ChangedDesc);
     const bool exits_changed = tag(RoomTag::ChangedExits);
-    const bool name_changed = tag(RoomTag::ChangedName);
-    if (!(entities_exist || tags_changed || desc_changed || exits_changed || name_changed)) return;
+    const bool short_name_changed = tag(RoomTag::ChangedShortName);
+    const bool map_char_changed = tag(RoomTag::ChangedMapChar);
+    if (!(entities_exist || tags_changed || desc_changed || exits_changed || short_name_changed || map_char_changed)) return;
 
     // Write the save version for this Room, and the Room's ID.
     file->write_data<uint32_t>(Region::REGION_DELTA_ROOM);
@@ -255,12 +282,18 @@ void Room::save_delta(FileWriter* file)
             file->write_data<uint32_t>(exits_[i]);
     }
 
-    // If the room name has changed, add it here.
-    if (name_changed)
+    // If the room's short name has changed, add it here.
+    if (short_name_changed)
     {
-        file->write_data<uint32_t>(ROOM_DELTA_NAME);
-        file->write_string(name_[0]);
-        file->write_string(name_[1]);
+        file->write_data<uint32_t>(ROOM_DELTA_SHORT_NAME);
+        file->write_string(short_name_);
+    }
+
+    // If the map character has changed, add it here.
+    if (map_char_changed)
+    {
+        file->write_data<uint32_t>(ROOM_DELTA_MAP_CHAR);
+        file->write_string(map_char_);
     }
 
     // Mark the end of the changes.
@@ -294,21 +327,23 @@ void Room::set_exit(Direction dir, uint32_t new_exit, bool mark_delta)
     exits_[static_cast<uint8_t>(dir) - 1] = new_exit;
 }
 
-// Sets the name of this Room.
-void Room::set_name(const string& new_full_name, const string& new_short_name, bool mark_delta)
+// Sets the map character for this Room.
+void Room::set_map_char(const std::string& new_char, bool mark_delta)
 {
-    if (mark_delta) set_tag(RoomTag::ChangedName);
-    if (!new_full_name.size() || !new_short_name.size())
+    if (mark_delta) set_tag(RoomTag::ChangedMapChar);
+    map_char_ = new_char;
+}
+
+// Sets the short name of this Room.
+void Room::set_short_name(const string& new_short_name, bool mark_delta)
+{
+    if (mark_delta) set_tag(RoomTag::ChangedShortName);
+    if (!new_short_name.size())
     {
         core().nonfatal("Attempt to set blank name on room.", Core::CORE_ERROR);
-        name_[0] = "Undefined Room";
-        name_[1] = "undefined";
+        short_name_ = "undefined";
     }
-    else
-    {
-        name_[0] = new_full_name;
-        name_[1] = new_short_name;
-    }
+    else short_name_ = new_short_name;
 }
 
 // Sets a RoomTag on this Room.
@@ -326,6 +361,9 @@ void Room::set_tags(list<RoomTag> tags_list, bool mark_delta)
         set_tag(the_tag);
     if (mark_delta) set_tag(RoomTag::ChangedTags, false);
 }
+
+// Retrieves the short name of this Room.
+const string& Room::short_name() const { return short_name_; }
 
 // Checks if a RoomTag is set on this Room.
 bool Room::tag(RoomTag the_tag) const { return (tags_.count(the_tag) > 0); }

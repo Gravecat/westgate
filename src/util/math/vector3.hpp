@@ -43,4 +43,23 @@ struct Vector3
     int32_t x, y, z;
 };
 
+inline void hash_combine(std::size_t& seed, std::size_t h) noexcept
+{ seed ^= h + 0x9e3779b9 + (seed << 6) + (seed >> 2); }
+
 }   // namespace westgate
+
+// specialise std::hash
+namespace std {
+using westgate::hash_combine;
+template <> struct hash<westgate::Vector3>
+{
+    std::size_t operator()(const westgate::Vector3& v) const noexcept
+    {
+        std::size_t seed = 0;
+        hash_combine(seed, std::hash<int32_t>{}(v.x));
+        hash_combine(seed, std::hash<int32_t>{}(v.y));
+        hash_combine(seed, std::hash<int32_t>{}(v.z));
+        return seed;
+    }
+};
+}   // namespace std
