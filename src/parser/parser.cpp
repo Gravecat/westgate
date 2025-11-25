@@ -42,6 +42,7 @@ static const std::map<uint32_t, Direction> parser_directions = {
 
 static const std::unordered_map<uint32_t, std::function<void(vector<uint32_t>&, vector<string>&)>> parser_verbs = {
     { 2252282012, parser::cheats::hash },       // #hash
+    { 3069208872, parser::meta::automap },      // automap
     { 2573673949, parser::world::travel },      // d
     { 715181085, parser::world::travel },       // down
     { 4163295959, parser::world::travel },      // e
@@ -50,6 +51,8 @@ static const std::unordered_map<uint32_t, std::function<void(vector<uint32_t>&, 
     { 93100650, parser::world::travel },        // go
     { 1214476199, parser::world::look },        // l
     { 365823675, parser::world::look },         // look
+    { 3654652163, parser::meta::automap },      // map
+    { 516519904, parser::meta::automap },       // minimap
     { 1337450370, parser::world::travel },      // move
     { 4254119393, parser::world::travel },      // n
     { 3641754167, parser::world::travel },      // ne
@@ -60,7 +63,7 @@ static const std::unordered_map<uint32_t, std::function<void(vector<uint32_t>&, 
     { 1253391317, parser::silly::magic_word },  // plugh
     { 1533866676, parser::silly::magic_word },  // plover
     { 3289483580, parser::meta::quit },         // quit
-    { 3627942915, parser::world::travel },       // s
+    { 3627942915, parser::world::travel },      // s
     { 1633956953, parser::meta::save },         // save
     { 3801532777, parser::world::travel },      // se
     { 819466240, parser::world::travel },       // south

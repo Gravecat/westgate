@@ -10,6 +10,7 @@
 #include "world/entity/player.hpp"
 #include "world/area/room.hpp"
 
+using std::list;
 using std::runtime_error;
 using std::to_string;
 
@@ -28,20 +29,43 @@ Player::Player(FileReader* file) : Mobile(file)
     // Check the save version for this Player.
     const uint32_t save_version = file->read_data<uint32_t>();
     if (save_version != PLAYER_SAVE_VERSION) FileReader::standard_error("Invalid player save version", save_version, PLAYER_SAVE_VERSION);
+
+    // Load the Player's tags, if any.
+    const uint32_t tags_tag = file->read_data<uint32_t>();
+    if (tags_tag != PLAYER_SAVE_TAGS) FileReader::standard_error("Invalid tag in player save data", tags_tag, PLAYER_SAVE_TAGS);
+    size_t tag_count = file->read_data<size_t>();
+    for (size_t t = 0; t < tag_count; t++)
+        set_player_tag(file->read_data<PlayerTag>());
 }
+
+// Clears a PlayerTag from this Player.
+void Player::clear_player_tag(PlayerTag the_tag)
+{
+    if (!(player_tags_.count(the_tag) > 0)) return;
+    player_tags_.erase(the_tag);
+}
+
+// Clears multiple PlayerTags at the same time.
+void Player::clear_player_tags(list<PlayerTag> tags_list) { for (auto the_tag : tags_list) clear_player_tag(the_tag); }
+
+// Checks if a PlayerTag is set on this Player.
+bool Player::player_tag(PlayerTag the_tag) const { return (player_tags_.count(the_tag) > 0); }
+
+// Checks what Region the Player is currently in.
+uint32_t Player::region() const { return region_; }
 
 // Saves this Player to a save game file.
 void Player::save(FileWriter* file)
 {
     Mobile::save(file);
     file->write_data<uint32_t>(PLAYER_SAVE_VERSION);
+
+    // Write the PlayerTags, if any.
+    file->write_data<uint32_t>(PLAYER_SAVE_TAGS);
+    file->write_data<size_t>(player_tags_.size());
+    for (auto &tag : player_tags_)
+        file->write_data<PlayerTag>(tag);
 }
-
-// A shortcut instead of using game().player()
-Player& player() { return game().player(); }
-
-// Checks what Region the Player is currently in.
-uint32_t Player::region() const { return region_; }
 
 // This is a big no-no. We're overriding this method for safety reasons.
 void Player::set_parent_entity(Entity* new_entity_parent)
@@ -57,5 +81,25 @@ void Player::set_parent_room(Room* new_room_parent)
     region_ = new_room_parent->region();
     new_room_parent->set_tag(RoomTag::Explored);
 }
+
+// Sets a PlayerTag on this Player.
+void Player::set_player_tag(PlayerTag the_tag)
+{
+    if (player_tags_.count(the_tag) > 0) return;
+    player_tags_.insert(the_tag);
+}
+
+// Sets multiple PlayerTags at the same time.
+void Player::set_player_tags(list<PlayerTag> tags_list) { for (auto the_tag : tags_list) set_player_tag(the_tag); }
+
+// Toggles a PlayerTag on or off.
+void Player::toggle_player_tag(PlayerTag the_tag)
+{
+    if (!player_tag(the_tag)) set_player_tag(the_tag);
+    else clear_player_tag(the_tag);
+}
+
+// A shortcut instead of using game().player()
+Player& player() { return game().player(); }
 
 }   // namespace westgate

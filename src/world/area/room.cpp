@@ -189,8 +189,9 @@ void Room::load_delta(FileReader* file)
 // Look around you. Just look around you.
 void Room::look() const
 {
+    const bool automap_enabled = !player().player_tag(PlayerTag::AutomapOff);
     const unsigned int term_width = terminal::get_width();
-    const unsigned int minimap_width = 11;
+    const unsigned int minimap_width = (automap_enabled ? 11 : 0);
     const unsigned int desc_width = term_width - minimap_width;
 
     vector<string> room_desc = stringutils::ansi_vector_split(desc_, desc_width);
@@ -211,14 +212,15 @@ void Room::look() const
     exits_list = stringutils::ansi_vector_split(exits_list_str, desc_width);
     room_desc.insert(room_desc.end(), exits_list.begin(), exits_list.end());
 
-    vector<string> room_map = world().automap().generate_map(this);
+    vector<string> room_map;
+    if (automap_enabled) room_map = world().automap().generate_map(this);
     bool desc_longer = room_desc.size() > room_map.size();
     for (size_t i = 0; i < (desc_longer ? room_map.size() : room_desc.size()); i++)
         room_map.at(i) += room_desc.at(i);
     if (desc_longer)
     {
         for (size_t i = room_map.size(); i < room_desc.size(); i++)
-            room_map.push_back("           " + room_desc.at(i));
+            room_map.push_back((automap_enabled ? "           " : "") + room_desc.at(i));
     }
 
     for (auto str : room_map)
