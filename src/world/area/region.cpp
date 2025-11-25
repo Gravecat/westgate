@@ -203,6 +203,16 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
             }
         }
 
+        // If the Room has any tags, process them here.
+        if (room_yaml.key_exists("tags"))
+        {
+            if (!room_yaml.get_child("tags").is_seq()) throw runtime_error(error_str + "Invalid tags section.");
+            for (auto &tag : room_yaml.get_seq("tags"))
+            {
+                room_ptr->set_tag(Room::parse_room_tag(tag), false);
+            }
+        }
+
         // If requested, update the lookup tables for Rooms and Regions.
         if (update_world)
         {

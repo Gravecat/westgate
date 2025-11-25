@@ -255,7 +255,6 @@ string TimeWeather::season_str(TimeWeather::Season season)
         case Season::SUMMER: return "SUMMER";
         default: throw runtime_error("Invalid season specified!");
     }
-    return "";
 }
 
 // Returns the current time of day (morning, day, dusk, night)
@@ -381,7 +380,6 @@ string TimeWeather::weather_str(TimeWeather::Weather weather)
         case Weather::SLEET: return "SLEET";
         default: throw runtime_error("Invalid weather specified: " + to_string(static_cast<int>(weather)));
     }
-    return "";
 }
 
 }   // namespace westgate

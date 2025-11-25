@@ -40,6 +40,11 @@ map<Direction, string> Room::direction_names_ = {
     { Direction::UP, "up" }, { Direction::DOWN, "down" }, { Direction::NONE, "" }
 };
 
+// Used during loading YAML data, to convert RoomTag text names into RoomTag enums.
+const std::map<std::string, RoomTag> Room::tag_map_ = { {"Explored", RoomTag::Explored }, { "Indoors", RoomTag::Indoors }, { "Windows", RoomTag::Windows },
+    { "Streets", RoomTag::Streets }, { "Underground", RoomTag::Underground }, { "Trees", RoomTag::Trees }, { "AlwaysWinter", RoomTag::AlwaysWinter },
+    { "AlwaysSpring", RoomTag::AlwaysSpring }, { "AlwaysSummer", RoomTag::AlwaysSummer }, { "AlwaysAutumn", RoomTag::AlwaysAutumn } };
+
 // Creates a blank Room with default values and no ID.
 Room::Room() : coords_{0,0,-10000}, desc_("Missing room description."), exits_{}, id_(0), map_char_("{M}?"), short_name_("undefined") { }
 
@@ -240,6 +245,14 @@ void Room::look() const
 
 // Retrieves the map character for this Room.
 const std::string Room::map_char() const { return map_char_ + "{0}"; }
+
+// Parses a string RoomTag name into a RoomTag enum.
+RoomTag Room::parse_room_tag(const std::string &tag)
+{
+    auto result = tag_map_.find(tag);
+    if (result == tag_map_.end()) throw runtime_error("Invalid RoomTag: " + tag);
+    return result->second;
+}
 
 // Returns the ID of the Region this Room belongs to.
 uint32_t Room::region() const

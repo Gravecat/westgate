@@ -49,7 +49,10 @@ class Room {
 public:
     static constexpr uint32_t   ROOM_SAVE_VERSION = 6;  // The expected version for saving/loading binary game data.
 
+    static const std::map<std::string, RoomTag> tag_map_;   // Used during loading YAML data, to convert RoomTag text names into RoomTag enums.
+
     static const std::string&   direction_name(Direction dir);  // Gets the string name of a Direction enum.
+    static RoomTag              parse_room_tag(const std::string &tag); // Parses a string RoomTag name into a RoomTag enum.
 
                 Room(); // Creates a blank Room with default values and no ID.
                 Room(const std::string& new_id);    // Creates a Room with a specified ID.

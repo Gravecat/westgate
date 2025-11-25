@@ -11,14 +11,14 @@ REGION_IDENTIFIER:
 SULA_PLAINS:
   coords: [ 0, 0, 100 ]
   desc: >
-    A wide field of grassy plains surrounds you, occasional bright flowers punctuating the green with a flash of colour. The sun shines brightly overhead, the
-    sky a clear blue with a few wisps of clouds. To the east stands a small wooden shack - more of a shed, really - while to the north is a grid of paved
-    stones.
+    A wide field of grassy plains surrounds you, occasional bright flowers punctuating the green with a flash of colour. To the east stands a small wooden
+    shack - more of a shed, really - while to the north is a grid of paved stones.
   exits:
     north: SULA_STONE_8
     east: SULA_SHACK
   map: "{g}O"
   short_name: plains
+  tags: [ AlwaysSpring ]
 
 SULA_SHACK:
   coords: [ 1, 0, 100 ]
@@ -29,6 +29,7 @@ SULA_SHACK:
     west: SULA_PLAINS
   map: "O"
   short_name: shack
+  tags: [ Indoors ]
 
 SULA_STONE_1:
   coords: [ -1, -3, 100 ]
