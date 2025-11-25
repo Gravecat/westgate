@@ -13,3 +13,5 @@ Westgate is copyright © 2025 [Raine "Gravecat" Simmons](https://github.com/Grav
 [rang](https://github.com/agauniyal/rang) by Abhinav Gauniyal.
 
 [Rapid YAML](https://github.com/biojppm/rapidyaml) copyright © 2018 Joao Paulo Magalhaes (<dev@jpmag.me>).
+
+Time and weather system adapted from [Keran's MUSH/MUX Weather and Time Code Package Version 4.0 beta](http://www.mushcode.com/File/Kerans-Weather-System-And-Time-Code-4-0-(PennMUSH)), (c) 1996-1998 Keran.

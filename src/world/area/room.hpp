@@ -32,6 +32,17 @@ enum class RoomTag : uint16_t {
 
     // Basic room attributes.
     Explored =      100,    // Has the player visited this Room before?
+
+    // Room attributes regarding the time/weather system.
+    Indoors =       201,    // Is this Room indoors?
+    Windows =       202,    // Is this Room an indoors location with windows?
+    Streets =       203,    // Is this Room part of some streets in a city?
+    Underground =   204,    // Is this Room underground?
+    Trees =         205,    // Are there trees nearby?
+    AlwaysWinter =  206,    // The weather system will be locked to winter for this room.
+    AlwaysSpring =  207,    // The weather system will be locked to spring for this room.
+    AlwaysSummer =  208,    // The weather system will be locked to summer for this room.
+    AlwaysAutumn =  209,    // The weather system will be locked to autumn (fall) for this room.
 };
 
 class Room {

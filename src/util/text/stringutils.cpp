@@ -46,11 +46,11 @@ vector<string> ansi_vector_split(const string &str, uint32_t line_length)
 
         // Determine if any ANSI tags are within this word. If so, record the last tag. Then measure the word length.
         size_t found_open = word.find_last_of('{');
-        size_t found_closed = word.find_last_of('}', found_open);
+        size_t found_closed = word.find_first_of('}', found_open);
         size_t word_len = 0;
         if (found_open != string::npos && found_closed != string::npos)
         {
-            last_tag = word.substr(found_open, found_closed - found_open - 1);
+            last_tag = word.substr(found_open, found_closed - found_open + 1);
             word_len = ansi_strlen(word);
         }
         else word_len = word.size();
@@ -91,6 +91,49 @@ string comma_list(vector<string> vec, uint8_t mode)
         }
     }
     return str;
+}
+
+// Decodes a compressed string (e.g. 4cab2z becomes ccccabzz).
+string decode_compressed_string(string cb)
+{
+    string result;
+    while(cb.size())
+    {
+        string letter = cb.substr(0, 1);
+        cb = cb.substr(1);
+        if (letter[0] >= '0' && letter[0] <= '9')
+        {
+            int number = letter[0] - '0';
+            letter = cb.substr(0, 1);
+            cb = cb.substr(1);
+            while (letter[0] >= '0' && letter[0] <= '9')
+            {
+                number *= 10;
+                number += letter[0] - '0';
+                letter = cb.substr(0, 1);
+                cb = cb.substr(1);
+            }
+            result += string(number, letter[0]);
+        }
+        else result += letter;
+    }
+    return result;
+}
+
+// Find and replace one string with another.
+bool find_and_replace(string &input, const string &to_find, const string &to_replace)
+{
+    string::size_type pos = 0;
+    const string::size_type find_len = to_find.length(), replace_len = to_replace.length();
+    if (find_len == 0) return false;
+    bool found = false;
+    while ((pos = input.find(to_find, pos)) != string::npos)
+    {
+        found = true;
+        input.replace(pos, find_len, to_replace);
+        pos += replace_len;
+    }
+    return found;
 }
 
 // 'Flattens' ANSI tags, by erasing redundant tags in the string.

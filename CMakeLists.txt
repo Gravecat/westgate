@@ -35,6 +35,7 @@ set(WESTGATE_CPPS
   src/world/entity/entity.cpp
   src/world/entity/mobile.cpp
   src/world/entity/player.cpp
+  src/world/time-weather.cpp
   src/world/world.cpp
 )
 

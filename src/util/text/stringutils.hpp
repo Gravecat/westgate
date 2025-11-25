@@ -17,6 +17,8 @@ std::string ansi_strip(const std::string &str);     // Strips all ANSI colour ta
 size_t      ansi_strlen(const std::string &str);    // Returns the length of a specified string, not counting the ANSI colour tags like {G} or {kR}.
 std::vector<std::string>    ansi_vector_split(const std::string &str, uint32_t line_length);    // Splits an ANSI-tagged string across multiple lines of text.
 std::string comma_list(std::vector<std::string> vec, uint8_t mode = 0);    // Converts a vector to a comma-separated list.
+std::string decode_compressed_string(std::string cb);   // Decodes a compressed string (e.g. 4cab2z becomes ccccabzz).
+bool        find_and_replace(std::string &input, const std::string &to_find, const std::string &to_replace);    // Find and replace one string with another.
 std::string flatten_tags(const std::string &str);   // 'Flattens' ANSI tags, by erasing redundant tags in the string.
 std::string number_to_text(int64_t num);    // Converts a number (e.g. 123) into a string (e.g. "one hundred and twenty-three").
 std::string str_tolower(std::string str);   // Converts a string to lower-case.

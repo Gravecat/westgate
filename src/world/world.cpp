@@ -16,6 +16,7 @@
 #include "world/area/automap.hpp"
 #include "world/area/region.hpp"
 #include "world/entity/player.hpp"
+#include "world/time-weather.hpp"
 #include "world/world.hpp"
 
 using std::make_unique;
@@ -29,14 +30,19 @@ namespace fs = std::filesystem;
 namespace westgate {
 
 // Sets up the World object and loads static data into memory.
-World::World() : automap_ptr_(make_unique<Automap>()), namegen_ptr_(make_unique<ProcNameGen>())
+World::World() : automap_ptr_(make_unique<Automap>()), namegen_ptr_(make_unique<ProcNameGen>()), time_weather_ptr_(make_unique<TimeWeather>())
 {
     core().log("Loading static data into memory.");
     namegen_ptr_->load_namelists();
 }
 
 // Destructor, explicitly frees memory used.
-World::~World() { namegen_ptr_.reset(nullptr); }
+World::~World()
+{
+    automap_ptr_.reset(nullptr);
+    namegen_ptr_.reset(nullptr);
+    time_weather_ptr_.reset(nullptr);
+}
 
 // Updates the room_regions_ map to keep track of what Region each Room is in.
 void World::add_room_to_region(uint32_t room_id, uint32_t region_id)
@@ -133,6 +139,13 @@ void World::save(int save_slot)
 {
     for (auto &region : regions_)
         region.second->save_delta(save_slot);
+}
+
+// Returns a reference to the time/weather manager object.
+TimeWeather& World::time_weather() const
+{
+    if (!time_weather_ptr_) throw runtime_error("Attempt to access null TimeWeather object!");
+    return *time_weather_ptr_;
 }
 
 // Removes a Region from memory, saving it first.

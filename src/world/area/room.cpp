@@ -18,6 +18,7 @@
 #include "world/area/room.hpp"
 #include "world/entity/mobile.hpp"
 #include "world/entity/player.hpp"
+#include "world/time-weather.hpp"
 #include "world/world.hpp"
 
 using std::list;
@@ -202,6 +203,9 @@ void Room::look() const
     }
 
     vector<string> room_desc = stringutils::ansi_vector_split(desc_, desc_width);
+
+    vector<string> weather_desc = stringutils::ansi_vector_split("{K}" + world().time_weather().weather_desc(), desc_width);
+    room_desc.insert(room_desc.end(), weather_desc.begin(), weather_desc.end());
 
     vector<string> exits_list;
     string exits_list_str;

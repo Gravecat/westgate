@@ -16,6 +16,7 @@ class Automap;      // defined in world/area/automap.hpp
 class ProcNameGen;  // defined in util/text/namegen.hpp
 class Region;       // defined in world/area/region.hpp
 class Room;         // defined in world/area/room.hpp
+class TimeWeather;  // defined in world/time-weather.hpp
 
 class World {
 public:
@@ -31,6 +32,7 @@ public:
     Region*         load_region(uint32_t id);   // Specifies a Region to be loaded into memory.
     ProcNameGen&    namegen() const;        // Returns a reference to the procedural name generator object.
     void            save(int save_slot);    // Saves the game! Should only be called via Game::save().
+    TimeWeather&    time_weather() const;   // Returns a reference to the time/weather manager object.
     void            unload_region(uint32_t id); // Removes a Region from memory, saving it first.
 
 private:
@@ -38,6 +40,7 @@ private:
     std::unique_ptr<ProcNameGen>    namegen_ptr_;   // Pointer to the procedural name-generator object.
     std::unordered_map<uint32_t, std::unique_ptr<Region>>   regions_;   // The Regions currently loaded into memory.
     std::unordered_map<uint32_t, uint32_t>  room_regions_;  // Lookup table to determine which Region each Room is located in.
+    std::unique_ptr<TimeWeather>    time_weather_ptr_;  // Pointer to the time/weather manager object.
 };
 
 World&  world();    // Shortcut instead of using game()->world()
