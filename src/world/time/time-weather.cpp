@@ -31,10 +31,18 @@ namespace fs = std::filesystem;
 namespace westgate {
 
 // Sets up the time and weather system with default values, and loads its strings into memory.
-TimeWeather::TimeWeather() : day_(80), moon_(1), time_(39660), time_passed_(0), time_passed_subsecond_(0), weather_(Weather::FAIR)
+TimeWeather::TimeWeather() : time_passed_(0), time_passed_subsecond_(0)
 {
-    weather_change_map_.resize(9);
+    // Slightly randomize the starting time, but keep it within certain parameters (early- to mid-spring, between sunrise and noon).
+    day_ = random::get<int>(80, 130);
+    moon_ = (day_ - 79) % LUNAR_CYCLE_DAYS;
+    time_ = random::get<int>(420 * Time::MINUTE, 660 * Time::MINUTE);
 
+    // The starting weather is always either clear or fair.
+    if (random::get<bool>(0.5f)) weather_ = Weather::CLEAR;
+    else weather_ = Weather::FAIR;
+
+    weather_change_map_.resize(9);
     const std::string filename = core().datafile("misc/weather.yml");
     if (!fs::is_regular_file(filename)) throw runtime_error("Could not load weather.yml!");
     YAML yaml(filename);
