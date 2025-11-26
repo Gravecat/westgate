@@ -44,6 +44,7 @@ static const std::map<uint32_t, Direction> parser_directions = {
 static const std::unordered_map<uint32_t, std::function<void(vector<uint32_t>&, vector<string>&)>> parser_verbs = {
     { 2252282012, parser::cheats::hash },       // #hash
     { 3069208872, parser::meta::automap },      // automap
+    { 2746646486, parser::world::open_close },  // close
     { 2573673949, parser::world::travel },      // d
     { 715181085, parser::world::travel },       // down
     { 4163295959, parser::world::travel },      // e
@@ -61,6 +62,7 @@ static const std::unordered_map<uint32_t, std::function<void(vector<uint32_t>&, 
     { 1897786808, parser::world::travel },      // northeast
     { 320024672, parser:: world::travel },      // northwest
     { 4257653048, parser::world::travel },      // nw
+    { 21229531, parser::world::open_close},     // open
     { 1253391317, parser::silly::magic_word },  // plugh
     { 1533866676, parser::silly::magic_word },  // plover
     { 3289483580, parser::meta::quit },         // quit

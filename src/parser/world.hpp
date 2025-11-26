@@ -16,6 +16,7 @@ namespace world {
 
 void    look(PARSER_FUNCTION);      // Look around you. Just look around you.
 void    travel(PARSER_FUNCTION);    // Travels in a specific direction.
+void    open_close(PARSER_FUNCTION);    // Attempts to open or close a door or similar.
 void    wait(PARSER_FUNCTION);      // Waits or rests for a specified period of time.
 
 } } }   // world, parser, westgate namespaces

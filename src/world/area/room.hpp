@@ -50,6 +50,7 @@ public:
 
     static const std::string&   direction_name(Direction dir);  // Gets the string name of a Direction enum.
     static RoomTag              parse_room_tag(const std::string &tag); // Parses a string RoomTag name into a RoomTag enum.
+    static Direction            reverse_direction(Direction dir);   // Reverses a Direction (e.g. north becomes south).
 
                 Room(); // Creates a blank Room with default values and no ID.
                 Room(const std::string& new_id);    // Creates a Room with a specified ID.
@@ -62,6 +63,7 @@ public:
     const Vector3   coords() const; // Retrieves the coordinates of this Room.
     const std::string   door_name(Direction dir) const; // Returns the name of the door (door, gate, etc.) on the specified Link, if any.
     Room*       get_link(Direction dir);    // Gets the Room linked in the specified direction, or nullptr if none is linked.
+    bool        has_exit(Direction dir) const;  // Checks if an Exit exists in the specified Direction.
     uint32_t    id() const;     // Retrieves the hashed ID of this Room.
     const std::string&  id_str() const; // Retrieves the string ID of this Room.
     bool        link_tag(Direction dir, LinkTag tag) const; // Checks a LinkTag on a specified Link.
@@ -100,6 +102,7 @@ private:
     static constexpr uint32_t   ROOM_DELTA_LINK_CHANGED =   201;    // Marks this Link as existing and modified.
 
     static const std::map<Direction, std::string> direction_names_; // Static map that converts a Direction enum into string names.
+    static const std::map<Direction, Direction> reverse_direction_map_; // Static map that inverts a Direction (e.g. east -> west).
     static const std::map<std::string, RoomTag> tag_map_;   // Used during loading YAML data, to convert RoomTag text names into RoomTag enums.
 
     // Turns a Direction into an int for array access, produces a standard error on invalid input.

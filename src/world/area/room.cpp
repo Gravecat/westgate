@@ -40,6 +40,12 @@ const map<Direction, string> Room::direction_names_ = {
     { Direction::UP, "up" }, { Direction::DOWN, "down" }, { Direction::NONE, "" }
 };
 
+// Static map that inverts a Direction (e.g. east -> west).
+const std::map<Direction, Direction> Room::reverse_direction_map_ = { { Direction::NONE, Direction::NONE }, { Direction::NORTH, Direction:: SOUTH },
+    { Direction::NORTHEAST, Direction::SOUTHWEST }, { Direction::EAST, Direction::WEST }, { Direction::SOUTHEAST, Direction::NORTHWEST },
+    { Direction::SOUTH, Direction::NORTH }, { Direction::SOUTHWEST, Direction::NORTHEAST }, { Direction::WEST, Direction::EAST },
+    { Direction::NORTHWEST, Direction::SOUTHEAST }, { Direction::UP, Direction::DOWN }, { Direction::DOWN, Direction::UP } };
+
 // Used during loading YAML data, to convert RoomTag text names into RoomTag enums.
 const std::map<std::string, RoomTag> Room::tag_map_ = { {"Explored", RoomTag::Explored }, { "Indoors", RoomTag::Indoors }, { "Windows", RoomTag::Windows },
     { "City", RoomTag::City }, { "Underground", RoomTag::Underground }, { "Trees", RoomTag::Trees }, { "AlwaysWinter", RoomTag::AlwaysWinter },
@@ -146,6 +152,10 @@ Room* Room::get_link(Direction dir)
     if (!links_[array_pos]) return nullptr;
     return world().find_room(links_[array_pos]->get());
 }
+
+// Checks if an Exit exists in the specified Direction.
+bool Room::has_exit(Direction dir) const
+{ return (links_[link_id(dir, "has_exit", false)] != nullptr); }
 
 // Retrieves the hashed ID of this Room.
 uint32_t Room::id() const { return id_; }
@@ -341,6 +351,18 @@ RoomTag Room::parse_room_tag(const std::string &tag)
 // Returns the ID of the Region this Room belongs to.
 uint32_t Room::region() const
 { return world().find_room_region(id_); }
+
+// Reverses a Direction (e.g. north becomes south).
+Direction Room::reverse_direction(Direction dir)
+{
+    if (dir > Direction::UP)
+    {
+        core().nonfatal("Attempt to reverse invalid direction: " + to_string(static_cast<int>(dir)), Core::CORE_ERROR);
+        return Direction::NONE;
+    }
+    return reverse_direction_map_.find(dir)->second;
+    
+}
 
 // Saves only the changes to this Room in a save file. Should only be called by a parent Region.
 void Room::save_delta(FileWriter* file)

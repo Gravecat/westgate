@@ -31,6 +31,8 @@ public:
     uint32_t        find_room_region(uint32_t id) const;    // Attempts to find the Region that a specified Room belongs to.
     Region*         load_region(uint32_t id);   // Specifies a Region to be loaded into memory.
     ProcNameGen&    namegen() const;        // Returns a reference to the procedural name generator object.
+                    // Opens/closes a door, without checking for locks/etc., without printing any messages.
+    void            open_close_no_checks(Room* room, Direction dir, bool open);
     void            save(int save_slot);    // Saves the game! Should only be called via Game::save().
     TimeWeather&    time_weather() const;   // Returns a reference to the time/weather manager object.
     void            unload_region(uint32_t id); // Removes a Region from memory, saving it first.

@@ -134,6 +134,25 @@ ProcNameGen& World::namegen() const
     return *namegen_ptr_;
 }
 
+// Opens/closes a door, without checking for locks/etc., without printing any messages.
+void World::open_close_no_checks(Room* room, Direction dir, bool open)
+{
+    if (!room) throw runtime_error("Attempt to open/close door with null room pointer!");
+    if (!room->has_exit(dir)) throw runtime_error("Attempt to open/close door on nonexistent exit! [" + room->id_str() + "]");
+    if (!room->link_tag(dir, LinkTag::Openable)) throw runtime_error("Attempt to open/close a non-Openable exit! [" + room->id_str() + "]");
+    Room* dest_room = room->get_link(dir);
+    if (open)
+    {
+        room->set_link_tag(dir, LinkTag::Open);
+        dest_room->set_link_tag(Room::reverse_direction(dir), LinkTag::Open);
+    }
+    else
+    {
+        room->clear_link_tag(dir, LinkTag::Open);
+        dest_room->clear_link_tag(Room::reverse_direction(dir), LinkTag::Open);
+    }
+}
+
 // Saves the game! Should only be called via Game::save().
 void World::save(int save_slot)
 {

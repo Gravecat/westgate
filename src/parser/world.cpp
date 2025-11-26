@@ -27,6 +27,47 @@ void look(PARSER_FUNCTION)
     player().parent_room()->look();
 }
 
+// Attempts to open or close a door or similar.
+void open_close(PARSER_FUNCTION)
+{ PARSER_NO_WORDS
+    const bool open = (words_hashed.at(0) == 21229531);
+    const string open_close = (open ? "open" : "close");
+    const string open_closed = (open ? "open" : "closed");
+
+    if (words_hashed.size() < 2)
+    {
+        print("{Y}Please specify a direction to " + open_close + " something.");
+        return;
+    }
+    Direction dir = parse_direction(words_hashed.at(1));
+    if (dir == Direction::NONE)
+    {
+        print("{Y}I don't understand. Please specify a direction to " + open_close + " something.");
+        return;
+    }
+
+    Room* room = player().parent_room();
+    if (!room->get_link(dir))
+    {
+        print("{Y}There isn't anything to " + open_close + " in that direction.");
+        return;
+    }
+    if (!room->link_tag(dir, LinkTag::Openable))
+    {
+        print("{Y}That isn't something you can " + open_close + "!");
+        return;
+    }
+    const bool is_open = room->link_tag(dir, LinkTag::Open);
+    if ((open && is_open) || (!open && !is_open))
+    {
+        print("{Y}It's already " + open_closed + ".");
+        return;
+    }
+
+    westgate::world().open_close_no_checks(room, dir, open);
+    print("You " + open_close + " the " + room->door_name(dir) + ".");
+}
+
 // Travels in a specific direction.
 void travel(PARSER_FUNCTION)
 {
