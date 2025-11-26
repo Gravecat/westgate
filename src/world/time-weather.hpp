@@ -24,6 +24,8 @@ public:
     enum class TimeOfDay : uint8_t { DAWN, SUNRISE, MORNING, NOON, SUNSET, DUSK, NIGHT, MIDNIGHT, DAY };
     enum class Weather : uint8_t { BLIZZARD, STORMY, RAIN, CLEAR, FAIR, OVERCAST, FOG, LIGHTSNOW, SLEET };
 
+    static constexpr int    TIME_TO_MOVE =  30; // The time it takes to move from one Room to another, in seconds.
+
                 TimeWeather();              // Sets up the time and weather system with default values, and loads its strings into memory.
     Season      current_season();           // Gets the current season.
     std::string day_name();                 // Returns the name of the current day of the week.
@@ -48,7 +50,6 @@ public:
 private:
     static constexpr int    LUNAR_CYCLE_DAYS =  29;     // How many days are in a lunar cycle?
     static constexpr float  TIME_GRANULARITY =  0.1f;   // The lower this number, the more fine-grained the accuracy of the passage of time becomes.
-    static constexpr int    TIME_TO_MOVE =      30;     // The time it takes to move from one Room to another, in seconds.
 
     Weather     fix_weather(Weather weather, Season season);    // Fixes weather for a specified season.
     void        trigger_event(std::string *message_to_append, bool silent); // Triggers a time-change event.

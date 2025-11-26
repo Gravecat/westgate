@@ -239,6 +239,7 @@ void Room::look() const
             room_map.push_back((automap_enabled ? "           " : "") + room_desc.at(i));
     }
 
+    print();
     for (auto str : room_map)
         print(str);
 }

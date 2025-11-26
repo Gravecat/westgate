@@ -65,7 +65,7 @@ const string get_input()
     cout << '\n' << rang::style::reset << rang::fgB::green << "> ";
     string input;
     do { std::getline(std::cin, input); } while(!input.size());
-    cout << rang::style::reset << '\n';
+    cout << rang::style::reset;
     return input;
 }
 

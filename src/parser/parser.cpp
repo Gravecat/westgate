@@ -20,6 +20,7 @@
 #include "util/text/stringutils.hpp"
 #include "world/area/room.hpp"
 
+using std::stol;
 using std::string;
 using std::vector;
 using westgate::terminal::print;
@@ -74,8 +75,10 @@ static const std::unordered_map<uint32_t, std::function<void(vector<uint32_t>&, 
     { 2399778729, parser::world::travel },      // u
     { 367575389, parser::world::travel },       // up
     { 3359274028, parser::world::travel },      // w
+    { 51785697, parser::world::wait },          // wait
     { 3976103327, parser::world::travel },      // west
-    { 42193550, parser::silly::magic_word }     // xyzzy
+    { 42193550, parser::silly::magic_word },    // xyzzy
+    { 1601889381, parser::world::wait }         // z
 };
 
 // Parses a hashed string into a Direction enum.
@@ -84,6 +87,19 @@ Direction parse_direction(uint32_t hash)
     auto result = parser_directions.find(hash);
     if (result == parser_directions.end()) return Direction::NONE;
     else return result->second;
+}
+
+// Attempts to parse a string into a number; invalid results are set to INT_MIN.
+int32_t parse_number(const std::string &num)
+{
+    int32_t result = 0;
+    try
+    { result = stol(num); }
+    catch(const std::invalid_argument&)
+    { return INT_MIN; }
+    catch(const std::out_of_range&)
+    { return INT_MIN; }
+    return result;
 }
 
 // Processes input from the player.

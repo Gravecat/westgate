@@ -226,7 +226,7 @@ bool TimeWeather::pass_time(float seconds, bool allow_interrupt)
             change_happened = show_weather_messages;
         }
 
-        if (change_happened) print(weather_msg.substr(1));
+        if (change_happened) print("{y}" + weather_msg.substr(1));
 
         //Encounters::tick(1);
 
@@ -336,7 +336,7 @@ void TimeWeather::trigger_event(string *message_to_append, bool silent)
     const string time_message = tw_string_map_.at(time_of_day_str(true) + "_" + weather_str(fix_weather(weather_, current_season())) +
         (indoors() == Indoors::INDOORS ? "_INDOORS" : ""));
     if (message_to_append) *message_to_append += " " + time_message;
-    else print(time_message);
+    else print("{y}" + time_message);
 }
 
 // Gets the current weather, runs fix_weather() internally.
