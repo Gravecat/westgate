@@ -16,6 +16,7 @@
 #include "util/file/filewriter.hpp"
 #include "world/area/region.hpp"
 #include "world/entity/player.hpp"
+#include "world/time-weather.hpp"
 #include "world/world.hpp"
 
 using std::make_unique;
@@ -65,22 +66,25 @@ void Game::load_game(int save_slot)
         core().destroy_core(EXIT_SUCCESS);
     }
 
-    // Load the metadata file.
-    const fs::path meta_path = BinPath::merge_paths(save_path.string(), "meta.wg");
-    if (!fs::exists(meta_path)) throw runtime_error("Could not locate saved game metadata!");
-    auto file = make_unique<FileReader>(meta_path.string());
+    // Load the misc data file.
+    const fs::path misc_path = BinPath::merge_paths(save_path.string(), "savedata.wg");
+    if (!fs::exists(misc_path)) throw runtime_error("Could not locate saved game data!");
+    auto file = make_unique<FileReader>(misc_path.string());
 
-    // Check the metadata headers and version.
-    if (!file->check_header()) throw runtime_error("Invalid metadata header!");
-    const uint32_t meta_version = file->read_data<uint32_t>();
-    if (meta_version != METADATA_SAVE_VERSION) FileReader::standard_error("Invalid metadata version", meta_version, METADATA_SAVE_VERSION);
-    if (file->read_string() != "METADATA") throw runtime_error("Invalid metadata header!");
+    // Check the misc data headers and version.
+    if (!file->check_header()) throw runtime_error("Invalid save data header!");
+    const uint32_t misc_version = file->read_data<uint32_t>();
+    if (misc_version != MISC_DATA_SAVE_VERSION) FileReader::standard_error("Invalid save data version", misc_version, MISC_DATA_SAVE_VERSION);
+    if (file->read_string() != "MISC_DATA") throw runtime_error("Invalid save data header!");
 
     // Check what Region the player is in.
     const uint32_t current_region = file->read_data<uint32_t>();
 
+    // Load the time/weather data.
+    world_ptr_->time_weather().load_data(file.get());
+
     // Finally, check the footer before closing the file.
-    if (!file->check_footer()) throw runtime_error("Invalid metadata footer!");
+    if (!file->check_footer()) throw runtime_error("Invalid save data footer!");
     file.reset(nullptr);
 
     // Load the Region that contains the Player object.
@@ -115,24 +119,27 @@ void Game::save(bool chatty)
 {
     if (chatty) print("{B}Saving the game...", false);
     world_ptr_->save(save_id_);
-    save_metadata();
+    save_misc_data();
     if (chatty) print(" Done!");
 }
 
-// Saves a metadata save file, which contains basic info like the current region and save file version.
-void Game::save_metadata()
+// Writes a misc save file, which contains everything that isn't in the region saves.
+void Game::save_misc_data()
 {
-    const fs::path save_path = BinPath::game_path("userdata/saves/" + to_string(save_id_) + "/meta.wg");
+    const fs::path save_path = BinPath::game_path("userdata/saves/" + to_string(save_id_) + "/savedata.wg");
     if (fs::exists(save_path)) fs::remove(save_path);
     auto file = make_unique<FileWriter>(save_path.string());
 
-    // Write the standard header, then the metadata version, and the metadata string tag.
+    // Write the standard header, then the misc data version, and the misc data string tag.
     file->write_header();
-    file->write_data<uint32_t>(METADATA_SAVE_VERSION);
-    file->write_string("METADATA");
+    file->write_data<uint32_t>(MISC_DATA_SAVE_VERSION);
+    file->write_string("MISC_DATA");
 
-    // The only other thing to write for now is the player's region ID.
+    // The only misc data to write for now is the player's region ID.
     file->write_data<uint32_t>(player_ptr_->region());
+
+    // And the time/weather data, which is saved elsewhere.
+    world_ptr_->time_weather().save_data(file.get());
 
     // And the EOF footer, of course.
     file->write_footer();

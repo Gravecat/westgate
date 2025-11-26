@@ -8,6 +8,8 @@
 
 #include "core/core.hpp"
 #include "core/terminal.hpp"
+#include "util/file/filereader.hpp"
+#include "util/file/filewriter.hpp"
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
 #include "util/text/stringutils.hpp"
@@ -145,6 +147,19 @@ TimeWeather::LightDark TimeWeather::light_dark()
     else return LightDark::NIGHT;
 }
 
+// Loads the time/weather data from the specified save file.
+void TimeWeather::load_data(FileReader* file)
+{
+    const uint32_t tw_save_ver = file->read_data<uint32_t>();
+    if (tw_save_ver != TIME_WEATHER_SAVE_VERSION) FileReader::standard_error("Incompatible time/weather data version", tw_save_ver, TIME_WEATHER_SAVE_VERSION);
+    day_ = file->read_data<int>();
+    moon_ = file->read_data<int>();
+    time_ = file->read_data<int>();
+    time_passed_ = file->read_data<uint64_t>();
+    time_passed_subsecond_ = file->read_data<float>();
+    weather_ = file->read_data<Weather>();
+}
+
 // Returns the name of the current month.
 string TimeWeather::month_name()
 {
@@ -255,6 +270,18 @@ string TimeWeather::season_str(TimeWeather::Season season)
         case Season::SUMMER: return "SUMMER";
         default: throw runtime_error("Invalid season specified!");
     }
+}
+
+// Saves the time/weather data to the specified datafile.
+void TimeWeather::save_data(FileWriter* file)
+{
+    file->write_data<uint32_t>(TIME_WEATHER_SAVE_VERSION);
+    file->write_data<int>(day_);
+    file->write_data<int>(moon_);
+    file->write_data<int>(time_);
+    file->write_data<uint64_t>(time_passed_);
+    file->write_data<float>(time_passed_subsecond_);
+    file->write_data<Weather>(weather_);
 }
 
 // Returns the current time of day (morning, day, dusk, night)

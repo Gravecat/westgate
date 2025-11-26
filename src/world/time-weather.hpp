@@ -13,6 +13,9 @@
 
 namespace westgate {
 
+class FileReader;   // defined in util/file/filereader.hpp
+class FileWriter;   // defined in util/file/filewriter.hpp
+
 class TimeWeather
 {
 public:
@@ -33,10 +36,12 @@ public:
     std::string day_of_month_string();      // Returns the day of the month in the form of a string like "1st" or "19th".
     Indoors     indoors();                  // Gets the indoors/outdoors state.
     LightDark   light_dark();               // Checks whether it's light or dark right now.
+    void        load_data(FileReader* file);    // Loads the time/weather data from the specified save file.
     std::string month_name();               // Returns the name of the current month.
     LunarPhase  moon_phase();               // Gets the current lunar phase.
     bool        pass_time(float seconds, bool allow_interrupt = false); // Causes time to pass.
     Season      room_season();              // Retrieves the season override (if any) for the current Room.
+    void        save_data(FileWriter* file);    // Saves the time/weather data to the specified save file.
     std::string season_str(Season season);  // Converts a season integer to a string.
     void        tick();                     // Advances time by the smallest possible gradient; useful for loops waiting for something to happen.
     TimeOfDay   time_of_day(bool fine);     // Returns the current time of day (morning, day, dusk, night)
@@ -50,6 +55,7 @@ public:
 private:
     static constexpr int    LUNAR_CYCLE_DAYS =  29;     // How many days are in a lunar cycle?
     static constexpr float  TIME_GRANULARITY =  0.1f;   // The lower this number, the more fine-grained the accuracy of the passage of time becomes.
+    static constexpr int    TIME_WEATHER_SAVE_VERSION = 1;  // The version of the time/weather saved data in the saved game file.
 
     Weather     fix_weather(Weather weather, Season season);    // Fixes weather for a specified season.
     void        trigger_event(std::string *message_to_append, bool silent); // Triggers a time-change event.
