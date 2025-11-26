@@ -206,7 +206,7 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
                     if (exit_yaml.size() > 1)
                     {
                         for (size_t i = 1; i < exit_yaml.size(); i++)
-                            room_ptr->set_link_tag(dir, Link::parse_link_tag(exit_yaml.get(i)));
+                            room_ptr->set_link_tag(dir, Link::parse_link_tag(exit_yaml.get(i)), false);
                     }
                 }
                 else room_ptr->set_link(dir, hash::murmur3(exits_yaml.val(exit_key)), false);

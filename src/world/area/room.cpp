@@ -88,6 +88,7 @@ void Room::clear_link_tag(Direction dir, LinkTag tag, bool mark_delta)
 {
     int array_pos = link_id(dir, "clear_link_tag", true);
     links_[array_pos]->clear_tag(tag, mark_delta);
+    if (mark_delta) set_tag(RoomTag::ChangedExits);
 }
 
 // Clears multiple LinkTags at once.
@@ -95,6 +96,7 @@ void Room::clear_link_tags(Direction dir, std::list<LinkTag> tags_list, bool mar
 {
     int array_pos = link_id(dir, "clear_link_tags", true);
     links_[array_pos]->clear_tags(tags_list, mark_delta);
+    if (mark_delta) set_tag(RoomTag::ChangedExits);
 }
 
 // Clears a RoomTag from this Room.
@@ -481,6 +483,7 @@ void Room::set_link_tag(Direction dir, LinkTag tag, bool mark_delta)
 {
     int array_pos = link_id(dir, "set_link_tag", true);
     links_[array_pos]->set_tag(tag, mark_delta);
+    if (mark_delta) set_tag(RoomTag::ChangedExits);
 }
 
 // Sets multiple LinkTags at once.
@@ -488,6 +491,7 @@ void Room::set_link_tags(Direction dir, std::list<LinkTag> tags_list, bool mark_
 {
     int array_pos = link_id(dir, "set_link_tags", true);
     links_[array_pos]->set_tags(tags_list, mark_delta);
+    if (mark_delta) set_tag(RoomTag::ChangedExits);
 }
 
 // Sets the map character for this Room.

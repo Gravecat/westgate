@@ -23,7 +23,7 @@ Link::Link() : links_to_(0) { }
 
 // Checks if this Link has been modified.
 bool Link::changed() const
-{ return (!(tag(LinkTag::ChangedLink) || tag(LinkTag::ChangedTags))); }
+{ return (tag(LinkTag::ChangedLink) || tag(LinkTag::ChangedTags)); }
 
 // Clears a LinkTag from this Link.
 void Link::clear_tag(LinkTag the_tag, bool mark_delta)
