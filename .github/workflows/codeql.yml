@@ -58,21 +58,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Conditional check for code changes
-        uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          filters: |
-            src:
-              - '**/*.c'
-              - '**/*.cpp'
-              - '**/*.h'
-              - '**/*.hpp'
-              - '**/*.hpp.in'
-              - '**/*.rc.in'
-              - '**/CMakeLists.txt'
-              - '.github/workflows/**'
-
       # Add any setup steps before running the `github/codeql-action/init` action.
       # This includes steps like installing compilers or runtimes (`actions/setup-node`
       # or others). This is typically only required for manual builds.
@@ -81,7 +66,6 @@ jobs:
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
-        if: steps.changes.outputs.src == 'true'
         uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
@@ -100,7 +84,7 @@ jobs:
       # ℹ️ Command-line programs to run using the OS shell.
       # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
       - name: Run manual build steps
-        if: matrix.build-mode == 'manual' && steps.changes.outputs.src == 'true'
+        if: matrix.build-mode == 'manual'
         shell: bash
         run: |
           echo 'If you are using a "manual" build mode for one or more of the' \
@@ -111,7 +95,6 @@ jobs:
           exit 1
 
       - name: Perform CodeQL Analysis
-        if: steps.changes.outputs.src == 'true'
         uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{matrix.language}}"
