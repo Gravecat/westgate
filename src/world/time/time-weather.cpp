@@ -230,7 +230,7 @@ bool TimeWeather::pass_time(float seconds, bool allow_interrupt)
         {
             if (++day_ > 364) day_ = 1;
             if (++moon_ >= LUNAR_CYCLE_DAYS) moon_ = 0;
-            print("{y}It is now " + day_name() + ", the " + day_of_month_string() + " day of " +  month_name() + ".");
+            print("{Y}It is now " + day_name() + ", the " + day_of_month_string() + " day of " +  month_name() + ".");
         }
         old_time = time_;
         if (time_of_day(true) != old_time_of_day)
