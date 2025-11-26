@@ -199,7 +199,7 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
             {
                 Direction dir = parser::parse_direction(hash::murmur3(exit.first));
                 if (dir == Direction::NONE) throw runtime_error(error_str + "Invalid room exits.");
-                room_ptr->set_exit(dir, hash::murmur3(exit.second), false);
+                room_ptr->set_link(dir, hash::murmur3(exit.second), false);
             }
         }
 

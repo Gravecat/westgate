@@ -46,7 +46,7 @@ const std::map<std::string, RoomTag> Room::tag_map_ = { {"Explored", RoomTag::Ex
     { "AlwaysSpring", RoomTag::AlwaysSpring }, { "AlwaysSummer", RoomTag::AlwaysSummer }, { "AlwaysAutumn", RoomTag::AlwaysAutumn } };
 
 // Creates a blank Room with default values and no ID.
-Room::Room() : coords_{0,0,-10000}, desc_("Missing room description."), exits_{}, id_(0), map_char_("{M}?"), short_name_("undefined") { }
+Room::Room() : coords_{0,0,-10000}, desc_("Missing room description."), links_{}, id_(0), map_char_("{M}?"), short_name_("undefined") { }
 
 // Creates a Room with a specified ID.
 Room::Room(const string& new_id) : Room()
@@ -117,8 +117,8 @@ Room* Room::get_link(Direction dir)
         core().nonfatal("Attempt to retrieve invalid room link on " + id_str_ + " (" + to_string(array_pos) + ")", Core::CORE_ERROR);
         return nullptr;
     }
-    if (!exits_[array_pos]) return nullptr;
-    return world().find_room(exits_[array_pos]);
+    if (!links_[array_pos]) return nullptr;
+    return world().find_room(links_[array_pos]->get());
 }
 
 // Retrieves the hashed ID of this Room.
@@ -172,11 +172,32 @@ void Room::load_delta(FileReader* file)
                 break;
             }
 
-            case ROOM_DELTA_EXITS:
+            case ROOM_DELTA_LINKS:
             {
-                // Clear the existing room exits, replace them with the save file data.
                 for (int i = 0; i < 10; i++)
-                    exits_[i] = file->read_data<uint32_t>();
+                {
+                    const uint32_t link_delta_type = file->read_data<uint32_t>();
+                    switch(link_delta_type)
+                    {
+                        // If no Link is marked, delete any Link that may currently be there.
+                        case ROOM_DELTA_LINK_NONE: links_[i].reset(nullptr); break;
+
+                        // If the Link is unchanged, ensure it exists, and if so, do nothing more.
+                        case ROOM_DELTA_LINK_UNCHANGED:
+                            if (!links_[i]) throw runtime_error("Missing link marked as unchanged! [" + id_str_ + "]");
+                            break;
+
+                        // If the Link has changed, load it from the data file, creating a blank Link first if needed.
+                        case ROOM_DELTA_LINK_CHANGED:
+                        {
+                            if (!links_[i]) links_[i] = make_unique<Link>();
+                            links_[i]->load_delta(file);
+                            break;
+                        }
+
+                        default: FileReader::standard_error("Unknown link delta identifier", link_delta_type, 0, {id_str_});
+                    }
+                }
                 break;
             }
 
@@ -227,8 +248,8 @@ void Room::look() const
     string exits_list_str;
     for (int i = 0; i < 10; i++)
     {
-        const uint32_t exit = exits_[i];
-        if (!exit) continue;
+        if (!links_[i]) continue;
+        const uint32_t exit = links_[i]->get();
         string exit_name = "{C}" + direction_name(static_cast<Direction>(i + 1)) + "{c}";
         const Room* target_room = world().find_room(exit);
         if (target_room->tag(RoomTag::Explored)) exit_name += " (" + target_room->short_name() + ")";
@@ -315,9 +336,20 @@ void Room::save_delta(FileWriter* file)
     // If any of the exits have changed, add them here.
     if (exits_changed)
     {
-        file->write_data<uint32_t>(ROOM_DELTA_EXITS);
+        file->write_data<uint32_t>(ROOM_DELTA_LINKS);
         for (int i = 0; i < 10; i++)
-            file->write_data<uint32_t>(exits_[i]);
+        {
+            if (links_[i])
+            {
+                if (links_[i]->changed())
+                {
+                    file->write_data<uint32_t>(ROOM_DELTA_LINK_CHANGED);
+                    links_[i]->save_delta(file);
+                }
+                else file->write_data<uint32_t>(ROOM_DELTA_LINK_UNCHANGED);
+            }
+            else file->write_data<uint32_t>(ROOM_DELTA_LINK_NONE);
+        }
     }
 
     // If the room's short name has changed, add it here.
@@ -358,11 +390,18 @@ void Room::set_desc(const string& new_desc, bool mark_delta)
 }
 
 // Sets an exit link from this Room to another.
-void Room::set_exit(Direction dir, uint32_t new_exit, bool mark_delta)
+void Room::set_link(Direction dir, uint32_t new_exit, bool mark_delta)
 {
-    if (mark_delta) set_tag(RoomTag::ChangedExits);
     if (dir == Direction::NONE || dir > Direction::DOWN) throw runtime_error("Invalid direction on set_exit call (" + id_str_ + ")");
-    exits_[static_cast<uint8_t>(dir) - 1] = new_exit;
+    int array_pos = static_cast<int>(dir) - 1;
+    if (!links_[array_pos])
+    {
+        auto new_link = std::make_unique<Link>();
+        new_link->set(new_exit, mark_delta);
+        links_[array_pos] = std::move(new_link);
+    }
+    else links_[array_pos]->set(new_exit, mark_delta);
+    if (mark_delta) set_tag(RoomTag::ChangedExits);
 }
 
 // Sets the map character for this Room.

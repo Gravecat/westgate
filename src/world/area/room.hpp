@@ -12,6 +12,7 @@
 #include <set>
 
 #include "util/math/vector3.hpp"
+#include "world/area/link.hpp"
 #include "world/entity/entity.hpp"
 
 namespace westgate {
@@ -19,14 +20,12 @@ namespace westgate {
 class FileReader;   // defined in util/file/filereader.hpp
 class FileWriter;   // defined in util/file/filewriter.hpp
 
-// Cardinal directions, along with up/down, to link the world together.
-enum class Direction : uint8_t { NONE, NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST, UP, DOWN };
-
+// Tags are kinda like flags that can be set on Rooms, except using std::set.
 enum class RoomTag : uint16_t {
     // Tags regarding changes made to this Room.
     ChangedTags =       1,  // The RoomTags on this Room have been changed.
     ChangedDesc =       2,  // The Room's description has been changed.
-    ChangedExits =      3,  // One or more exits in this Room have changed.
+    ChangedExits =      3,  // The Room's exits have been changed.
     ChangedShortName =  4,  // The short name of this Room has been changed.
     ChangedMapChar =    5,  // The map character for this Room has been changed.
 
@@ -47,7 +46,7 @@ enum class RoomTag : uint16_t {
 
 class Room {
 public:
-    static constexpr uint32_t   ROOM_SAVE_VERSION = 6;  // The expected version for saving/loading binary game data.
+    static constexpr uint32_t   ROOM_SAVE_VERSION = 7;  // The expected version for saving/loading binary game data.
 
     static const std::map<std::string, RoomTag> tag_map_;   // Used during loading YAML data, to convert RoomTag text names into RoomTag enums.
 
@@ -72,7 +71,7 @@ public:
     void        save_delta(FileWriter* file);   // Saves only the changes to this Room in a save file. Should only be called by a parent Region.
     void        set_coords(Vector3 new_coords); // Sets the coordinates of this room. Does not affect delta, as this should only ever be done when loading YAML.
     void        set_desc(const std::string& new_desc, bool mark_delta = true);  // Sets the description of this Room.
-    void        set_exit(Direction dir, uint32_t new_exit, bool mark_delta = true); // Sets an exit link from this Room to another.
+    void        set_link(Direction dir, uint32_t new_exit, bool mark_delta = true); // Sets an exit link from this Room to another.
     void        set_map_char(const std::string& new_char, bool mark_delta = true);  // Sets the map character for this Room.
     void        set_short_name(const std::string& new_short_name, bool mark_delta = true);  // Sets the short name of this Room.
     void        set_tag(RoomTag the_tag, bool mark_delta = true);   // Sets a RoomTag on this Room.
@@ -89,15 +88,19 @@ private:
     static constexpr uint32_t   ROOM_DELTA_ENTITIES =   1;  // The delta tag to indicate entity data is below.
     static constexpr uint32_t   ROOM_DELTA_TAGS =       2;  // Any and all RoomTags that have changed on this Room.
     static constexpr uint32_t   ROOM_DELTA_DESC =       3;  // The Room description, if it's changed.
-    static constexpr uint32_t   ROOM_DELTA_EXITS =      4;  // The Room's exits, if any have changed.
+    static constexpr uint32_t   ROOM_DELTA_LINKS =      4;  // The Room's Links, if any have changed.
     static constexpr uint32_t   ROOM_DELTA_SHORT_NAME = 5;  // The Room's short name, if it's changed.
-    static constexpr uint32_t   ROOM_DELTA_MAP_CHAR =   6;  // The Room's map character, if it's changed.#
+    static constexpr uint32_t   ROOM_DELTA_MAP_CHAR =   6;  // The Room's map character, if it's changed.
+
+    static constexpr uint32_t   ROOM_DELTA_LINK_NONE =      100;    // Marks this Link as missing or removed.
+    static constexpr uint32_t   ROOM_DELTA_LINK_UNCHANGED = 101;    // Marks this Link as existing but unchanged.
+    static constexpr uint32_t   ROOM_DELTA_LINK_CHANGED =   201;    // Marks this Link as existing and modified.
 
     static std::map<Direction, std::string> direction_names_;   // Static map that converts a Direction enum into string names.
 
     Vector3     coords_;        // The coordinates of this Room in the game world.
     std::string desc_;          // The text description of this Room, as shown to the player.
-    uint32_t    exits_[10];     // Links in the eight cardinal directions, and up/down, to other Rooms.
+    std::unique_ptr<Link>   links_[10]; // Any and all Links leading out of this Room.
     uint32_t    id_;            // The Room's unique hashed ID.
     std::string id_str_;        // The Room's unique text ID.
     std::string map_char_;      // The character representing this Room on the minimap.

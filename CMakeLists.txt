@@ -30,6 +30,7 @@ set(WESTGATE_CPPS
   src/util/text/namegen.cpp
   src/util/text/stringutils.cpp
   src/world/area/automap.cpp
+  src/world/area/link.cpp
   src/world/area/region.cpp
   src/world/area/room.cpp
   src/world/entity/entity.cpp
