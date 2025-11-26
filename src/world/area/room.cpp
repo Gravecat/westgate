@@ -114,9 +114,6 @@ const Vector3 Room::coords() const
     return coords_;
 }
 
-// Retrieves the description of this Room.
-const string& Room::desc() const { return desc_; }
-
 // Gets the string name of a Direction enum.
 const string& Room::direction_name(Direction dir)
 {

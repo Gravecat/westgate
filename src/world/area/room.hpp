@@ -60,7 +60,6 @@ public:
     void        clear_tag(RoomTag the_tag, bool mark_delta = true); // Clears a RoomTag from this Room.
     void        clear_tags(std::list<RoomTag> tags_list, bool mark_delta = true);   // Clears multiple RoomTags at the same time.
     const Vector3   coords() const; // Retrieves the coordinates of this Room.
-    const std::string&  desc() const;   // Retrieves the description of this Room.
     const std::string   door_name(Direction dir) const; // Returns the name of the door (door, gate, etc.) on the specified Link, if any.
     Room*       get_link(Direction dir);    // Gets the Room linked in the specified direction, or nullptr if none is linked.
     uint32_t    id() const;     // Retrieves the hashed ID of this Room.
