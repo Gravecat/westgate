@@ -5,7 +5,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 #include "core/core.hpp"
-#include "trailmix/text/stringutils.hpp"
+#include "trailmix/text/ansiutils.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/room.hpp"
 #include "world/world.hpp"
@@ -78,7 +78,7 @@ vector<string> Automap::generate_map(const Room* start_room)
         map_out.at(y) = " ";
         for (int x = 0; x < 7; x++)
             map_out.at(y) += game_map.at(x + (y * 7));
-        map_out.at(y) = stringutils::flatten_tags(map_out.at(y) + "   " + "{0}");
+        map_out.at(y) = ansiutils::flatten_tags(map_out.at(y) + "   " + "{0}");
     }
 
     // Crop any excess space from the map.

@@ -129,8 +129,8 @@ target_link_libraries(westgate PRIVATE
   ${CMAKE_THREAD_LIBS_INIT}
   fantasyname
   murmurhash3
-  trailmix
   rapidyaml
+  trailmix
 )
 
 # Include directories.
@@ -188,7 +188,7 @@ set(FETCHCONTENT_BASE_DIR "${CMAKE_BINARY_DIR}/trailmix")
 FetchContent_Declare(
     trailmix
     GIT_REPOSITORY https://github.com/Gravecat/trailmix.git
-    GIT_TAG        e24fa276b489bcae66291d6d8923f58f6c431b31
+    GIT_TAG        d45e96de879fa01329184c7b19c3b57d9e6a2753
 )
 FetchContent_MakeAvailable(trailmix)
 

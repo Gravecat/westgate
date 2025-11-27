@@ -12,6 +12,7 @@
 #include "trailmix/file/filereader.hpp"
 #include "trailmix/file/filewriter.hpp"
 #include "trailmix/text/hash.hpp"
+#include "trailmix/text/ansiutils.hpp"
 #include "trailmix/text/stringutils.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/region.hpp"
@@ -291,11 +292,11 @@ void Room::look() const
             "simply type: {C}automap off\n");
     }
 
-    vector<string> room_desc = stringutils::ansi_vector_split(desc_, desc_width);
+    vector<string> room_desc = ansiutils::ansi_vector_split(desc_, desc_width);
 
     if (can_see_outside())
     {
-        vector<string> weather_desc = stringutils::ansi_vector_split("{K}" + world().time_weather().weather_desc(), desc_width);
+        vector<string> weather_desc = ansiutils::ansi_vector_split("{K}" + world().time_weather().weather_desc(), desc_width);
         room_desc.insert(room_desc.end(), weather_desc.begin(), weather_desc.end());
     }
 
@@ -322,7 +323,7 @@ void Room::look() const
     }
     if (exits_list.size()) exits_list_str = string("{c}There ") + (exits_list.size() > 1 ? "are " : "is ") + stringutils::number_to_text(exits_list.size()) +
         " obvious exit" + (exits_list.size() > 1 ? "s" : "") + ": " + stringutils::comma_list(exits_list, stringutils::CL_MODE_USE_AND) + ".";
-    exits_list = stringutils::ansi_vector_split(exits_list_str, desc_width);
+    exits_list = ansiutils::ansi_vector_split(exits_list_str, desc_width);
     room_desc.insert(room_desc.end(), exits_list.begin(), exits_list.end());
 
     vector<string> room_map;
