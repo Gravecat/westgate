@@ -15,7 +15,7 @@
 #include "parser/parser.hpp"
 #include "parser/parser-macros.hpp"
 #include "parser/silly.hpp"
-#include "parser/world.hpp"
+#include "parser/world-interaction.hpp"
 #include "util/text/hash.hpp"
 #include "util/text/stringutils.hpp"
 #include "world/area/room.hpp"
@@ -42,45 +42,45 @@ static const std::map<uint32_t, Direction> parser_directions = {
 };
 
 static const std::unordered_map<uint32_t, std::function<void(vector<uint32_t>&, vector<string>&)>> parser_verbs = {
-    { 2252282012, parser::cheats::hash },       // #hash
-    { 3069208872, parser::meta::automap },      // automap
-    { 2746646486, parser::world::open_close },  // close
-    { 2573673949, parser::world::travel },      // d
-    { 715181085, parser::world::travel },       // down
-    { 4163295959, parser::world::travel },      // e
-    { 717260451, parser::world::travel },       // east
+    { 2252282012, parser::cheats::hash },   // #hash
+    { 3069208872, parser::meta::automap },  // automap
+    { 2746646486, parser::world_interaction::open_close },  // close
+    { 2573673949, parser::world_interaction::travel },  // d
+    { 715181085, parser::world_interaction::travel },   // down
+    { 4163295959, parser::world_interaction::travel },  // e
+    { 717260451, parser::world_interaction::travel },   // east
     { 3693685262, parser::silly::magic_word },  // frotz
-    { 93100650, parser::world::travel },        // go
-    { 1214476199, parser::world::look },        // l
-    { 365823675, parser::world::look },         // look
-    { 3654652163, parser::meta::automap },      // map
-    { 516519904, parser::meta::automap },       // minimap
-    { 1337450370, parser::world::travel },      // move
-    { 4254119393, parser::world::travel },      // n
-    { 3641754167, parser::world::travel },      // ne
-    { 1081869984, parser::world::travel },      // north
-    { 1897786808, parser::world::travel },      // northeast
-    { 320024672, parser:: world::travel },      // northwest
-    { 4257653048, parser::world::travel },      // nw
-    { 21229531, parser::world::open_close},     // open
+    { 93100650, parser::world_interaction::travel },    // go
+    { 1214476199, parser::world_interaction::look },    // l
+    { 365823675, parser::world_interaction::look }, // look
+    { 3654652163, parser::meta::automap },  // map
+    { 516519904, parser::meta::automap },   // minimap
+    { 1337450370, parser::world_interaction::travel },  // move
+    { 4254119393, parser::world_interaction::travel },  // n
+    { 3641754167, parser::world_interaction::travel },  // ne
+    { 1081869984, parser::world_interaction::travel },  // north
+    { 1897786808, parser::world_interaction::travel },  // northeast
+    { 320024672, parser:: world_interaction::travel },  // northwest
+    { 4257653048, parser::world_interaction::travel },  // nw
+    { 21229531, parser::world_interaction::open_close}, // open
     { 1253391317, parser::silly::magic_word },  // plugh
     { 1533866676, parser::silly::magic_word },  // plover
-    { 3289483580, parser::meta::quit },         // quit
-    { 3627942915, parser::world::travel },      // s
-    { 1633956953, parser::meta::save },         // save
-    { 3801532777, parser::world::travel },      // se
-    { 819466240, parser::world::travel },       // south
-    { 1457891302, parser::world::travel },      // southeast
-    { 2626121188, parser::world::travel },      // southwest
-    { 656258893, parser::world::travel },       // sw
-    { 1908976648, parser::world::travel },      // travel
-    { 2399778729, parser::world::travel },      // u
-    { 367575389, parser::world::travel },       // up
-    { 3359274028, parser::world::travel },      // w
-    { 51785697, parser::world::wait },          // wait
-    { 3976103327, parser::world::travel },      // west
+    { 3289483580, parser::meta::quit }, // quit
+    { 3627942915, parser::world_interaction::travel },  // s
+    { 1633956953, parser::meta::save }, // save
+    { 3801532777, parser::world_interaction::travel },  // se
+    { 819466240, parser::world_interaction::travel },   // south
+    { 1457891302, parser::world_interaction::travel },  // southeast
+    { 2626121188, parser::world_interaction::travel },  // southwest
+    { 656258893, parser::world_interaction::travel },   // sw
+    { 1908976648, parser::world_interaction::travel },  // travel
+    { 2399778729, parser::world_interaction::travel },  // u
+    { 367575389, parser::world_interaction::travel },   // up
+    { 3359274028, parser::world_interaction::travel },  // w
+    { 51785697, parser::world_interaction::wait },  // wait
+    { 3976103327, parser::world_interaction::travel },  // west
     { 42193550, parser::silly::magic_word },    // xyzzy
-    { 1601889381, parser::world::wait }         // z
+    { 1601889381, parser::world_interaction::wait } // z
 };
 
 // Parses a hashed string into a Direction enum.

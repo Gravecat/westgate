@@ -1,4 +1,4 @@
-// parser/world.cpp -- Commands that interact with the world, in ways that aren't specific enough to get their own source files.
+// parser/world-interaction.cpp -- Commands that interact with the world, in ways that aren't specific enough to get their own source files.
 
 // SPDX-FileType: SOURCE
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
@@ -6,7 +6,7 @@
 
 #include "core/terminal.hpp"
 #include "parser/parser.hpp"
-#include "parser/world.hpp"
+#include "parser/world-interaction.hpp"
 #include "util/text/stringutils.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/player.hpp"
@@ -19,7 +19,7 @@ using westgate::terminal::print;
 
 namespace westgate {
 namespace parser {
-namespace world {
+namespace world_interaction {
 
 // Look around you. Just look around you.
 void look(PARSER_FUNCTION)
@@ -69,7 +69,7 @@ void open_close(PARSER_FUNCTION)
         return;
     }
 
-    westgate::world().open_close_no_checks(room, dir, open);
+    world().open_close_no_checks(room, dir, open);
     print("You " + open_close + " the " + room->door_name(dir) + ".");
 }
 
@@ -112,13 +112,13 @@ void travel(PARSER_FUNCTION)
         if (!room_here->link_tag(dir, LinkTag::Open))
         {
             print("{B}(first opening the " + room_here->door_name(dir) + ")");
-            westgate::world().open_close_no_checks(room_here, dir, true);
+            world().open_close_no_checks(room_here, dir, true);
         }
     }
 
     print(string("You travel to ") + (dir == Direction::UP || dir == Direction::DOWN ? "" : "the ") + Room::direction_name(dir) + ".");
     room_here->transfer(&player(), room_target);
-    westgate::world().time_weather().pass_time(timing::TIME_TO_MOVE);
+    world().time_weather().pass_time(timing::TIME_TO_MOVE);
     look(words_hashed, words);
 }
 
@@ -128,7 +128,7 @@ void wait(PARSER_FUNCTION)
     if (words_hashed.size() < 2)
     {
         print("Time passes...");
-        westgate::world().time_weather().pass_time(timing::TIME_TO_WAIT, true);
+        world().time_weather().pass_time(timing::TIME_TO_WAIT, true);
         return;
     }
     if (words_hashed.size() < 3)
@@ -161,7 +161,7 @@ void wait(PARSER_FUNCTION)
     }
     print("You prepare to wait for " + stringutils::number_to_text(original_amount) + " " + time_str + (original_amount > 1 ? "s" : "") +
         ". Time passes...");
-    westgate::world().time_weather().pass_time(amount, true);
+    world().time_weather().pass_time(amount, true);
 }
 
-} } }   // world, parser, westgate namespaces
+} } }   // world_interaction, parser, westgate namespaces
