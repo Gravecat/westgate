@@ -9,10 +9,10 @@
 #include "core/core.hpp"
 #include "core/game.hpp"
 #include "core/terminal.hpp"
-#include "util/file/filereader.hpp"
-#include "util/file/filewriter.hpp"
-#include "util/text/hash.hpp"
-#include "util/text/stringutils.hpp"
+#include "trailmix/file/filereader.hpp"
+#include "trailmix/file/filewriter.hpp"
+#include "trailmix/text/hash.hpp"
+#include "trailmix/text/stringutils.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/region.hpp"
 #include "world/area/room.hpp"
@@ -21,6 +21,7 @@
 #include "world/time/time-weather.hpp"
 #include "world/world.hpp"
 
+using namespace trailmix;
 using std::list;
 using std::make_unique;
 using std::map;

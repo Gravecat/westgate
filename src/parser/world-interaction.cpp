@@ -7,13 +7,14 @@
 #include "core/terminal.hpp"
 #include "parser/parser.hpp"
 #include "parser/world-interaction.hpp"
-#include "util/text/stringutils.hpp"
+#include "trailmix/text/stringutils.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/player.hpp"
 #include "world/time/time-weather.hpp"
 #include "world/time/timing.hpp"
 #include "world/world.hpp"
 
+using namespace trailmix;
 using std::string;
 using westgate::terminal::print;
 

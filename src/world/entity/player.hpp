@@ -9,6 +9,11 @@
 
 #include "world/entity/mobile.hpp"
 
+namespace trailmix {
+class FileReader;   // defined in trailmix/file/filereader.hpp
+class FileWriter;   // defined in trailmix/file/filewriter.hpp
+}   // namespace trailmix
+
 namespace westgate {
 
 enum class PlayerTag : uint16_t {
@@ -22,12 +27,12 @@ enum class PlayerTag : uint16_t {
 class Player : public Mobile {
 public:
                 Player() = delete;  // No default constructor; use nullptr on the constructor below.
-                Player(FileReader* file);   // Creates a blank Player, then loads its data from a FileReader.
+                Player(trailmix::FileReader* file); // Creates a blank Player, then loads its data from a FileReader.
     void        clear_player_tag(PlayerTag the_tag);    // Clears a PlayerTag from this Player.
     void        clear_player_tags(std::list<PlayerTag> tags_list);  // Clears multiple PlayerTags at the same time.
     bool        player_tag(PlayerTag the_tag) const;    // Checks if a PlayerTag is set on this Player.
     uint32_t    region() const;     // Checks what Region the Player is currently in.
-    void        save(FileWriter* file) override;    // Saves this Player to a save game file.
+    void        save(trailmix::FileWriter* file) override;  // Saves this Player to a save game file.
     void        set_parent_entity(Entity* new_entity_parent = nullptr) override;    // This is a big no-no. We're overriding this method for safety reasons.
     void        set_parent_room(Room* new_room_parent = nullptr) override;  // Sets a new Room as the parent of this Player.
     void        set_player_tag(PlayerTag the_tag);  // Sets a PlayerTag on this Player.

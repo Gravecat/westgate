@@ -1,6 +1,6 @@
 # Very basic minimal CMake file for building fantasyname code as its own object.
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.19)
 
 add_library(fantasyname STATIC namegen.cpp)
 target_compile_definitions(fantasyname PRIVATE

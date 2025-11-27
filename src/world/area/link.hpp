@@ -11,10 +11,12 @@
 #include <map>
 #include <set>
 
-namespace westgate {
+namespace trailmix {
+class FileReader;   // defined in trailmix/file/filereader.hpp
+class FileWriter;   // defined in trailmix/file/filewriter.hpp
+}   // namespace trailmix
 
-class FileReader;   // defined in util/file/filereader.hpp
-class FileWriter;   // defined in util/file/filewriter.hpp
+namespace westgate {
 
 // Cardinal directions, along with up/down, to link the world together.
 enum class Direction : uint8_t { NONE, NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST, UP, DOWN };
@@ -50,8 +52,8 @@ public:
     void        clear_tags(std::list<LinkTag> tags_list, bool mark_delta = true);   // Clears multiple LinkTags at the same time.
     const std::string   door_name() const;  // Returns the name of the door (door, gate, etc.) on this Link, if any.
     uint32_t    get() const;    // Gets the Room linked to by this Link.)
-    void        load_delta(FileReader* file);   // Loads the delta changes to this Link (should only be called from its parent Room).
-    void        save_delta(FileWriter* file);   // Saves the delta changes to this Link (should only be called from its parent Room).
+    void        load_delta(trailmix::FileReader* file); // Loads the delta changes to this Link (should only be called from its parent Room).
+    void        save_delta(trailmix::FileWriter* file); // Saves the delta changes to this Link (should only be called from its parent Room).
     void        set(uint32_t new_room, bool mark_delta = true);     // Sets this Link to point to a Room.
     void        set_tag(LinkTag the_tag, bool mark_delta = true);   // Sets a LinkTag on this Link.
     void        set_tags(std::list<LinkTag> tags_list, bool mark_delta = true); // Sets multiple LinkTags at the same time.

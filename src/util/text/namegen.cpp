@@ -8,12 +8,13 @@
 
 #include "3rdparty/fantasyname/namegen.hpp"
 #include "core/core.hpp"
-#include "util/file/fileutils.hpp"
-#include "util/file/yaml.hpp"
-#include "util/math/random.hpp"
+#include "trailmix/file/fileutils.hpp"
+#include "trailmix/file/yaml.hpp"
+#include "trailmix/math/random.hpp"
 #include "util/text/namegen.hpp"
 #include "world/entity/entity.hpp"
 
+using namespace trailmix;
 using std::runtime_error;
 using std::string;
 using std::tolower;

@@ -6,8 +6,9 @@
 
 #include "core/terminal.hpp"
 #include "parser/cheats.hpp"
-#include "util/math/random.hpp"
+#include "trailmix/math/random.hpp"
 
+using namespace trailmix;
 using westgate::terminal::print;
 
 namespace westgate {

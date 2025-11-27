@@ -22,7 +22,6 @@
 #include "3rdparty/rang/rang.hpp"
 #include "core/core.hpp"
 #include "core/terminal.hpp"
-#include "util/text/stringutils.hpp"
 
 using std::cout;
 using std::string;

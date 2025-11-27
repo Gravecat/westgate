@@ -16,10 +16,11 @@
 #include "parser/parser-macros.hpp"
 #include "parser/silly.hpp"
 #include "parser/world-interaction.hpp"
-#include "util/text/hash.hpp"
-#include "util/text/stringutils.hpp"
+#include "trailmix/text/hash.hpp"
+#include "trailmix/text/stringutils.hpp"
 #include "world/area/room.hpp"
 
+using namespace trailmix;
 using std::stol;
 using std::string;
 using std::vector;

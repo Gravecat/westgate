@@ -5,9 +5,11 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-#include "util/file/filereader.hpp"
-#include "util/file/filewriter.hpp"
+#include "trailmix/file/filereader.hpp"
+#include "trailmix/file/filewriter.hpp"
 #include "world/entity/mobile.hpp"
+
+using namespace trailmix;
 
 namespace westgate {
 

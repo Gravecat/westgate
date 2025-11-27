@@ -10,8 +10,8 @@
 #include "core/core.hpp"
 #include "core/game.hpp"
 #include "core/terminal.hpp"
-#include "util/file/binpath.hpp"
-#include "util/text/hash.hpp"
+#include "trailmix/sys/binpath.hpp"
+#include "trailmix/text/hash.hpp"
 #include "util/text/namegen.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/region.hpp"
@@ -19,6 +19,7 @@
 #include "world/time/time-weather.hpp"
 #include "world/world.hpp"
 
+using namespace trailmix;
 using std::make_unique;
 using std::runtime_error;
 using std::to_string;

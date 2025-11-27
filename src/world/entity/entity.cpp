@@ -8,11 +8,12 @@
 #include <cctype>
 
 #include "core/core.hpp"
-#include "util/file/filereader.hpp"
-#include "util/file/filewriter.hpp"
+#include "trailmix/file/filereader.hpp"
+#include "trailmix/file/filewriter.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/entity.hpp"
 
+using namespace trailmix;
 using std::list;
 using std::runtime_error;
 using std::string;

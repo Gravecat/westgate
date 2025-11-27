@@ -5,7 +5,7 @@
 # SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.19)
 project(westgate LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -21,14 +21,7 @@ set(WESTGATE_CPPS
   src/parser/parser.cpp
   src/parser/silly.cpp
   src/parser/world-interaction.cpp
-  src/util/file/binpath.cpp
-  src/util/file/filereader.cpp
-  src/util/file/fileutils.cpp
-  src/util/file/filewriter.cpp
-  src/util/file/yaml.cpp
-  src/util/text/hash.cpp
   src/util/text/namegen.cpp
-  src/util/text/stringutils.cpp
   src/world/area/automap.cpp
   src/world/area/link.cpp
   src/world/area/region.cpp
@@ -42,8 +35,6 @@ set(WESTGATE_CPPS
 
 # Third-party code being built as separate object files.
 add_subdirectory(src/3rdparty/fantasyname)
-add_subdirectory(src/3rdparty/murmurhash3)
-add_subdirectory(src/3rdparty/rapidyaml)
 
 # Automatically generate version strings used in-game and in the Windows resource file, from this specified game version.
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/version.txt" WESTGATE_VERSION)
@@ -138,6 +129,7 @@ target_link_libraries(westgate PRIVATE
   ${CMAKE_THREAD_LIBS_INIT}
   fantasyname
   murmurhash3
+  trailmix
   rapidyaml
 )
 
@@ -187,6 +179,18 @@ if(TARGET_WINDOWS)
 	ntdll
   )
 endif(TARGET_WINDOWS)
+
+# Include the Trailmix utility code repo.
+include(FetchContent)
+set(TRAILMIX_MURMURHASH TRUE)
+set(TRAILMIX_YAML TRUE)
+set(FETCHCONTENT_BASE_DIR "${CMAKE_BINARY_DIR}/trailmix")
+FetchContent_Declare(
+    trailmix
+    GIT_REPOSITORY https://github.com/Gravecat/trailmix.git
+    GIT_TAG        e24fa276b489bcae66291d6d8923f58f6c431b31
+)
+FetchContent_MakeAvailable(trailmix)
 
 # Post-build, make a 'bin' folder and copy the binary file in there.
 add_custom_command(TARGET westgate POST_BUILD

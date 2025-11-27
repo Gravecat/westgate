@@ -8,11 +8,11 @@
 
 #include "core/core.hpp"
 #include "core/terminal.hpp"
-#include "util/file/filereader.hpp"
-#include "util/file/filewriter.hpp"
-#include "util/file/yaml.hpp"
-#include "util/math/random.hpp"
-#include "util/text/stringutils.hpp"
+#include "trailmix/file/filereader.hpp"
+#include "trailmix/file/filewriter.hpp"
+#include "trailmix/file/yaml.hpp"
+#include "trailmix/math/random.hpp"
+#include "trailmix/text/stringutils.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/player.hpp"
 #include "world/time/time-weather.hpp"
@@ -20,6 +20,7 @@
 #include <cmath>
 #include <filesystem>
 
+using namespace trailmix;
 using std::floor;
 using std::runtime_error;
 using std::string;

@@ -11,10 +11,13 @@
 #include <list>
 #include <set>
 
+namespace trailmix {
+class FileReader;   // defined in trailmix/file/filereader.hpp
+class FileWriter;   // defined in trailmix/file/filewriter.hpp
+}   // namespace trailmix
+
 namespace westgate {
 
-class FileReader;   // defined in util/file/filereader.hpp
-class FileWriter;   // defined in util/file/filewriter.hpp
 class Room;         // defined in world/room.hpp
 
 // Used to allow Entity to self-identify its derived class.
@@ -39,7 +42,7 @@ static constexpr uint32_t NAME_FLAG_PLURAL =            8;  // Return a plural o
 class Entity {
 public:
                         Entity() = delete;  // No default constructor; use nullptr on the constructor below.
-                        Entity(FileReader* file);   // Creates a blank Entity, then loads its data from a FileReader.
+                        Entity(trailmix::FileReader* file); // Creates a blank Entity, then loads its data from a FileReader.
     virtual             ~Entity() = default;    // Virtual destructor. Nothing here yet.
     void                clear_tag(EntityTag the_tag);   // Clears an EntityTag from this Entity.
     void                clear_tags(std::list<EntityTag> tags_list); // Clears multiple EntityTags at the same time.
@@ -50,7 +53,7 @@ public:
     const std::string   name(uint32_t flags = 0) const; // Retrieves the name of this Entity.
     Entity*             parent_entity() const;  // Retrieves the Entity (if any) containing this Entity.
     Room*               parent_room() const;    // Retrieves the Room (if any) containing this Entity.
-    virtual void        save(FileWriter* file); // Saves this Entity to a save game file.
+    virtual void        save(trailmix::FileWriter* file);   // Saves this Entity to a save game file.
     void                set_gender(Gender new_gender);  // Sets the gender of this Entity.
     void                set_name(const std::string& new_name);  // Sets the name of this Entity.
     virtual void        set_parent_entity(Entity* new_entity_parent = nullptr); // Sets a new Entity as the parent of this Entity, or nullptr for none.

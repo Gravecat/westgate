@@ -5,11 +5,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 #include "core/core.hpp"
-#include "util/text/stringutils.hpp"
+#include "trailmix/text/stringutils.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/room.hpp"
 #include "world/world.hpp"
 
+using namespace trailmix;
 using std::string;
 using std::vector;
 

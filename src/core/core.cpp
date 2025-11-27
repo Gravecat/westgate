@@ -18,9 +18,10 @@
 #include "core/core.hpp"
 #include "core/game.hpp"
 #include "core/terminal.hpp"
-#include "util/file/binpath.hpp"
-#include "util/file/yaml.hpp"
+#include "trailmix/file/yaml.hpp"
+#include "trailmix/sys/binpath.hpp"
 
+using namespace trailmix;
 using std::cerr;
 using std::cout;
 using std::endl;

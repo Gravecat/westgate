@@ -11,14 +11,15 @@
 #include "core/game.hpp"
 #include "core/terminal.hpp"
 #include "parser/parser.hpp"
-#include "util/file/binpath.hpp"
-#include "util/file/filereader.hpp"
-#include "util/file/filewriter.hpp"
+#include "trailmix/file/filereader.hpp"
+#include "trailmix/file/filewriter.hpp"
+#include "trailmix/sys/binpath.hpp"
 #include "world/area/region.hpp"
 #include "world/entity/player.hpp"
 #include "world/time/time-weather.hpp"
 #include "world/world.hpp"
 
+using namespace trailmix;
 using std::make_unique;
 using std::runtime_error;
 using std::string;
@@ -69,7 +70,7 @@ void Game::load_game(int save_slot)
     // Load the misc data file.
     const fs::path misc_path = BinPath::merge_paths(save_path.string(), "savedata.wg");
     if (!fs::exists(misc_path)) throw runtime_error("Could not locate saved game data!");
-    auto file = make_unique<FileReader>(misc_path.string());
+    std::unique_ptr<FileReader> file = make_unique<FileReader>(misc_path.string());
 
     // Check the misc data headers and version.
     if (!file->check_header()) throw runtime_error("Invalid save data header!");

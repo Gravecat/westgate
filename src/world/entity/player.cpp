@@ -5,11 +5,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 #include "core/game.hpp"
-#include "util/file/filereader.hpp"
-#include "util/file/filewriter.hpp"
+#include "trailmix/file/filereader.hpp"
+#include "trailmix/file/filewriter.hpp"
 #include "world/entity/player.hpp"
 #include "world/area/room.hpp"
 
+using namespace trailmix;
 using std::list;
 using std::runtime_error;
 using std::to_string;
