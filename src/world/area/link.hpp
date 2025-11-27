@@ -30,6 +30,9 @@ enum class LinkTag : uint16_t {
     Door =          101,    // Is this exit a door, specifically?
     SeeThrough =    102,    // Is this exit a window, or something else we can see through (e.g. bars)?
     Open =          103,    // Is this exit currently open?
+    Lockable =      104,    // Can this exit be locked and unlocked?
+    Locked =        105,    // Unlike open/closed, the default state is unlocked.
+    Permalock =     106,    // For locks that have no key; they can never be unlocked.
 
     // Different types of doors (and openable things).
     Gate =          200,    // This 'door' should be called a gate.

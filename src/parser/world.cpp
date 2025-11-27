@@ -63,6 +63,11 @@ void open_close(PARSER_FUNCTION)
         print("{Y}It's already " + open_closed + ".");
         return;
     }
+    if (room->link_tag(dir, LinkTag::Locked) || room->link_tag(dir, LinkTag::Permalock))
+    {
+        print("{Y}You try to open the " + room->door_name(dir) + ", but it's locked.");
+        return;
+    }
 
     westgate::world().open_close_no_checks(room, dir, open);
     print("You " + open_close + " the " + room->door_name(dir) + ".");
@@ -93,6 +98,12 @@ void travel(PARSER_FUNCTION)
     if (!room_target)
     {
         print("{Y}You can't travel in that direction.");
+        return;
+    }
+
+    if ((room_here->link_tag(dir, LinkTag::Locked) || room_here->link_tag(dir, LinkTag::Permalock)) && !room_here->link_tag(dir, LinkTag::Open))
+    {
+        print("{Y}You can't go that way, the " + room_here->door_name(dir) + " is locked.");
         return;
     }
 
