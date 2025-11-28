@@ -21,7 +21,6 @@
 
 using namespace trailmix::file;
 using namespace trailmix::sys;
-using std::make_unique;
 using std::runtime_error;
 using std::string;
 using std::to_string;
@@ -40,7 +39,7 @@ Game::~Game()
 // Starts the game, in the form of a title screen followed by the main game loop.
 void Game::begin()
 {
-    world_ptr_ = make_unique<World>();
+    world_ptr_ = std::make_unique<World>();
     title_screen();
     print();
     player_ptr_->parent_room()->look();
@@ -71,7 +70,7 @@ void Game::load_game(int save_slot)
     // Load the misc data file.
     const fs::path misc_path = BinPath::merge_paths(save_path.string(), "savedata.wg");
     if (!fs::exists(misc_path)) throw runtime_error("Could not locate saved game data!");
-    std::unique_ptr<FileReader> file = make_unique<FileReader>(misc_path.string());
+    std::unique_ptr<FileReader> file = std::make_unique<FileReader>(misc_path.string());
 
     // Check the misc data headers and version.
     if (!file->check_header()) throw runtime_error("Invalid save data header!");
@@ -105,7 +104,7 @@ void Game::new_game(const uint32_t starting_region, const string& starting_room)
     world_ptr_->create_region_saves(save_id_);
 
     // Create the player character, assign them to a starting room, then transfer ownership.
-    auto player = make_unique<Player>(nullptr);
+    auto player = std::make_unique<Player>(nullptr);
     Room* start_room = world_ptr_->find_room(starting_room, starting_region);
     start_room->add_entity(std::move(player));
 
@@ -130,7 +129,7 @@ void Game::save_misc_data()
 {
     const fs::path save_path = BinPath::game_path("userdata/saves/" + to_string(save_id_) + "/savedata.wg");
     if (fs::exists(save_path)) fs::remove(save_path);
-    auto file = make_unique<FileWriter>(save_path.string());
+    auto file = std::make_unique<FileWriter>(save_path.string());
 
     // Write the standard header, then the misc data version, and the misc data string tag.
     file->write_header();

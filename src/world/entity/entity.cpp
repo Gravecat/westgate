@@ -14,7 +14,6 @@
 #include "world/entity/entity.hpp"
 
 using namespace trailmix::file;
-using std::list;
 using std::runtime_error;
 using std::string;
 using std::to_string;
@@ -52,7 +51,7 @@ void Entity::clear_tag(EntityTag the_tag)
 }
 
 // Clears multiple EntityTags at the same time.
-void Entity::clear_tags(list<EntityTag> tags_list) { for (auto the_tag : tags_list) clear_tag(the_tag); }
+void Entity::clear_tags(std::list<EntityTag> tags_list) { for (auto the_tag : tags_list) clear_tag(the_tag); }
 
 // Retrieves the gender (if any) of this Entity.
 Gender Entity::gender() const { return gender_; }
@@ -195,7 +194,7 @@ void Entity::set_tag(EntityTag the_tag)
 }
 
 // Sets multiple EntityTags at the same time.
-void Entity::set_tags(list<EntityTag> tags_list) { for (auto the_tag : tags_list) set_tag(the_tag); }
+void Entity::set_tags(std::list<EntityTag> tags_list) { for (auto the_tag : tags_list) set_tag(the_tag); }
 
 // Checks if an EntityTag is set on this Entity.
 bool Entity::tag(EntityTag the_tag) const { return (tags_.count(the_tag) > 0); }

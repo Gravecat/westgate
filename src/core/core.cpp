@@ -23,14 +23,9 @@
 
 using namespace trailmix::file;
 using namespace trailmix::sys;
-using std::cerr;
-using std::cout;
-using std::endl;
 using std::exception;
-using std::make_unique;
 using std::runtime_error;
 using std::string;
-using std::time;
 using std::to_string;
 using std::vector;
 namespace fs = std::filesystem;
@@ -41,7 +36,7 @@ namespace westgate {
 void core_intercept_signal(int sig) { core().intercept_signal(sig); }
 
 // Constructor, sets up the Core object.
-Core::Core() : cascade_count_(0), cascade_failure_(false), cascade_timer_(time(0)), dead_already_(0), lock_stderr_(false), stderr_old_(nullptr),
+Core::Core() : cascade_count_(0), cascade_failure_(false), cascade_timer_(std::time(0)), dead_already_(0), lock_stderr_(false), stderr_old_(nullptr),
     game_ptr_(nullptr) { }
 
 // Checks stderr for any updates, puts them in the log if any exist.
@@ -63,8 +58,8 @@ void Core::check_stderr()
 // Cleans up all Core-managed objects.
 void Core::cleanup()
 {
-    cout << rang::style::reset << '\n';    // Reset any lingering ANSI codes.
-    cout.flush();  // Ensure anything left on the console output buffer (including the reset code we just added) is flushed.
+    std::cout << rang::style::reset << '\n';    // Reset any lingering ANSI codes.
+    std::cout.flush();  // Ensure anything left on the console output buffer (including the reset code we just added) is flushed.
 
     // Release all attached objects.
     game_ptr_.reset(nullptr);
@@ -79,7 +74,7 @@ void Core::close_log()
     this->log("Logging and error-handling system shutting down.");
     if (stderr_old_)
     {
-        cerr.rdbuf(stderr_old_);
+        std::cerr.rdbuf(stderr_old_);
         stderr_old_ = nullptr;
     }
 
@@ -239,7 +234,7 @@ void Core::init_core(vector<string> parameters)
 
     if (set_title) terminal::set_window_title("Westgate v" + version::VERSION_STRING + " (" + version::BUILD_TIMESTAMP + ")");
     find_gamedata();
-    game_ptr_ = make_unique<Game>();
+    game_ptr_ = std::make_unique<Game>();
 }
 
 // Catches a segfault or other fatal signal.
@@ -281,27 +276,27 @@ void Core::log(string msg, int type)
     switch(type)
     {
         case CORE_INFO: break;
-        case CORE_WARN: txt_tag = "[WARN] "; cout << rang::bgB::yellow << rang::fg::black; break;
-        case CORE_ERROR: txt_tag = "[ERROR] "; cout << rang::bgB::red << rang::fg::black; break;
-        case CORE_CRITICAL: txt_tag = "[CRITICAL] "; cout << rang::bg::red << rang::fg::black; break;
+        case CORE_WARN: txt_tag = "[WARN] "; std::cout << rang::bgB::yellow << rang::fg::black; break;
+        case CORE_ERROR: txt_tag = "[ERROR] "; std::cout << rang::bgB::red << rang::fg::black; break;
+        case CORE_CRITICAL: txt_tag = "[CRITICAL] "; std::cout << rang::bg::red << rang::fg::black; break;
     }
 
     char* buffer = new char[32];
-    const time_t now = time(nullptr);
+    const time_t now = std::time(nullptr);
 #if defined(WESTGATE_TARGET_WINDOWS) && !defined(WESTGATE_TARGET_MINGW)
     tm time_struct;
     tm* ptm = &time_struct;
     localtime_s(ptm, &now);
 #else
-    const tm *ptm = localtime(&now);
+    const tm *ptm = std::localtime(&now);
 #endif
     std::strftime(&buffer[0], 32, "%H:%M:%S", ptm);
     string time_str = &buffer[0];
     msg = "[" + time_str + "] " + txt_tag + msg;
-    syslog_ << msg << endl;
+    syslog_ << msg << std::endl;
     delete[] buffer;
 
-    if (type != CORE_INFO) cout << msg << rang::style::reset << endl;
+    if (type != CORE_INFO) std::cout << msg << rang::style::reset << std::endl;
 }
 
 // Reports a non-fatal error, which will be logged but will not halt execution unless it cascades.
@@ -321,7 +316,7 @@ void Core::nonfatal(string error, int type)
 
     if (cascade_weight)
     {
-        time_t elapsed_seconds = time(0) - cascade_timer_;
+        time_t elapsed_seconds = std::time(0) - cascade_timer_;
         if (elapsed_seconds <= ERROR_CASCADE_TIMEOUT)
         {
             cascade_count_ += cascade_weight;
@@ -333,7 +328,7 @@ void Core::nonfatal(string error, int type)
         }
         else
         {
-            cascade_timer_ = time(0);
+            cascade_timer_ = std::time(0);
             cascade_count_ = 0;
         }
     }
@@ -350,7 +345,7 @@ void Core::open_log()
     if (!syslog_.is_open()) throw runtime_error("Cannot open " + logfile_path.string());
     this->log("Welcome to Westgate " + version::VERSION_STRING + " build " + version::BUILD_TIMESTAMP);
     hook_signals();
-    stderr_old_ = cerr.rdbuf(stderr_buffer_.rdbuf());
+    stderr_old_ = std::cerr.rdbuf(stderr_buffer_.rdbuf());
     this->log("Logging and error-handling system is online.");
 }
 
@@ -368,7 +363,7 @@ int main(int argc, char** argv)
     try { westgate::core().init_core(parameters); }
     catch (exception& e)
     {
-        cout << "[FATAL] " << e.what() << endl;
+        std::cout << "[FATAL] " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
 

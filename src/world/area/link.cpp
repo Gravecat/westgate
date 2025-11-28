@@ -9,7 +9,6 @@
 #include "world/area/link.hpp"
 
 using namespace trailmix::file;
-using std::list;
 using std::runtime_error;
 using std::to_string;
 
@@ -36,7 +35,7 @@ void Link::clear_tag(LinkTag the_tag, bool mark_delta)
 }
 
 // Clears multiple LinkTags at the same time.
-void Link::clear_tags(list<LinkTag> tags_list, bool mark_delta)
+void Link::clear_tags(std::list<LinkTag> tags_list, bool mark_delta)
 {
     for (auto the_tag : tags_list)
         clear_tag(the_tag);
@@ -120,7 +119,7 @@ void Link::set_tag(LinkTag the_tag, bool mark_delta)
 }
 
 // Sets multiple LinkTags at the same time.
-void Link::set_tags(list<LinkTag> tags_list, bool mark_delta)
+void Link::set_tags(std::list<LinkTag> tags_list, bool mark_delta)
 {
     for (auto the_tag : tags_list)
         set_tag(the_tag);

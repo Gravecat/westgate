@@ -25,15 +25,9 @@ using namespace trailmix::math;
 using namespace trailmix::sys;
 using namespace trailmix::text::formatting;
 using namespace trailmix::text::hash;
-using std::invalid_argument;
-using std::make_unique;
-using std::out_of_range;
 using std::runtime_error;
-using std::stol;
-using std::stoul;
 using std::string;
 using std::to_string;
-using std::unique_ptr;
 using std::vector;
 namespace fs = std::filesystem;
 
@@ -79,8 +73,8 @@ void Region::load(int save_slot, uint32_t region_id)
             const string filename = file.path().filename().string();
             auto dash_pos = filename.find_first_of('-');
             if (dash_pos == string::npos) throw runtime_error("Cannot determine region ID: " + filename);
-            try { id_ = stoul(filename.substr(0, dash_pos)); }
-            catch (invalid_argument&) { throw runtime_error("Invalid region ID: " + filename); }
+            try { id_ = std::stoul(filename.substr(0, dash_pos)); }
+            catch (std::invalid_argument&) { throw runtime_error("Invalid region ID: " + filename); }
             if (id_ == region_id)
             {
                 yaml_filename = filename;
@@ -104,7 +98,7 @@ void Region::load_delta(int save_slot)
     if (!fs::is_regular_file(save_file)) throw runtime_error("Unable to load region deltas" + err_file);
 
     // Load the save file, check the headers and version.
-    auto file = make_unique<FileReader>(save_file);
+    auto file = std::make_unique<FileReader>(save_file);
     if (!file->check_header()) throw runtime_error("Invalid region deltas" + err_file);
     const uint32_t delta_ver = file->read_data<uint32_t>();
     if (delta_ver != REGION_SAVE_VERSION) FileReader::standard_error("Invalid region deltas save version" + err_file, delta_ver, REGION_SAVE_VERSION);
@@ -139,8 +133,8 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
     // Determine this region's ID from the filename.
     auto dash_pos = filename.find_first_of('-');
     if (dash_pos == string::npos) throw runtime_error("Cannot determine region ID: " + filename);
-    try { id_ = stoul(filename.substr(0, dash_pos)); }
-    catch (invalid_argument&) { throw runtime_error("Invalid region ID: " + filename); }
+    try { id_ = std::stoul(filename.substr(0, dash_pos)); }
+    catch (std::invalid_argument&) { throw runtime_error("Invalid region ID: " + filename); }
 
     // Determine the full path for the data file, and ensure the file exists.
     const string full_filename = core().datafile("world/regions/" + filename);
@@ -155,8 +149,8 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
     if (!region_id.is_map()) throw runtime_error(filename + ": Cannot find region identifier data!");
     if (!region_id.key_exists("version")) throw runtime_error(filename + ": Missing version in identifier data!");
     uint32_t region_version;
-    try { region_version = stoul(region_id.val("version")); }
-    catch (invalid_argument&) { throw runtime_error(filename + ": Invalid region version identifier!"); }
+    try { region_version = std::stoul(region_id.val("version")); }
+    catch (std::invalid_argument&) { throw runtime_error(filename + ": Invalid region version identifier!"); }
     if (region_version != REGION_YAML_VERSION) FileReader::standard_error("Invalid region version", region_version, REGION_YAML_VERSION, {filename});
     if (!region_id.key_exists("name")) throw runtime_error(filename + ": Missing region name in identifier data!");
     name_ = region_id.val("name");
@@ -169,7 +163,7 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
 
         const YAML room_yaml = yaml.get_child(key);
         const string error_str = filename + " [" + key + "]: ";
-        unique_ptr<Room> room_ptr = make_unique<Room>(key);
+        auto room_ptr = std::make_unique<Room>(key);
 
         if (!room_yaml.key_exists("short_name")) throw runtime_error(error_str + "Missing short_name data.");
         room_ptr->set_short_name(room_yaml.val("short_name"), false);
@@ -185,10 +179,10 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
         for (int i = 0; i < 3; i++)
         {
             try
-            { coord_int_vec.at(i) = stol(coord_vec.at(i));}
-            catch(const invalid_argument&)
+            { coord_int_vec.at(i) = std::stol(coord_vec.at(i));}
+            catch(const std::invalid_argument&)
             { throw runtime_error(error_str + "Coordinate data could not be processed (not a number?)"); }
-            catch(const out_of_range&)
+            catch(const std::out_of_range&)
             { throw runtime_error(error_str + "Coordinate data could not be processed (out of range?)"); }
         }
         room_ptr->set_coords(Vector3(coord_int_vec.at(0), coord_int_vec.at(1), coord_int_vec.at(2)));
@@ -252,7 +246,7 @@ void Region::save_delta(int save_slot, bool no_changes)
     if (fs::exists(region_save_file)) fs::remove(region_save_file);
 
     // Create the save file, and mark it with a version tag.
-    auto file = make_unique<FileWriter>(region_save_file.string());
+    auto file = std::make_unique<FileWriter>(region_save_file.string());
     file->write_header();
     file->write_data<uint32_t>(REGION_SAVE_VERSION);
     file->write_string("REGION_DELTA");

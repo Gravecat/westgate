@@ -11,7 +11,6 @@
 #include "world/area/room.hpp"
 
 using namespace trailmix::file;
-using std::list;
 using std::runtime_error;
 using std::to_string;
 
@@ -47,7 +46,7 @@ void Player::clear_player_tag(PlayerTag the_tag)
 }
 
 // Clears multiple PlayerTags at the same time.
-void Player::clear_player_tags(list<PlayerTag> tags_list) { for (auto the_tag : tags_list) clear_player_tag(the_tag); }
+void Player::clear_player_tags(std::list<PlayerTag> tags_list) { for (auto the_tag : tags_list) clear_player_tag(the_tag); }
 
 // Checks if a PlayerTag is set on this Player.
 bool Player::player_tag(PlayerTag the_tag) const { return (player_tags_.count(the_tag) > 0); }
@@ -91,7 +90,7 @@ void Player::set_player_tag(PlayerTag the_tag)
 }
 
 // Sets multiple PlayerTags at the same time.
-void Player::set_player_tags(list<PlayerTag> tags_list) { for (auto the_tag : tags_list) set_player_tag(the_tag); }
+void Player::set_player_tags(std::list<PlayerTag> tags_list) { for (auto the_tag : tags_list) set_player_tag(the_tag); }
 
 // Toggles a PlayerTag on or off.
 void Player::toggle_player_tag(PlayerTag the_tag)

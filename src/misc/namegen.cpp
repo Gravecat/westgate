@@ -19,8 +19,6 @@ using namespace trailmix::file::utils;
 using namespace trailmix::math;
 using std::runtime_error;
 using std::string;
-using std::tolower;
-using std::toupper;
 
 namespace westgate {
 
@@ -126,7 +124,7 @@ string ProcNameGen::npc_name(Gender gender, bool with_surname)
     {
         int vowel_count = 0;
         bool ends_in_vowel = false;
-        to_check[0] = tolower(to_check[0]);
+        to_check[0] = std::tolower(to_check[0]);
         for (size_t i = 0; i < to_check.size(); i++)
         {
             const char ch = to_check[i];
@@ -197,7 +195,7 @@ string ProcNameGen::random_word(bool cap)
         case 8: gen_name = pv3_k[random::get<int>(0, pv3_k.size() - 1)] + pv3_v[random::get<int>(0, pv3_v.size() - 1)] +
             pv3_k[random::get<int>(0, pv3_k.size() - 1)] + pv3_v[random::get<int>(0, pv3_v.size() - 1)]; break;
     }
-    if (cap) gen_name[0] = toupper(gen_name[0]);
+    if (cap) gen_name[0] = std::toupper(gen_name[0]);
     return gen_name;
 }
 
@@ -209,10 +207,10 @@ string ProcNameGen::surname()
     {
         part_b = names_s_b[random::get<int>(0, names_s_b.size() - 1)];
     } while (part_a == part_b || part_a[part_a.size() - 1] == part_b[0]);
-    part_a[0] = toupper(part_a[0]);
+    part_a[0] = std::toupper(part_a[0]);
     if (random::get<bool>(0.333f))
     {
-        part_b[0] = toupper(part_b[0]);
+        part_b[0] = std::toupper(part_b[0]);
         return part_a + "-" + part_b;
     }
     else return part_a + part_b;
