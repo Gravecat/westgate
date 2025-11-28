@@ -20,7 +20,7 @@
 #include "world/world.hpp"
 
 using namespace trailmix::sys;
-using namespace trailmix::text::hash;
+using namespace trailmix::text;
 using std::make_unique;
 using std::runtime_error;
 using std::to_string;
@@ -28,6 +28,10 @@ using std::unique_ptr;
 using std::vector;
 using westgate::terminal::print;
 namespace fs = std::filesystem;
+
+#ifdef WESTGATE_BUILD_DEBUG
+using namespace trailmix::math;
+#endif
 
 namespace westgate {
 
@@ -90,7 +94,7 @@ void World::create_region_saves(int save_slot)
 
 // Attempts to find a room by its string ID.
 Room* World::find_room(const std::string& id, uint32_t region_id)
-{ return find_room(murmur3(id), region_id); }
+{ return find_room(hash::murmur3(id), region_id); }
 
 // Attempts to find a room by its hashed ID.
 Room* World::find_room(uint32_t id, uint32_t region_id)
@@ -128,6 +132,16 @@ Region* World::load_region(uint32_t id)
     regions_.insert({id, std::move(new_region)});
     return region_ptr;
 }
+
+#ifdef WESTGATE_BUILD_DEBUG
+// When in debug mode, mark room coordinates as used, to track overlaps.
+void World::mark_room_coords_used(Vector3 coords)
+{
+    core().log(coords.string());
+    if (room_coords_used_.count(coords) > 0) throw std::runtime_error("Room coordinate collision detected: " + coords.string());
+    room_coords_used_.insert(coords);
+}
+#endif
 
 // Returns a reference to the procedural name generator object.
 ProcNameGen& World::namegen() const

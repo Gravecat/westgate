@@ -10,6 +10,11 @@
 
 #include <unordered_map>
 
+#ifdef WESTGATE_BUILD_DEBUG
+#include "trailmix/math/vector3.hpp"
+#include <set>
+#endif
+
 namespace westgate {
 
 class Automap;      // defined in world/area/automap.hpp
@@ -37,12 +42,20 @@ public:
     TimeWeather&    time_weather() const;   // Returns a reference to the time/weather manager object.
     void            unload_region(uint32_t id); // Removes a Region from memory, saving it first.
 
+#ifdef WESTGATE_BUILD_DEBUG
+    void            mark_room_coords_used(trailmix::math::Vector3 coords);  // When in debug mode, mark room coordinates as used, to track overlaps.
+#endif
+
 private:
     std::unique_ptr<Automap>        automap_ptr_;   // Pointer to the automapper object.
     std::unique_ptr<ProcNameGen>    namegen_ptr_;   // Pointer to the procedural name-generator object.
     std::unordered_map<uint32_t, std::unique_ptr<Region>>   regions_;   // The Regions currently loaded into memory.
     std::unordered_map<uint32_t, uint32_t>  room_regions_;  // Lookup table to determine which Region each Room is located in.
     std::unique_ptr<TimeWeather>    time_weather_ptr_;  // Pointer to the time/weather manager object.
+
+#ifdef WESTGATE_BUILD_DEBUG
+    std::set<trailmix::math::Vector3>   room_coords_used_;  // When in debug mode, this keeps track of Room coordinates, so we can track overlaps.
+#endif
 };
 
 World&  world();    // Shortcut instead of using game()->world()
