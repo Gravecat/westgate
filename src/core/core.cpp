@@ -150,8 +150,11 @@ Game& Core::game() const
     return *game_ptr_;
 }
 
-// Used internally only to apply the most powerful possible method to kill the process, in event of emergency.
-void Core::great_googly_moogly_its_all_gone_to_shit()
+/*         ○
+       /\__\__/\
+      /         \
+    \(ﾐ  ⌒ ● ⌒ ﾐ)/     */
+void Core::great_googly_moogly_its_all_gone_to_shit()   // Applies the most powerful possible method to kill the process, in event of emergency.
 {
 #ifdef WESTGATE_TARGET_WINDOWS
     TerminateProcess(GetCurrentProcess(), 1);
@@ -183,8 +186,9 @@ void Core::halt(string error)
 // As above, but with an exception instead of a string.
 void Core::halt(const exception& e) { halt(e.what()); }
 
-// Hook system failure signals.
-void Core::hook_signals()
+// (ง ͠° ͟ʖ ͡°)ง ᴛʜɪs ɪs ᴏᴜʀ ᴛᴏwɴ, sᴄʀᴜʙ. (ง ͠° ͟ʖ ͡°)ง
+// (ง •̀_•́)ง ʏᴇᴀʜ, ʙᴇᴀᴛ ɪᴛ! (ง •̀_•́)ง
+void Core::hook_signals()   // Hook system failure signals.
 {
     this->log("Error-handling system hooking signals...");
     if (signal(SIGABRT, core_intercept_signal) == SIG_ERR) halt("Failed to hook abort signal.");
