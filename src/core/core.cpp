@@ -150,10 +150,10 @@ Game& Core::game() const
     return *game_ptr_;
 }
 
-/*         ○
-       /\__\__/\
-      /         \
-    \(ﾐ  ⌒ ● ⌒ ﾐ)/     */
+         /*
+    /\__/__/\
+   /         \
+ \(ﾐ  ⌒ ● ⌒ */
 void Core::great_googly_moogly_its_all_gone_to_shit()   // Applies the most powerful possible method to kill the process, in event of emergency.
 {
 #ifdef WESTGATE_TARGET_WINDOWS
