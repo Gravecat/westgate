@@ -12,7 +12,7 @@
 #include "trailmix/file/filewriter.hpp"
 #include "trailmix/file/yaml.hpp"
 #include "trailmix/math/random.hpp"
-#include "trailmix/text/stringutils.hpp"
+#include "trailmix/text/manipulation.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/player.hpp"
 #include "world/time/time-weather.hpp"
@@ -22,8 +22,7 @@
 
 using namespace trailmix::file;
 using namespace trailmix::math;
-using namespace trailmix::text::utils;
-using std::floor;
+using namespace trailmix::text::manipulation;
 using std::runtime_error;
 using std::string;
 using std::to_string;

@@ -15,7 +15,7 @@
 #include "trailmix/file/yaml.hpp"
 #include "trailmix/sys/binpath.hpp"
 #include "trailmix/text/hash.hpp"
-#include "trailmix/text/stringutils.hpp"
+#include "trailmix/text/formatting.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/region.hpp"
 #include "world/world.hpp"
@@ -23,8 +23,8 @@
 using namespace trailmix::file;
 using namespace trailmix::math;
 using namespace trailmix::sys;
+using namespace trailmix::text::formatting;
 using namespace trailmix::text::hash;
-using namespace trailmix::text::utils;
 using std::invalid_argument;
 using std::make_unique;
 using std::out_of_range;

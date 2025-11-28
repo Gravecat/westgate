@@ -17,12 +17,11 @@
 #include "parser/silly.hpp"
 #include "parser/world-interaction.hpp"
 #include "trailmix/text/hash.hpp"
-#include "trailmix/text/stringutils.hpp"
+#include "trailmix/text/manipulation.hpp"
 #include "world/area/room.hpp"
 
 using namespace trailmix::text::hash;
-using namespace trailmix::text::utils;
-using std::stol;
+using namespace trailmix::text::manipulation;
 using std::string;
 using std::vector;
 using westgate::terminal::print;
@@ -97,7 +96,7 @@ int32_t parse_number(const std::string &num)
 {
     int32_t result = 0;
     try
-    { result = stol(num); }
+    { result = std::stol(num); }
     catch(const std::invalid_argument&)
     { return INT_MIN; }
     catch(const std::out_of_range&)

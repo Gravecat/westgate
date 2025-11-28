@@ -13,7 +13,8 @@
 #include "trailmix/file/filewriter.hpp"
 #include "trailmix/text/hash.hpp"
 #include "trailmix/text/ansiutils.hpp"
-#include "trailmix/text/stringutils.hpp"
+#include "trailmix/text/conversion.hpp"
+#include "trailmix/text/formatting.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/region.hpp"
 #include "world/area/room.hpp"
@@ -25,11 +26,9 @@
 using namespace trailmix::file;
 using namespace trailmix::math;
 using namespace trailmix::text::ansi;
+using namespace trailmix::text::conversion;
+using namespace trailmix::text::formatting;
 using namespace trailmix::text::hash;
-using namespace trailmix::text::utils;
-using std::list;
-using std::make_unique;
-using std::map;
 using std::runtime_error;
 using std::string;
 using std::to_string;
@@ -40,7 +39,7 @@ using westgate::terminal::print;
 namespace westgate {
 
 // Static map that converts a Direction enum into string names.
-const map<Direction, string> Room::direction_names_ = {
+const std::map<Direction, string> Room::direction_names_ = {
     { Direction::NORTH, "north" }, { Direction::NORTHEAST, "northeast" }, { Direction::EAST, "east" }, { Direction::SOUTHEAST, "southeast" },
     { Direction::SOUTH, "south" }, { Direction::SOUTHWEST, "southwest" }, { Direction::WEST, "west" }, { Direction::NORTHWEST, "northwest" },
     { Direction::UP, "up" }, { Direction::DOWN, "down" }, { Direction::NONE, "" }
@@ -114,7 +113,7 @@ void Room::clear_tag(RoomTag the_tag, bool mark_delta)
 }
 
 // Clears multiple RoomTags at the same time.
-void Room::clear_tags(list<RoomTag> tags_list, bool mark_delta)
+void Room::clear_tags(std::list<RoomTag> tags_list, bool mark_delta)
 {
     for (auto the_tag : tags_list)
         clear_tag(the_tag);
@@ -206,9 +205,9 @@ void Room::load_delta(FileReader* file)
                     EntityType type = file->read_data<EntityType>();
                     switch(type)
                     {
-                        case EntityType::ENTITY: add_entity(make_unique<Entity>(file)); break;
-                        case EntityType::MOBILE: add_entity(make_unique<Mobile>(file)); break;
-                        case EntityType::PLAYER: add_entity(make_unique<Player>(file)); break;
+                        case EntityType::ENTITY: add_entity(std::make_unique<Entity>(file)); break;
+                        case EntityType::MOBILE: add_entity(std::make_unique<Mobile>(file)); break;
+                        case EntityType::PLAYER: add_entity(std::make_unique<Player>(file)); break;
                         default: throw runtime_error("Attempt to load unknown entity type: " + to_string(static_cast<int>(type)));
                     }
                 }
@@ -250,7 +249,7 @@ void Room::load_delta(FileReader* file)
                         // If the Link has changed, load it from the data file, creating a blank Link first if needed.
                         case ROOM_DELTA_LINK_CHANGED:
                         {
-                            if (!links_[i]) links_[i] = make_unique<Link>();
+                            if (!links_[i]) links_[i] = std::make_unique<Link>();
                             links_[i]->load_delta(file);
                             break;
                         }
@@ -529,7 +528,7 @@ void Room::set_tag(RoomTag the_tag, bool mark_delta)
 }
 
 // Sets multiple RoomTags at the same time.
-void Room::set_tags(list<RoomTag> tags_list, bool mark_delta)
+void Room::set_tags(std::list<RoomTag> tags_list, bool mark_delta)
 {
     for (auto the_tag : tags_list)
         set_tag(the_tag);
