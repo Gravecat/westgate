@@ -72,7 +72,7 @@ void open_close(PARSER_FUNCTION)
         return;
     }
 
-    world().open_close_no_checks(room, dir, open);
+    world().open_close_lock_unlock_no_checks(room, dir, (open ? World::OpenCloseLockUnlock::OPEN : World::OpenCloseLockUnlock::CLOSE), &player());
     print("You " + open_close + " the " + room->door_name(dir) + ".");
 }
 
@@ -117,7 +117,7 @@ void travel(PARSER_FUNCTION)
         if (!room_here->link_tag(dir, LinkTag::Open))
         {
             print("{B}(first opening the " + room_here->door_name(dir) + ")");
-            world().open_close_no_checks(room_here, dir, true);
+            world().open_close_lock_unlock_no_checks(room_here, dir, World::OpenCloseLockUnlock::OPEN, &player());
         }
     }
 

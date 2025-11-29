@@ -18,6 +18,7 @@
 namespace westgate {
 
 class Automap;      // defined in world/area/automap.hpp
+class Mobile;       // defined in world/entity/mobile.hpp
 class ProcNameGen;  // defined in util/text/namegen.hpp
 class Region;       // defined in world/area/region.hpp
 class Room;         // defined in world/area/room.hpp
@@ -25,6 +26,8 @@ class TimeWeather;  // defined in world/time-weather.hpp
 
 class World {
 public:
+    enum class OpenCloseLockUnlock : uint8_t { OPEN, CLOSE, LOCK, UNLOCK };
+
                     World();    // Sets up the World object and loads static data into memory.
                     ~World();   // Destructor, explicitly frees memory used.
     void            add_room_to_region(uint32_t room_id, uint32_t region_id);   // Updates the room_regions_ map to keep track of what Region each Room is in.
@@ -36,8 +39,8 @@ public:
     uint32_t        find_room_region(uint32_t id) const;    // Attempts to find the Region that a specified Room belongs to.
     Region*         load_region(uint32_t id);   // Specifies a Region to be loaded into memory.
     ProcNameGen&    namegen() const;        // Returns a reference to the procedural name generator object.
-                    // Opens/closes a door, without checking for locks/etc., without printing any messages.
-    void            open_close_no_checks(Room* room, Direction dir, bool open);
+                    // Opens/closes/locks/unlocks a door, without checking for locks/etc. The checks should be done in player commands or Mobile AI.
+    void            open_close_lock_unlock_no_checks(Room* room, Direction dir, OpenCloseLockUnlock type, Mobile* actor);
     void            save(int save_slot);    // Saves the game! Should only be called via Game::save().
     TimeWeather&    time_weather() const;   // Returns a reference to the time/weather manager object.
     void            unload_region(uint32_t id); // Removes a Region from memory, saving it first.

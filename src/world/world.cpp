@@ -153,23 +153,66 @@ ProcNameGen& World::namegen() const
     return *namegen_ptr_;
 }
 
-// Opens/closes a door, without checking for locks/etc., without printing any messages.
-void World::open_close_no_checks(Room* room, Direction dir, bool open)
+// Opens/closes/locks/unlocks a door, without checking for locks/etc. The checks should be done in player commands or Mobile AI.
+void World::open_close_lock_unlock_no_checks(Room* room, Direction dir, OpenCloseLockUnlock type, Mobile* actor)
 {
-    if (!room) throw runtime_error("Attempt to open/close door with null room pointer!");
-    if (!room->has_exit(dir)) throw runtime_error("Attempt to open/close door on nonexistent exit! [" + room->id_str() + "]");
-    if (!room->link_tag(dir, LinkTag::Openable)) throw runtime_error("Attempt to open/close a non-Openable exit! [" + room->id_str() + "]");
+    if (!room) throw runtime_error("Attempt to open/close/lock/unlock door with null room pointer!");
+    if (!room->has_exit(dir)) throw runtime_error("Attempt to open/close/lock/unlock door on nonexistent exit! [" + room->id_str() + "]");
+    if (!room->link_tag(dir, LinkTag::Openable)) throw runtime_error("Attempt to open/close/lock/unlock a non-Openable exit! [" + room->id_str() + "]");
     Room* dest_room = room->get_link(dir);
-    if (open)
+    const Direction reverse_dir = Room::reverse_direction(dir);
+    std::string action_str;
+    switch(type)
     {
-        room->set_link_tag(dir, LinkTag::Open);
-        dest_room->set_link_tag(Room::reverse_direction(dir), LinkTag::Open);
+        case OpenCloseLockUnlock::OPEN:
+            room->set_link_tag(dir, LinkTag::Open);
+            dest_room->set_link_tag(reverse_dir, LinkTag::Open);
+            action_str = "opens";
+            break;
+        case OpenCloseLockUnlock::CLOSE:
+            room->clear_link_tag(dir, LinkTag::Open);
+            dest_room->clear_link_tag(reverse_dir, LinkTag::Open);
+            action_str = "closes";
+            break;
+        case OpenCloseLockUnlock::LOCK:
+            room->set_link_tag(dir, LinkTag::Locked);
+            dest_room->set_link_tag(reverse_dir, LinkTag::Locked);
+            action_str = "locks";
+            break;
+        case OpenCloseLockUnlock::UNLOCK:
+            room->clear_link_tag(dir, LinkTag::Locked);
+            dest_room->clear_link_tag(reverse_dir, LinkTag::Locked);
+            action_str = "unlocks";
+            break;
+    }
+    const Room* player_parent = player().parent_room();
+
+    // Check if the player saw this door open or close.
+    const bool player_sees = (room == player_parent || dest_room == player_parent) && (!actor || actor->type() != EntityType::PLAYER);
+    if (!player_sees) return;
+    const Direction player_sees_dir = (room == player_parent ? dir : reverse_dir);
+    const string door_name = (room == player_parent ? room->door_name(dir) : dest_room->door_name(reverse_dir));
+
+    // If the Actor pointer exists (it can be nullptr to make a door open on its own) AND the Mobile is in the same room as the Player, we'll inform them that
+    // the door has been opened by this Mobile.
+    std::string message;
+    if (room == player_parent && actor && actor->parent_room() == player_parent)
+    {
+        if (actor->tag(EntityTag::PluralName)) action_str.pop_back();
+        message = "{b}" + actor->name(NAME_FLAG_THE | NAME_FLAG_CAPITALIZE_FIRST) + " " + action_str + " the " + door_name;
+        if (player_sees_dir == Direction::UP) message += " above.";
+        else if (player_sees_dir == Direction::DOWN) message += " below.";
+        else message += " to the " + Room::direction_name(player_sees_dir) + ".";
     }
     else
     {
-        room->clear_link_tag(dir, LinkTag::Open);
-        dest_room->clear_link_tag(Room::reverse_direction(dir), LinkTag::Open);
+        message = "{b}The " + door_name;
+        if (player_sees_dir == Direction::UP) message += " above ";
+        else if (player_sees_dir == Direction::DOWN) message += " below ";
+        else message += " to the " + Room::direction_name(player_sees_dir) + " ";
+        message += action_str + ".";
     }
+    print(message);
 }
 
 // Saves the game! Should only be called via Game::save().
