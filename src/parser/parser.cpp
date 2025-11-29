@@ -20,10 +20,11 @@
 #include "trailmix/text/manipulation.hpp"
 #include "world/area/room.hpp"
 
-using namespace trailmix::text::hash;
-using namespace trailmix::text::manipulation;
 using std::string;
 using std::vector;
+using trailmix::text::hash::murmur3;
+using trailmix::text::manipulation::string_explode;
+using trailmix::text::manipulation::str_tolower;
 using westgate::terminal::print;
 
 namespace westgate::parser {

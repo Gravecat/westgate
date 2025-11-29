@@ -23,17 +23,19 @@
 #include "world/time/time-weather.hpp"
 #include "world/world.hpp"
 
-using namespace trailmix::file;
-using namespace trailmix::math;
-using namespace trailmix::text::ansi;
-using namespace trailmix::text::conversion;
-using namespace trailmix::text::formatting;
-using namespace trailmix::text::hash;
 using std::runtime_error;
 using std::string;
 using std::to_string;
 using std::unique_ptr;
 using std::vector;
+using trailmix::file::FileReader;
+using trailmix::file::FileWriter;
+using trailmix::math::Vector3;
+using trailmix::text::ansi::ansi_vector_split;
+using trailmix::text::conversion::number_to_text;
+using trailmix::text::formatting::CL_MODE_USE_AND;
+using trailmix::text::formatting::comma_list;
+using trailmix::text::hash::murmur3;
 using westgate::terminal::print;
 
 namespace westgate {

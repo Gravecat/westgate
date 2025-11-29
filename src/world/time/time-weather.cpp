@@ -20,13 +20,16 @@
 #include <cmath>
 #include <filesystem>
 
-using namespace trailmix::file;
-using namespace trailmix::math;
-using namespace trailmix::text::manipulation;
 using std::runtime_error;
 using std::string;
 using std::to_string;
 using std::vector;
+using trailmix::file::FileReader;
+using trailmix::file::FileWriter;
+using trailmix::file::YAML;
+using trailmix::math::rnd;
+using trailmix::text::manipulation::decode_compressed_string;
+using trailmix::text::manipulation::find_and_replace;
 using westgate::terminal::print;
 namespace fs = std::filesystem;
 
@@ -36,12 +39,12 @@ namespace westgate {
 TimeWeather::TimeWeather() : time_passed_(0), time_passed_subsecond_(0)
 {
     // Slightly randomize the starting time, but keep it within certain parameters (early- to mid-spring, between sunrise and noon).
-    day_ = random::get<int>(80, 130);
+    day_ = rnd::get<int>(80, 130);
     moon_ = (day_ - 79) % LUNAR_CYCLE_DAYS;
-    time_ = random::get<int>(420 * Time::MINUTE, 660 * Time::MINUTE);
+    time_ = rnd::get<int>(420 * Time::MINUTE, 660 * Time::MINUTE);
 
     // The starting weather is always either clear or fair.
-    if (random::get<bool>(0.5f)) weather_ = Weather::CLEAR;
+    if (rnd::get<bool>(0.5f)) weather_ = Weather::CLEAR;
     else weather_ = Weather::FAIR;
 
     weather_change_map_.resize(9);
@@ -377,7 +380,7 @@ uint64_t TimeWeather::time_passed() { return time_passed_; }
 void TimeWeather::trigger_event(string *message_to_append, bool silent)
 {
     const string weather_map = weather_change_map_.at(static_cast<int>(weather_));
-    const char new_weather = weather_map[random::get<int>(0, weather_map.size() - 1)];
+    const char new_weather = weather_map[rnd::get<int>(0, weather_map.size() - 1)];
     switch (new_weather)
     {
         case 'c': weather_ = Weather::CLEAR; break;

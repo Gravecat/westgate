@@ -21,13 +21,13 @@
 #include "trailmix/file/yaml.hpp"
 #include "trailmix/sys/binpath.hpp"
 
-using namespace trailmix::file;
-using namespace trailmix::sys;
 using std::exception;
 using std::runtime_error;
 using std::string;
 using std::to_string;
 using std::vector;
+using trailmix::file::YAML;
+using trailmix::sys::BinPath;
 namespace fs = std::filesystem;
 
 namespace westgate {

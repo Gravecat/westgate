@@ -19,11 +19,12 @@
 #include "world/time/time-weather.hpp"
 #include "world/world.hpp"
 
-using namespace trailmix::file;
-using namespace trailmix::sys;
 using std::runtime_error;
 using std::string;
 using std::to_string;
+using trailmix::file::FileReader;
+using trailmix::file::FileWriter;
+using trailmix::sys::BinPath;
 using westgate::terminal::print;
 namespace fs = std::filesystem;
 

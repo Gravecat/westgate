@@ -8,7 +8,7 @@
 #include "parser/cheats.hpp"
 #include "trailmix/math/random.hpp"
 
-using namespace trailmix::math;
+using trailmix::math::rnd;
 using westgate::terminal::print;
 
 namespace westgate::parser::silly {
@@ -16,8 +16,8 @@ namespace westgate::parser::silly {
 // You are likely to be eaten by a grue.
 void magic_word(PARSER_FUNCTION)
 { PARSER_NO_WORDS PARSER_NO_HASHED
-    if (random::get<int>(1, 50) == 1) print("{K}A hollow voice says, \"Plugh.\"");
-    else if (random::get<int>(1, 20) == 1) print("{K}Something happens.");
+    if (rnd::get<int>(1, 50) == 1) print("{K}A hollow voice says, \"Plugh.\"");
+    else if (rnd::get<int>(1, 20) == 1) print("{K}Something happens.");
     else print("{K}Nothing happens.");
 }
 

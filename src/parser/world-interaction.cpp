@@ -14,8 +14,8 @@
 #include "world/time/timing.hpp"
 #include "world/world.hpp"
 
-using namespace trailmix::text::conversion;
 using std::string;
+using trailmix::text::conversion::number_to_text;
 using westgate::terminal::print;
 
 namespace westgate::parser::world_interaction {

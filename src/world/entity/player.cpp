@@ -10,9 +10,10 @@
 #include "world/entity/player.hpp"
 #include "world/area/room.hpp"
 
-using namespace trailmix::file;
 using std::runtime_error;
 using std::to_string;
+using trailmix::file::FileReader;
+using trailmix::file::FileWriter;
 
 namespace westgate {
 

@@ -8,9 +8,10 @@
 #include "trailmix/file/filewriter.hpp"
 #include "world/area/link.hpp"
 
-using namespace trailmix::file;
 using std::runtime_error;
 using std::to_string;
+using trailmix::file::FileReader;
+using trailmix::file::FileWriter;
 
 namespace westgate {
 

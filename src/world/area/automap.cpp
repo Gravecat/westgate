@@ -10,10 +10,10 @@
 #include "world/area/room.hpp"
 #include "world/world.hpp"
 
-using namespace trailmix::math;
-using namespace trailmix::text::ansi;
 using std::string;
 using std::vector;
+using trailmix::math::Vector3;
+using trailmix::text::ansi::flatten_tags;
 
 namespace westgate {
 
