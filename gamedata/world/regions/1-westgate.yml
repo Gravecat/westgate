@@ -43,7 +43,7 @@ ARROW_TRENCH:
     east: ARROW_TRENCH_CENTRAL
     southwest: [ WHITE_STAR_ENTRYWAY, Gate, Openable, Permalock, SeeThrough ]
     up: ARROW_PARK_S
-  map: ^
+  map: "{w}^"
   name: [ Rough Stone Trench, trench]
   short_name: trench
   tags: [ Underground ]
@@ -56,10 +56,11 @@ ARROW_TRENCH_CENTRAL:
     grate mounted in an opening to the north leads into further darkness, along with the distant sound of running water.
   exits:
     east: ARROW_TRENCH_COLLAPSED
+    southeast: SUBTERRANEAN_GRAVEYARD
     west: ARROW_TRENCH
-  map: O
+  map: "{w}O"
   name: [ Rough Stone Trench, trench ]
-  tags: [ Underground, UnfinishedNorth, UnfinishedSoutheast ]
+  tags: [ Underground, UnfinishedNorth ]
 
 ARROW_TRENCH_COLLAPSED:
   coords: [ 2, 1, -1 ]
@@ -68,8 +69,74 @@ ARROW_TRENCH_COLLAPSED:
     blocked by a cave-in, huge chunks of rubble packed together with dirt completely sealing off anything that may have existed to the east.
   exits:
     west: ARROW_TRENCH_CENTRAL
-  map: O
+  map: "{w}O"
   name: [ Collapsed Stone Trench, trench ]
+  tags: [ Underground ]
+
+COLLAPSED_CITY_TUNNEL:
+  coords: [ 3, 3, -1 ]
+  desc: >
+    The dirt tunnels leading from the west and north appear to have collapsed long ago here, the roof open to the city above with some rubble and rusted,
+    wrecked old debris from above strewn around, covered in grime and thick layers of moss and vines. The walls partly consist of dirt, partly of the lower
+    levels and foundations of the ancient brick and stone buildings which tower high above. Makeshift entrances into some of the buildings are visible to the
+    east and southeast.
+  exits:
+    east: [ WRETCHED_ENCAMPMENT, Openable ]
+    north: SKITTERING_TUNNEL
+    southeast: [ FLOODED_UNDERCITY, Openable ]
+    west: WRETCHED_TUNNEL
+  map: "{w}O"
+  name: [ Collapsed City Tunnel, collapsed tunnel ]
+  tags: [ City, Underground, Windows ]
+
+FETID_WARRENS:
+  coords: [ 1, 3, -1 ]
+  desc: >
+    The west branch of this tunnel ends in a slightly more spacious room, largely unremarkable save for a few sizeable holes dug in the rough earth, from which
+    an atrocious stench emerges. It's not hard to imagine what this room's purpose is, and why further investigation would be unwise.
+  exits:
+    east: WRETCHED_TUNNEL
+  map: "{y}O"
+  name: [ Fetid Warrens, fetid warrens ]
+  tags: [ Underground ]
+
+FLOODED_UNDERCITY:
+  coords: [ 4, 4, -1 ]
+  desc: >
+    What may have once been the foundations of one of the sprawling city buildings above is now a huge flooded cave, dimly lit from small openings in the
+    rotting ceiling above, huge vine-covered pillars holding the stone sky aloft. Debris and rotting wood lays strewn around this cavern, and fetid greenish
+    water sprawls out as far as the eye can see to the east, disappearing into a gloomy underground lake.
+  exits:
+    northwest: [ COLLAPSED_CITY_TUNNEL, Openable ]
+  map: "{c}O"
+  name: [ Flooded Undercity, flooded undercity ]
+  tags: [ Underground ]
+
+SKITTERING_TUNNEL:
+  coords: [ 3, 2, -1 ]
+  desc: >
+    Curving around to the west and south, this dirt tunnel has been carved roughly from the dry earth, barely high enough for you to be able to stand without
+    hunching under dry roots or rusted pieces of metal jutting from the ceiling. You can barely see your way thanks to half-buried, dimly-glowing mushrooms in
+    the ground, which rather more alarmingly reveal hundreds of insects skittering around the uneven soil.
+  exits:
+    south: COLLAPSED_CITY_TUNNEL
+    west: SUBTERRANEAN_GRAVEYARD
+  map: "{y}O"
+  name: [ Skittering Tunnel, tunnel ]
+  tags: [ Underground ]
+
+SUBTERRANEAN_GRAVEYARD:
+  coords: [ 2, 2, -1 ]
+  desc: >
+    This series of dirt-hewn tunnels opens up into a larger chamber, the ceiling high enough that you could barely touch it if you jumped. Glowing mushrooms in
+    the loamy soil illuminate the area in an unearthly green haze, revealing a number of open graves - some occupied, some not - as well as more dirt mounds
+    with crudely-fashioned headstones made from pieces of debris or rusting metal signs. Several tunnels lead off into the gloom.
+  exits:
+    east: SKITTERING_TUNNEL
+    south: WRETCHED_TUNNEL
+    northwest: ARROW_TRENCH_CENTRAL
+  map: "{y}O"
+  name: [ Subterranean Graveyard, graveyard ]
   tags: [ Underground ]
 
 WHITE_STAR_ENTRYWAY:
@@ -81,3 +148,30 @@ WHITE_STAR_ENTRYWAY:
   map: v
   name: [ tbc, tbc ]
   tags: [ Underground, UnfinishedDown ]
+
+WRETCHED_ENCAMPMENT:
+  coords: [ 4, 3, -1 ]
+  desc: >
+    This was probably once the basement of one of the buildings towering above, but it's now little more than a ruined scrapyard. Ancient brick walls are filthy
+    and damaged, the ceiling above is torn open to reveal rusted pipes, and the floor is strewn with all manner of debris covering almost every surface, a few
+    torn old sheets here and there, empty bottles, rotting crates, and rusted old metal boxes. The exits are mostly blocked by debris, leaving only a rusted old
+    door to the west.
+  exits:
+    west: [ COLLAPSED_CITY_TUNNEL, Openable ]
+  map: "{w}O"
+  name: [ Wretched Encampment, encampment ]
+  tags: [ Underground ]
+
+WRETCHED_TUNNEL:
+  coords: [ 2, 3, -1 ]
+  desc: >
+    This tunnel has been carved roughly out of the dry, dead earth, a few half-buried glowing mushrooms providing enough illumination to find your way along the
+    uneven ground. The tunnel mostly heads east-west, with a fetid breeze blowing through from the western end, though an opening in the wall leads into a
+    larger chamber to the north.
+  exits:
+    north: SUBTERRANEAN_GRAVEYARD
+    east: COLLAPSED_CITY_TUNNEL
+    west: FETID_WARRENS
+  map: "{y}O"
+  name: [ Rough-Hewn Dirt Tunnel, tunnel ]
+  tags: [ Underground ]
