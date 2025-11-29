@@ -23,6 +23,7 @@ class ProcNameGen;  // defined in util/text/namegen.hpp
 class Region;       // defined in world/area/region.hpp
 class Room;         // defined in world/area/room.hpp
 class TimeWeather;  // defined in world/time-weather.hpp
+enum class Direction : uint8_t; // defined in world/area/area.hpp
 
 class World {
 public:
