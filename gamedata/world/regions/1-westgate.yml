@@ -36,9 +36,22 @@ ARROW_PARK_S:
 ARROW_TRENCH:
   coords: [ 0, 1, -1 ]
   desc: >
-    tbc
+    Rough stone slopes up about eight feet to the ceiling, the floor clean. Seems you're on one end of a long trench, close to the surface end, the other
+    vanished into darkness. The ceiling ends and one can probably climb up the sloped sides to the forest floor, dark evergreens towering well above you. Barely
+    visible in the gloom, a heavy metal gate leads southwest.
   exits:
+    southwest: [ WHITE_STAR_ENTRYWAY, Gate, Openable, Permalock, SeeThrough ]
     up: ARROW_PARK_S
   map: "^"
   short_name: trench
-  tags: [ Underground, UnfinishedEast, UnfinishedSouthwest ]
+  tags: [ Underground, UnfinishedEast ]
+
+WHITE_STAR_ENTRYWAY:
+  coords: [ -1, 2, -1 ]
+  desc: >
+    Not yet implemented.
+  exits:
+    northeast: [ ARROW_TRENCH, Gate, Openable, Permalock, SeeThrough ]
+  map: "v"
+  short_name: tbc
+  tags: [ Underground, UnfinishedDown ]
