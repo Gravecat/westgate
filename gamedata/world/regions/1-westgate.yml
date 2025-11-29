@@ -56,11 +56,12 @@ ARROW_TRENCH_CENTRAL:
     grate mounted in an opening to the north leads into further darkness, along with the distant sound of running water.
   exits:
     east: ARROW_TRENCH_COLLAPSED
+    north: [ SEWER_KINGS, Grate, Openable ]
     southeast: SUBTERRANEAN_GRAVEYARD
     west: ARROW_TRENCH
   map: "{w}O"
   name: [ Rough Stone Trench, trench ]
-  tags: [ Underground, UnfinishedNorth ]
+  tags: [ Underground ]
 
 ARROW_TRENCH_COLLAPSED:
   coords: [ 2, 1, -1 ]
@@ -111,6 +112,18 @@ FLOODED_UNDERCITY:
   map: "{c}O"
   name: [ Flooded Undercity, flooded undercity ]
   tags: [ Underground ]
+
+SEWER_KINGS:
+  coords: [ 1, 0, -1 ]
+  desc: >
+    The sewer curves here, the stagnant stream of rainwater leading off into gloom to the west and northeast, flanked by mossy red brick walkways and rusted
+    iron handrails. It's hard to see here, though the small drainage grates in the ceiling allow some light from the city above to trickle down into the
+    oppressive gloom. Mounted in the brick wall to the south is a heavy, tarnished metal grate, which appears to lead into a sloped tunnel.
+  exits:
+    south: [ ARROW_TRENCH_CENTRAL, Grate, Openable ]
+  map: "{w}O"
+  name: [ King's Sewer, sewer ]
+  tags: [ Underground, Windows, UnfinishedNortheast, UnfinishedWest ]
 
 SKITTERING_TUNNEL:
   coords: [ 3, 2, -1 ]
