@@ -40,6 +40,7 @@ enum class LinkTag : uint16_t {
     // Different types of doors (and openable things).
     Gate =          200,    // This 'door' should be called a gate.
     Window =        201,    // ... You know how this goes, I'm not gonna comment all of these.
+    Grate =         202,
 };
 
 class Link

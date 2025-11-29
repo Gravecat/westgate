@@ -18,7 +18,7 @@ namespace westgate {
 // Used during loading YAML data, to convert LinkTag text names into LinkTag enums.
 const std::map<std::string, LinkTag> Link::tag_map_ = { { "Openable", LinkTag::Openable }, { "Door", LinkTag::Door }, { "SeeThrough", LinkTag::SeeThrough },
     { "Open", LinkTag::Open }, { "Gate", LinkTag::Gate }, { "Window", LinkTag::Window }, { "Lockable", LinkTag:: Lockable }, { "Locked", LinkTag::Locked },
-    { "Permalock", LinkTag::Permalock }, { "AwareOfLock", LinkTag::AwareOfLock } };
+    { "Permalock", LinkTag::Permalock }, { "AwareOfLock", LinkTag::AwareOfLock }, { "Grate", LinkTag::Grate } };
 
 // Creates a new Link with default values.
 Link::Link() : links_to_(0) { }
@@ -49,6 +49,7 @@ const std::string Link::door_name() const
     if (!tag(LinkTag::Openable)) return "";
     if (tag(LinkTag::Gate)) return "gate";
     if (tag(LinkTag::Window)) return "window";
+    if (tag(LinkTag::Grate)) return "grate";
     return "door";
 }
 
