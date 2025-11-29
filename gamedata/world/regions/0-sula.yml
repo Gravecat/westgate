@@ -10,9 +10,8 @@ REGION_IDENTIFIER:
 
 SULA_PLAINS:
   coords: [ 0, 0, 100 ]
-  desc: >
-    A wide field of grassy plains surrounds you, occasional bright flowers punctuating the green with a flash of colour. To the east stands a small wooden
-    shack - more of a shed, really - while to the north is a grid of paved stones.
+  desc: "A wide field of grassy plains surrounds you, occasional bright flowers punctuating the green with a flash of colour. To the east stands a small wooden
+    shack - more of a shed, really - while to the north is a grid of paved stones."
   exits:
     north: SULA_STONE_8
     east: [ SULA_SHACK, Door, Openable ]
@@ -22,9 +21,8 @@ SULA_PLAINS:
 
 SULA_SHACK:
   coords: [ 1, 0, 100 ]
-  desc: >
-    The interior of this small wooden shack reveals it to be more of a shed than anything, various shelves attached to the walls holding miscellaneous
-    bric-a-brac, while a few dusty barrels and crates occupy the east wide. The only door leads back outside, to the west.
+  desc: "The interior of this small wooden shack reveals it to be more of a shed than anything, various shelves attached to the walls holding miscellaneous
+    bric-a-brac, while a few dusty barrels and crates occupy the east wide. The only door leads back outside, to the west."
   exits:
     west: [ SULA_PLAINS, Door, Openable ]
   map: "O"
@@ -33,9 +31,8 @@ SULA_SHACK:
 
 SULA_STONE_1:
   coords: [ -1, -3, 100 ]
-  desc: >
-    Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking passage
-    except in certain directions.
+  desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
+    passage except in certain directions."
   exits:
     south: SULA_STONE_4
     east: SULA_STONE_2
@@ -44,9 +41,8 @@ SULA_STONE_1:
 
 SULA_STONE_2:
   coords: [ 0, -3, 100 ]
-  desc: >
-    Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking passage
-    except in certain directions.
+  desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
+    passage except in certain directions."
   exits:
     south: SULA_STONE_5
     southeast: SULA_STONE_6
@@ -56,9 +52,8 @@ SULA_STONE_2:
 
 SULA_STONE_3:
   coords: [ 1, -3, 100 ]
-  desc: >
-    Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking passage
-    except in certain directions.
+  desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
+    passage except in certain directions."
   exits:
     south: SULA_STONE_6
   map: "{W}O"
@@ -66,9 +61,8 @@ SULA_STONE_3:
 
 SULA_STONE_4:
   coords: [ -1, -2, 100 ]
-  desc: >
-    Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking passage
-    except in certain directions.
+  desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
+    passage except in certain directions."
   exits:
     north: SULA_STONE_1
     south: SULA_STONE_7
@@ -78,9 +72,8 @@ SULA_STONE_4:
 
 SULA_STONE_5:
   coords: [ 0, -2, 100 ]
-  desc: >
-    Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking passage
-    except in certain directions.
+  desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
+    passage except in certain directions."
   exits:
     north: SULA_STONE_2
     south: SULA_STONE_8
@@ -90,9 +83,8 @@ SULA_STONE_5:
 
 SULA_STONE_6:
   coords: [ 1, -2, 100 ]
-  desc: >
-    Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking passage
-    except in certain directions.
+  desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
+    passage except in certain directions."
   exits:
     north: SULA_STONE_3
     northwest: SULA_STONE_2
@@ -102,9 +94,8 @@ SULA_STONE_6:
 
 SULA_STONE_7:
   coords: [ -1, -1, 100 ]
-  desc: >
-    Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking passage
-    except in certain directions.
+  desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
+    passage except in certain directions."
   exits:
     north: SULA_STONE_4
     northeast: SULA_STONE_5
@@ -113,9 +104,8 @@ SULA_STONE_7:
 
 SULA_STONE_8:
   coords: [ 0, -1, 100 ]
-  desc: >
-    Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking passage
-    except in certain directions.
+  desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
+    passage except in certain directions."
   exits:
     north: SULA_STONE_5
     northwest: SULA_STONE_4
@@ -125,9 +115,8 @@ SULA_STONE_8:
 
 SULA_STONE_9:
   coords: [ 1, -1, 100 ]
-  desc: >
-    Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking passage
-    except in certain directions.
+  desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
+    passage except in certain directions."
   exits:
     north: SULA_STONE_6
   map: "{W}O"

@@ -10,10 +10,10 @@ REGION_IDENTIFIER:
 
 ARROW_PARK:
   coords: [ 0, 0, 0 ]
-  desc: >
-     The atmosphere is thick and heavy, tall chimney stacks looming ominously in the sky. Here, surrounded by the stone walls, rests a small natural sanctuary.
-     The grass is thick and green underfoot, and tall trees block out a little of the surrounding buildings, leaves rustling softly. Covering almost a quarter
-     of the park is a large pool, edged in natural rock and varying in depth. To the south stand thick pines, hidden behind which is a weathered brick platform.
+  desc: "The atmosphere is thick and heavy, tall chimney stacks looming ominously in the sky. Here, surrounded by the stone walls, rests a small natural
+    sanctuary. The grass is thick and green underfoot, and tall trees block out a little of the surrounding buildings, leaves rustling softly. Covering almost a
+    quarter of the park is a large pool, edged in natural rock and varying in depth. To the south stand thick pines, hidden behind which is a weathered brick
+    platform."
   exits:
     south: ARROW_PARK_S
   map: "{g}O"
@@ -22,10 +22,9 @@ ARROW_PARK:
 
 ARROW_PARK_S:
   coords: [ 0, 1, 0 ]
-  desc: >
-    A weathered brick platform is settled firmly within the cluster of evergreens, grass and wildflowers creeping through cracks in the old stone. The trees
-    here are dense and deep enough that the city seems it might be miles away, forgiving the encroaching plumes of smoke breaching the treetops. A large,
-    rusted iron ring in the middle of the brick platform marks a passage into the ground.
+  desc: "A weathered brick platform is settled firmly within the cluster of evergreens, grass and wildflowers creeping through cracks in the old stone. The
+    trees here are dense and deep enough that the city seems it might be miles away, forgiving the encroaching plumes of smoke breaching the treetops. A large,
+    rusted iron ring in the middle of the brick platform marks a passage into the ground."
   exits:
     down: ARROW_TRENCH
     north: ARROW_PARK
@@ -35,10 +34,9 @@ ARROW_PARK_S:
 
 ARROW_TRENCH:
   coords: [ 0, 1, -1 ]
-  desc: >
-    Rough stone slopes up about eight feet to the ceiling, the floor clean. Seems you're on one end of a long trench, close to the surface end, the other
+  desc: "Rough stone slopes up about eight feet to the ceiling, the floor clean. Seems you're on one end of a long trench, close to the surface end, the other
     vanished into darkness. The ceiling ends and one can probably climb up the sloped sides to the forest floor, dark evergreens towering well above you. Barely
-    visible in the gloom, a heavy metal gate leads southwest.
+    visible in the gloom, a heavy metal gate leads southwest."
   exits:
     east: ARROW_TRENCH_CENTRAL
     southwest: [ WHITE_STAR_ENTRYWAY, Gate, Openable, Permalock, SeeThrough ]
@@ -50,10 +48,9 @@ ARROW_TRENCH:
 
 ARROW_TRENCH_CENTRAL:
   coords: [ 1, 1, -1]
-  desc: >
-    You find yourself at a crossroads of a sort, a rough stone tunnel of chipped yet clean stone, a trench with angled sides leading off into the gloom to both
-    the east and west. To the southeast you see a crude hole has been torn in the slope, leading into what looks like a dry dirt tunnel, while a heavy metal
-    grate mounted in an opening to the north leads into further darkness, along with the distant sound of running water.
+  desc: "You find yourself at a crossroads of a sort, a rough stone tunnel of chipped yet clean stone, a trench with angled sides leading off into the gloom to
+    both the east and west. To the southeast you see a crude hole has been torn in the slope, leading into what looks like a dry dirt tunnel, while a heavy
+    metal grate mounted in an opening to the north leads into further darkness, along with the distant sound of running water."
   exits:
     east: ARROW_TRENCH_COLLAPSED
     north: [ SEWER_KINGS, Grate, Openable ]
@@ -65,9 +62,8 @@ ARROW_TRENCH_CENTRAL:
 
 ARROW_TRENCH_COLLAPSED:
   coords: [ 2, 1, -1 ]
-  desc: >
-    The rough stone trench comes to a rather abrupt end here, its sloping walls still reaching to the tall stone ceiling, but the passage east is completely
-    blocked by a cave-in, huge chunks of rubble packed together with dirt completely sealing off anything that may have existed to the east.
+  desc: "The rough stone trench comes to a rather abrupt end here, its sloping walls still reaching to the tall stone ceiling, but the passage east is
+    completely blocked by a cave-in, huge chunks of rubble packed together with dirt completely sealing off anything that may have existed to the east."
   exits:
     west: ARROW_TRENCH_CENTRAL
   map: "{w}O"
@@ -76,11 +72,10 @@ ARROW_TRENCH_COLLAPSED:
 
 COLLAPSED_CITY_TUNNEL:
   coords: [ 3, 3, -1 ]
-  desc: >
-    The dirt tunnels leading from the west and north appear to have collapsed long ago here, the roof open to the city above with some rubble and rusted,
+  desc: "The dirt tunnels leading from the west and north appear to have collapsed long ago here, the roof open to the city above with some rubble and rusted,
     wrecked old debris from above strewn around, covered in grime and thick layers of moss and vines. The walls partly consist of dirt, partly of the lower
     levels and foundations of the ancient brick and stone buildings which tower high above. Makeshift entrances into some of the buildings are visible to the
-    east and southeast.
+    east and southeast."
   exits:
     east: [ WRETCHED_ENCAMPMENT, Openable ]
     north: SKITTERING_TUNNEL
@@ -92,9 +87,8 @@ COLLAPSED_CITY_TUNNEL:
 
 FETID_WARRENS:
   coords: [ 1, 3, -1 ]
-  desc: >
-    The west branch of this tunnel ends in a slightly more spacious room, largely unremarkable save for a few sizeable holes dug in the rough earth, from which
-    an atrocious stench emerges. It's not hard to imagine what this room's purpose is, and why further investigation would be unwise.
+  desc: "The west branch of this tunnel ends in a slightly more spacious room, largely unremarkable save for a few sizeable holes dug in the rough earth, from
+    which an atrocious stench emerges. It's not hard to imagine what this room's purpose is, and why further investigation would be unwise."
   exits:
     east: WRETCHED_TUNNEL
   map: "{y}O"
@@ -103,10 +97,9 @@ FETID_WARRENS:
 
 FLOODED_UNDERCITY:
   coords: [ 4, 4, -1 ]
-  desc: >
-    What may have once been the foundations of one of the sprawling city buildings above is now a huge flooded cave, dimly lit from small openings in the
+  desc: "What may have once been the foundations of one of the sprawling city buildings above is now a huge flooded cave, dimly lit from small openings in the
     rotting ceiling above, huge vine-covered pillars holding the stone sky aloft. Debris and rotting wood lays strewn around this cavern, and fetid greenish
-    water sprawls out as far as the eye can see to the east, disappearing into a gloomy underground lake.
+    water sprawls out as far as the eye can see to the east, disappearing into a gloomy underground lake."
   exits:
     northwest: [ COLLAPSED_CITY_TUNNEL, Openable ]
   map: "{c}O"
@@ -115,10 +108,9 @@ FLOODED_UNDERCITY:
 
 SEWER_KINGS:
   coords: [ 1, 0, -1 ]
-  desc: >
-    The sewer curves here, the stagnant stream of rainwater leading off into gloom to the west and northeast, flanked by mossy red brick walkways and rusted
-    iron handrails. It's hard to see here, though the small drainage grates in the ceiling allow some light from the city above to trickle down into the
-    oppressive gloom. Mounted in the brick wall to the south is a heavy, tarnished metal grate, which appears to lead into a sloped tunnel.
+  desc: "The sewer curves here, the stagnant stream of rainwater leading off into gloom to the west and northeast, flanked by mossy red brick walkways and
+    rusted iron handrails. It's hard to see here, though the small drainage grates in the ceiling allow some light from the city above to trickle down into the
+    oppressive gloom. Mounted in the brick wall to the south is a heavy, tarnished metal grate, which appears to lead into a sloped tunnel."
   exits:
     south: [ ARROW_TRENCH_CENTRAL, Grate, Openable ]
   map: "{w}O"
@@ -127,10 +119,9 @@ SEWER_KINGS:
 
 SKITTERING_TUNNEL:
   coords: [ 3, 2, -1 ]
-  desc: >
-    Curving around to the west and south, this dirt tunnel has been carved roughly from the dry earth, barely high enough for you to be able to stand without
-    hunching under dry roots or rusted pieces of metal jutting from the ceiling. You can barely see your way thanks to half-buried, dimly-glowing mushrooms in
-    the ground, which rather more alarmingly reveal hundreds of insects skittering around the uneven soil.
+  desc: "Curving around to the west and south, this dirt tunnel has been carved roughly from the dry earth, barely high enough for you to be able to stand
+    without hunching under dry roots or rusted pieces of metal jutting from the ceiling. You can barely see your way thanks to half-buried, dimly-glowing
+    mushrooms in the ground, which rather more alarmingly reveal hundreds of insects skittering around the uneven soil."
   exits:
     south: COLLAPSED_CITY_TUNNEL
     west: SUBTERRANEAN_GRAVEYARD
@@ -140,10 +131,9 @@ SKITTERING_TUNNEL:
 
 SUBTERRANEAN_GRAVEYARD:
   coords: [ 2, 2, -1 ]
-  desc: >
-    This series of dirt-hewn tunnels opens up into a larger chamber, the ceiling high enough that you could barely touch it if you jumped. Glowing mushrooms in
-    the loamy soil illuminate the area in an unearthly green haze, revealing a number of open graves - some occupied, some not - as well as more dirt mounds
-    with crudely-fashioned headstones made from pieces of debris or rusting metal signs. Several tunnels lead off into the gloom.
+  desc: "This series of dirt-hewn tunnels opens up into a larger chamber, the ceiling high enough that you could barely touch it if you jumped. Glowing
+    mushrooms in the loamy soil illuminate the area in an unearthly green haze, revealing a number of open graves - some occupied, some not - as well as more
+    dirt mounds with crudely-fashioned headstones made from pieces of debris or rusting metal signs. Several tunnels lead off into the gloom."
   exits:
     east: SKITTERING_TUNNEL
     south: WRETCHED_TUNNEL
@@ -154,8 +144,7 @@ SUBTERRANEAN_GRAVEYARD:
 
 WHITE_STAR_ENTRYWAY:
   coords: [ -1, 2, -1 ]
-  desc: >
-    Not yet implemented.
+  desc: "Not yet implemented."
   exits:
     northeast: [ ARROW_TRENCH, Gate, Openable, Permalock, SeeThrough ]
   map: v
@@ -164,11 +153,10 @@ WHITE_STAR_ENTRYWAY:
 
 WRETCHED_ENCAMPMENT:
   coords: [ 4, 3, -1 ]
-  desc: >
-    This was probably once the basement of one of the buildings towering above, but it's now little more than a ruined scrapyard. Ancient brick walls are filthy
-    and damaged, the ceiling above is torn open to reveal rusted pipes, and the floor is strewn with all manner of debris covering almost every surface, a few
-    torn old sheets here and there, empty bottles, rotting crates, and rusted old metal boxes. The exits are mostly blocked by debris, leaving only a rusted old
-    door to the west.
+  desc: "This was probably once the basement of one of the buildings towering above, but it's now little more than a ruined scrapyard. Ancient brick walls are
+    filthy and damaged, the ceiling above is torn open to reveal rusted pipes, and the floor is strewn with all manner of debris covering almost every surface,
+    a few torn old sheets here and there, empty bottles, rotting crates, and rusted old metal boxes. The exits are mostly blocked by debris, leaving only a
+    rusted old door to the west."
   exits:
     west: [ COLLAPSED_CITY_TUNNEL, Openable ]
   map: "{w}O"
@@ -177,10 +165,9 @@ WRETCHED_ENCAMPMENT:
 
 WRETCHED_TUNNEL:
   coords: [ 2, 3, -1 ]
-  desc: >
-    This tunnel has been carved roughly out of the dry, dead earth, a few half-buried glowing mushrooms providing enough illumination to find your way along the
-    uneven ground. The tunnel mostly heads east-west, with a fetid breeze blowing through from the western end, though an opening in the wall leads into a
-    larger chamber to the north.
+  desc: "This tunnel has been carved roughly out of the dry, dead earth, a few half-buried glowing mushrooms providing enough illumination to find your way
+    along the uneven ground. The tunnel mostly heads east-west, with a fetid breeze blowing through from the western end, though an opening in the wall leads
+    into a larger chamber to the north."
   exits:
     north: SUBTERRANEAN_GRAVEYARD
     east: COLLAPSED_CITY_TUNNEL

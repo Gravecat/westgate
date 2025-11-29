@@ -15,7 +15,6 @@
 #include "trailmix/file/yaml.hpp"
 #include "trailmix/sys/binpath.hpp"
 #include "trailmix/text/hash.hpp"
-#include "trailmix/text/formatting.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/region.hpp"
 #include "world/world.hpp"
@@ -29,7 +28,6 @@ using trailmix::file::FileWriter;
 using trailmix::file::YAML;
 using trailmix::math::Vector3;
 using trailmix::sys::BinPath;
-using trailmix::text::formatting::strip_trailing_newlines;
 using trailmix::text::hash::murmur3;
 namespace fs = std::filesystem;
 
@@ -174,7 +172,7 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
         room_ptr->set_name(name_vec[0], name_vec[1]);
 
         if (!room_yaml.key_exists("desc")) throw runtime_error(error_str + "Missing room description.");
-        room_ptr->set_desc(strip_trailing_newlines(room_yaml.val("desc")), false);
+        room_ptr->set_desc(room_yaml.val("desc"), false);
 
         if (!room_yaml.key_exists("coords")) throw runtime_error(error_str + "Missing room coordinates.");
         if (!room_yaml.get_child("coords").is_seq()) throw runtime_error(error_str + "Coordinate data not correctly set (expected sequence).");
