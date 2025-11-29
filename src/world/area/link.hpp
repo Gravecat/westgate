@@ -35,6 +35,7 @@ enum class LinkTag : uint16_t {
     Lockable =      104,    // Can this exit be locked and unlocked?
     Locked =        105,    // Unlike open/closed, the default state is unlocked.
     Permalock =     106,    // For locks that have no key; they can never be unlocked.
+    AwareOfLock =   107,    // The player is aware that this Link is locked.
 
     // Different types of doors (and openable things).
     Gate =          200,    // This 'door' should be called a gate.

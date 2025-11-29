@@ -336,7 +336,7 @@ void Room::look() const
         if (links_[i]->tag(LinkTag::Openable))
         {
             if (links_[i]->tag(LinkTag::Open)) exit_tags.push_back("open");
-            else if (links_[i]->tag(LinkTag::Locked)) exit_tags.push_back("locked");
+            else if (links_[i]->tag(LinkTag::AwareOfLock)) exit_tags.push_back("locked");
             else exit_tags.push_back("closed");
         }
 

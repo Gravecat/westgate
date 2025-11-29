@@ -68,6 +68,7 @@ void open_close(PARSER_FUNCTION)
     if (room->link_tag(dir, LinkTag::Locked) || room->link_tag(dir, LinkTag::Permalock))
     {
         print("{Y}You try to open the " + room->door_name(dir) + ", but it's locked.");
+        room->set_link_tag(dir, LinkTag::AwareOfLock);
         return;
     }
 
@@ -107,6 +108,7 @@ void travel(PARSER_FUNCTION)
     if ((room_here->link_tag(dir, LinkTag::Locked) || room_here->link_tag(dir, LinkTag::Permalock)) && !room_here->link_tag(dir, LinkTag::Open))
     {
         print("{Y}You can't go that way, the " + room_here->door_name(dir) + " is locked.");
+        room_here->set_link_tag(dir, LinkTag::AwareOfLock);
         return;
     }
 
