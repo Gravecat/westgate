@@ -44,6 +44,7 @@ static const std::map<uint32_t, Direction> parser_directions = {
 
 static const std::unordered_map<uint32_t, std::function<void(vector<uint32_t>&, vector<string>&)>> parser_verbs = {
     { 2252282012, actions::cheats::hash },                  // #hash
+    { 2606056173, actions::cheats::weather_desc },          // #weather
     { 3069208872, actions::meta::automap },                 // automap
     { 2746646486, actions::world_interaction::open_close }, // close
     { 2573673949, actions::world_interaction::travel },     // d

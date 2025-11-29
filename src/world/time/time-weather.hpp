@@ -9,6 +9,7 @@
 #pragma once
 #include "core/pch.hpp"
 
+#include <cstdint>
 #include <map>
 
 namespace trailmix::file
@@ -16,6 +17,8 @@ namespace trailmix::file
 class FileReader;   // defined in trailmix/file/filereader.hpp
 class FileWriter;   // defined in trailmix/file/filewriter.hpp
 }
+
+enum class Direction : uint8_t; // defined in world/area/link.hpp
 
 namespace westgate {
 
@@ -42,6 +45,7 @@ public:
     Season      room_season();              // Retrieves the season override (if any) for the current Room.
     void        save_data(trailmix::file::FileWriter* file);    // Saves the time/weather data to the specified save file.
     std::string season_str(Season season);  // Converts a season integer to a string.
+    std::string string_map(const std::string& key); // Retrieves a message directly from the string map, with tags processed.
     void        tick();                     // Advances time by the smallest possible gradient; useful for loops waiting for something to happen.
     TimeOfDay   time_of_day(bool fine);     // Returns the current time of day (morning, day, dusk, night)
     int         time_of_day_exact();        // Returns the exact time of day.
@@ -54,12 +58,11 @@ public:
 private:
     static constexpr int    LUNAR_CYCLE_DAYS =  29;     // How many days are in a lunar cycle?
     static constexpr float  TIME_GRANULARITY =  0.1f;   // The lower this number, the more fine-grained the accuracy of the passage of time becomes.
-    static constexpr int    TIME_WEATHER_SAVE_VERSION = 1;  // The version of the time/weather saved data in the saved game file.
+    static constexpr int    TIME_WEATHER_SAVE_VERSION = 2;  // The version of the time/weather saved data in the saved game file.
 
     Weather     fix_weather(Weather weather, Season season);    // Fixes weather for a specified season.
     void        trigger_event(std::string *message_to_append, bool silent); // Triggers a time-change event.
     bool        player_near_trees();                            // Is the player near trees right now?
-    void        replace_tokens(std::string &str, bool in_city); // Replaces tokens like $LANDSCAPE|STREETS$ in the source message with correct text.
     std::string weather_desc(Season season, bool trees);        // Returns a weather description for the current time/weather, based on the specified season.
 
     int         day_;       // The current day of the year.
@@ -68,6 +71,9 @@ private:
     uint64_t    time_passed_;   // The total amount of time that has passed in this game.
     float       time_passed_subsecond_; // For counting time passed in amounts of time less than a second.
     Weather     weather_;   // The current weather.
+    bool        wind_clockwise_;    // Is the wind direction changing in a clockwise direction?
+    Direction   wind_direction_;    // The current direction the wind is blowing from.
+    uint64_t    wind_next_change_;  // The time when the wind is due to next change direction.
 
     std::map<std::string, std::string>  tw_string_map_; // The time and weather transition strings.
     std::vector<std::string>            weather_change_map_;    // Weather change maps, to determine odds of changing to different weather types.

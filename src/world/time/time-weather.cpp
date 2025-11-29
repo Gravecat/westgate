@@ -12,7 +12,9 @@
 #include "trailmix/file/filewriter.hpp"
 #include "trailmix/file/yaml.hpp"
 #include "trailmix/math/random.hpp"
+#include "trailmix/text/formatting.hpp"
 #include "trailmix/text/manipulation.hpp"
+#include "world/area/link.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/player.hpp"
 #include "world/time/time-weather.hpp"
@@ -28,6 +30,7 @@ using trailmix::file::FileReader;
 using trailmix::file::FileWriter;
 using trailmix::file::YAML;
 using trailmix::math::rnd;
+using trailmix::text::formatting::process_conditional_tags;
 using trailmix::text::manipulation::decode_compressed_string;
 using trailmix::text::manipulation::find_and_replace;
 using westgate::terminal::print;
@@ -42,6 +45,9 @@ TimeWeather::TimeWeather() : time_passed_(0), time_passed_subsecond_(0)
     day_ = rnd::get<int>(80, 130);
     moon_ = (day_ - 79) % LUNAR_CYCLE_DAYS;
     time_ = rnd::get<int>(420 * Time::MINUTE, 660 * Time::MINUTE);
+    wind_clockwise_ = rnd::get<bool>(0.5f);
+    wind_direction_ = static_cast<Direction>(rnd::get<int>(1, 8));
+    wind_next_change_ = rnd::get<int>(2 * HOUR, 4 * HOUR);
 
     // The starting weather is always either clear or fair.
     if (rnd::get<bool>(0.5f)) weather_ = Weather::CLEAR;
@@ -157,6 +163,9 @@ void TimeWeather::load_data(FileReader* file)
     time_passed_ = file->read_data<uint64_t>();
     time_passed_subsecond_ = file->read_data<float>();
     weather_ = file->read_data<Weather>();
+    wind_clockwise_ = file->read_data<bool>();
+    wind_direction_ = file->read_data<Direction>();
+    wind_next_change_ = file->read_data<uint64_t>();
 }
 
 // Returns the name of the current month.
@@ -219,6 +228,32 @@ bool TimeWeather::pass_time(float seconds, bool allow_interrupt)
         }
         const bool can_see_outside = player().parent_room()->can_see_outside();
 
+        // Check if it's due time for the wind to change direction. First, we'll shorten the duration if there's a storm ongoing.
+        const bool storm = (weather_ == Weather::BLIZZARD || weather_ == Weather::STORMY);
+        if (storm && wind_next_change_ > time_passed_ - seconds_to_add)
+        {
+            const uint64_t wind_change_time_left = wind_next_change_ - time_passed_ - seconds_to_add;
+            if (wind_change_time_left > HOUR) wind_next_change_ = time_passed_ - seconds_to_add + rnd::get<int>(30 * MINUTE, 60 * MINUTE);
+        }
+        // If it's due to change direction now, let's do it.
+        if (time_passed_ - seconds_to_add > wind_next_change_)
+        {
+            if (storm) wind_next_change_ = time_passed_ - seconds_to_add + rnd::get<int>(30 * MINUTE, 60 * MINUTE);
+            else wind_next_change_ = time_passed_ - seconds_to_add + rnd::get<int>(2 * HOUR, 4 * HOUR);
+            if (rnd::get<bool>(storm ? 0.5f : 0.1f))    // 10% chance (60% during storms) of the wind randomizing its direction and rotation
+            {
+                wind_clockwise_ = rnd::get<bool>(0.5f);
+                wind_direction_ = static_cast<Direction>(rnd::get<int>(1, 8));
+            }
+            // 35% chance (80% during storms) for the wind's rotation to switch.
+            else if (rnd::get<bool>(storm ? 0.8f : 0.35f)) wind_clockwise_ = !wind_clockwise_;
+
+            // Rotate the wind, and apply the new value.
+            uint8_t wind_dir_int = static_cast<uint8_t>(wind_direction_);
+            wind_dir_int = ((wind_dir_int - 1 + (wind_clockwise_ ? 1 : -1) + 8) % 8) + 1;
+            wind_direction_ = static_cast<Direction>(wind_dir_int);
+        }
+
         TimeOfDay old_time_of_day = time_of_day(true);
         int old_time = time_;
         bool change_happened = false;
@@ -257,29 +292,6 @@ bool TimeWeather::pass_time(float seconds, bool allow_interrupt)
 bool TimeWeather::player_near_trees()
 { return player().parent_room()->tag(RoomTag::Trees); }
 
-// Replaces tokens like $LANDSCAPE|STREETS$ in the source message with correct text.
-void TimeWeather::replace_tokens(string &str, bool in_city)
-{
-    if (in_city)
-    {
-        find_and_replace(str, "$GROUND|STREET$", "street");
-        find_and_replace(str, "$LAND|CITY$", "city");
-        find_and_replace(str, "$LAND|STREET$", "street");
-        find_and_replace(str, "$LAND|STREETS$", "streets");
-        find_and_replace(str, "$LANDSCAPE|CITY$", "city");
-        find_and_replace(str, "$LANDSCAPE|STREETS$", "streets");
-    }
-    else
-    {
-        find_and_replace(str, "$GROUND|STREET$", "ground");
-        find_and_replace(str, "$LAND|CITY$", "land");
-        find_and_replace(str, "$LAND|STREET$", "land");
-        find_and_replace(str, "$LAND|STREETS$", "land");
-        find_and_replace(str, "$LANDSCAPE|CITY$", "landscape");
-        find_and_replace(str, "$LANDSCAPE|STREETS$", "landscape");
-    }
-}
-
 // Converts a season integer to a string.
 string TimeWeather::season_str(TimeWeather::Season season)
 {
@@ -303,6 +315,46 @@ void TimeWeather::save_data(FileWriter* file)
     file->write_data<uint64_t>(time_passed_);
     file->write_data<float>(time_passed_subsecond_);
     file->write_data<Weather>(weather_);
+    file->write_data<bool>(wind_clockwise_);
+    file->write_data<Direction>(wind_direction_);
+    file->write_data<uint64_t>(wind_next_change_);
+}
+
+// Retrieves a message directly from the string map, with tags processed.
+std::string TimeWeather::string_map(const std::string& key)
+{
+    const Room* player_room = player().parent_room();
+    const bool indoors = player_room->tag(RoomTag::Indoors) || player_room->tag(RoomTag::Underground);
+    const bool in_city = player_room->tag(RoomTag::City);
+    auto result = tw_string_map_.find(key);
+    if (result == tw_string_map_.end())
+    {
+        core().nonfatal("Unable to retrieve time/weather string: " + key, Core::CORE_ERROR);
+        return "";
+    }
+    std::string out = result->second;
+    process_conditional_tags(out, "outside", !indoors);
+    process_conditional_tags(out, "inside", indoors);
+    if (in_city)
+    {
+        find_and_replace(out, "$GROUND|STREET$", "street");
+        find_and_replace(out, "$LAND|CITY$", "city");
+        find_and_replace(out, "$LAND|STREET$", "street");
+        find_and_replace(out, "$LAND|STREETS$", "streets");
+        find_and_replace(out, "$LANDSCAPE|CITY$", "city");
+        find_and_replace(out, "$LANDSCAPE|STREETS$", "streets");
+    }
+    else
+    {
+        find_and_replace(out, "$GROUND|STREET$", "ground");
+        find_and_replace(out, "$LAND|CITY$", "land");
+        find_and_replace(out, "$LAND|STREET$", "land");
+        find_and_replace(out, "$LAND|STREETS$", "land");
+        find_and_replace(out, "$LANDSCAPE|CITY$", "landscape");
+        find_and_replace(out, "$LANDSCAPE|STREETS$", "landscape");
+    }
+    find_and_replace(out, "$WIND_DIR$", Room::direction_name(wind_direction_));
+    return out;
 }
 
 // Returns the current time of day (morning, day, dusk, night)
@@ -380,12 +432,8 @@ void TimeWeather::trigger_event(string *message_to_append, bool silent)
     }
     if (silent) return;
 
-    // Display an appropriate message for the changing time/weather, if we're outdoors.
-    const Room* player_room = player().parent_room();
-    const bool in_city = player_room->tag(RoomTag::City);
-    const bool indoors = player_room->tag(RoomTag::Indoors) || player_room->tag(RoomTag::Underground);
-    string time_message = tw_string_map_.at(time_of_day_str(true) + "_" + weather_str(fix_weather(weather_, current_season())) + (indoors ? "_INDOORS" : ""));
-    replace_tokens(time_message, in_city);
+    // Display an appropriate message for the changing time/weather.
+    string time_message = string_map(time_of_day_str(true) + "_" + weather_str(fix_weather(weather_, current_season())));
     if (message_to_append) *message_to_append += " " + time_message;
     else print("{y}" + time_message);
 }
@@ -401,18 +449,14 @@ string TimeWeather::weather_desc()
 // Returns a weather description for the current time/weather, based on the specified season.
 string TimeWeather::weather_desc(TimeWeather::Season season, bool trees)
 {
-    const Room* player_room = player().parent_room();
-    const bool indoors = player_room->tag(RoomTag::Indoors) || player_room->tag(RoomTag::Underground);
-    const bool in_city = player_room->tag(RoomTag::City);
     const Weather weather = fix_weather(weather_, season);
-    string desc = tw_string_map_.at(season_str(season) + "_" + time_of_day_str(false) + "_" + weather_str(weather)  + (indoors ? "_INDOORS" : ""));
+    string desc = string_map(season_str(season) + "_" + time_of_day_str(false) + "_" + weather_str(weather));
     if (trees)
     {
         string tree_time = "DAY";
         if (time_of_day(false) == TimeOfDay::DUSK || time_of_day(false) == TimeOfDay::NIGHT) tree_time = "NIGHT";
-        desc += " " + tw_string_map_.at(season_str(season) + "_" + tree_time + "_" + weather_str(weather) + "_TREES");
+        desc += " " + string_map(season_str(season) + "_" + tree_time + "_" + weather_str(weather) + "_TREES");
     }
-    replace_tokens(desc, in_city);
     return desc;
 }
 

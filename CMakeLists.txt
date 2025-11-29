@@ -188,7 +188,7 @@ set(FETCHCONTENT_BASE_DIR "${CMAKE_BINARY_DIR}/trailmix")
 FetchContent_Declare(
     trailmix
     GIT_REPOSITORY https://github.com/Gravecat/trailmix.git
-    GIT_TAG        v0.8.3
+    GIT_TAG        v0.9.2
 )
 FetchContent_MakeAvailable(trailmix)
 
