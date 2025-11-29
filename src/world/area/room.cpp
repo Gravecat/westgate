@@ -367,7 +367,12 @@ void Room::look() const
 }
 
 // Retrieves the map character for this Room.
-const std::string Room::map_char() const { return map_char_ + "{0}"; }
+const std::string Room::map_char() const
+{
+    if (!map_char_.size()) throw runtime_error(id_str_ + ": empty map char");
+    if (map_char_[0] == '{') return map_char_ + "{0}";
+    else return "{0}" + map_char_;
+}
 
 // Retrieves the full name of this Room.
 const std::string& Room::name() const { return name_[1]; }
