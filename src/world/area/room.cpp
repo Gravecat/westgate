@@ -78,13 +78,27 @@ void Room::add_entity(unique_ptr<Entity> entity)
 // Checks if we can see the outside world from here.
 bool Room::can_see_outside() const
 {
+    // If the Room isn't tagged as Indoors or Underground, then it's de facto outside, so we can see outside.
     if (!tag(RoomTag::Indoors) && !tag(RoomTag::Underground)) return true;
+
+    // If the Room is tagged with Windows, this implies a view of the outside. Technically, any Room could be tagged with Windows even if it wasn't linked to
+    // any outside Room, but rather than checking everything, it's better to just trust the area-builder knew what they were doing.
     if (tag(RoomTag::Windows)) return true;
 
+    // So we probably can't see outside. Let's check if any Links are tagged as SeeThrough or Open, and if so, check if they connect to an exterior room.
     for (auto &link : links_)
     {
-        if (!link) continue;
-        if (link->tag(LinkTag::SeeThrough) || link->tag(LinkTag::Open)) return true;
+        if (!link) continue;    // Ignore dead links, obviously.
+        if (link->tag(LinkTag::Openable))   // Doors will block our vision, unless...
+        {
+            // If it's not Open and not SeeThrough, then we're out of luck.
+            if (!link->tag(LinkTag::Open) && !link->tag(LinkTag::SeeThrough)) continue;
+        }
+
+        // Check the linked room, to see if it's outdoors.
+        Room* linked_room = world().find_room(link->get());
+        if (linked_room->tag(RoomTag::Indoors) || linked_room->tag(RoomTag::Underground)) continue;
+        else return true;
     }
 
     return false;
