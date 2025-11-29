@@ -118,7 +118,7 @@ void travel(PARSER_FUNCTION)
         }
     }
 
-    print(string("You travel to ") + (dir == Direction::UP || dir == Direction::DOWN ? "" : "the ") + Room::direction_name(dir) + ".");
+    print(string("You travel ") + (dir == Direction::UP || dir == Direction::DOWN ? "" : "to the ") + Room::direction_name(dir) + ".");
     room_here->transfer(&player(), room_target);
     world().time_weather().pass_time(timing::TIME_TO_MOVE);
     look(words_hashed, words);
