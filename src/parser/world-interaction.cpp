@@ -4,9 +4,11 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#include "core/core.hpp"
 #include "core/terminal.hpp"
 #include "parser/parser.hpp"
 #include "parser/world-interaction.hpp"
+#include "trailmix/math/vector3.hpp"
 #include "trailmix/text/conversion.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/player.hpp"
@@ -15,6 +17,7 @@
 #include "world/world.hpp"
 
 using std::string;
+using trailmix::math::Vector3;
 using trailmix::text::conversion::number_to_text;
 using westgate::terminal::print;
 
@@ -119,6 +122,25 @@ void travel(PARSER_FUNCTION)
     room_here->transfer(&player(), room_target);
     world().time_weather().pass_time(timing::TIME_TO_MOVE);
     look(words_hashed, words);
+
+    // If we're on a debug build, ensure the room coordinates align correctly. There may be edge cases eventually, but we can make a special LinkTag for that
+    // if and when it happens. This is computationally cheap, but we're restricting it to debug builds anyway, to be efficient.
+#ifdef WESTGATE_BUILD_DEBUG
+    const Vector3 old_coord = room_here->coords();
+    const Vector3 new_coord = room_target->coords();
+    Vector3 expected_coord = old_coord;
+    if (dir == Direction::UP) expected_coord.z++;
+    else if (dir == Direction::DOWN) expected_coord.z--;
+    else
+    {
+        if (dir == Direction::NORTH || dir == Direction::NORTHEAST || dir == Direction::NORTHWEST) expected_coord.y--;
+        else if (dir == Direction::SOUTH || dir == Direction::SOUTHWEST || dir == Direction::SOUTHEAST) expected_coord.y++;
+        if (dir == Direction::EAST || dir == Direction::NORTHEAST || dir == Direction::SOUTHEAST) expected_coord.x++;
+        else if (dir == Direction::WEST || dir == Direction::NORTHWEST || dir == Direction::SOUTHWEST) expected_coord.x--;
+    }
+    if (new_coord != expected_coord) core().nonfatal("Moved in an unexpected direction! Old coordinates were [" + old_coord.string() + "], new coords are [" +
+        new_coord.string() + "], expected coords were [" + expected_coord.string() + "]", Core::CORE_WARN);
+#endif
 }
 
 // Waits or rests for a specified period of time.
