@@ -55,7 +55,12 @@ vector<string> Automap::generate_map(const Room* start_room)
             // Draw the room's exits onto the map.
             for (int i = 1; i <= 8; i++)
             {
-                if (!room->get_link(static_cast<Direction>(i))) continue;
+                bool unfinished_link = false;
+                if (!room->get_link(static_cast<Direction>(i)))
+                {
+                    if (room->is_unfinished(static_cast<Direction>(i))) unfinished_link = true;
+                    else continue;
+                }
                 const unsigned int link_vec_pos = vec_pos + link_offsets.at(i);
                 const char current_sym = game_map.at(link_vec_pos).at(game_map.at(link_vec_pos).size() - 1);
                 const char new_sym = link_symbols.at(i);
@@ -67,7 +72,7 @@ vector<string> Automap::generate_map(const Room* start_room)
                     game_map.at(link_vec_pos).pop_back();
                     game_map.at(link_vec_pos) += "X";
                 }
-                else game_map.at(link_vec_pos) = "{K}" + string(1, link_symbols.at(i));
+                else game_map.at(link_vec_pos) = (unfinished_link ? "{r}" : "{K}") + string(1, link_symbols.at(i));
             }
         }
     }

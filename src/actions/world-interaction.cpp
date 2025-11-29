@@ -99,7 +99,8 @@ void travel(PARSER_FUNCTION)
     Room* room_target = room_here->get_link(dir);
     if (!room_target)
     {
-        print("{Y}You can't travel in that direction.");
+        if (room_here->is_unfinished(dir)) print("{Y}You can't travel in that direction; that part of the game is not yet finished.");
+        else print("{Y}You can't travel in that direction.");
         return;
     }
 

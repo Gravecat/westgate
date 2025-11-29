@@ -10,6 +10,7 @@
 #include <list>
 #include <map>
 #include <set>
+#include <vector>
 
 #include "trailmix/math/vector3.hpp"
 #include "world/area/link.hpp"
@@ -44,6 +45,18 @@ enum class RoomTag : uint16_t {
     AlwaysSpring =  207,    // The weather system will be locked to spring for this room.
     AlwaysSummer =  208,    // The weather system will be locked to summer for this room.
     AlwaysAutumn =  209,    // The weather system will be locked to autumn (fall) for this room.
+
+    // Markers for exits in a Room that are planned but currently unfinished.
+    UnfinishedNorth =       300,
+    UnfinishedNortheast =   301,
+    UnfinishedEast =        302,
+    UnfinishedSoutheast =   303,
+    UnfinishedSouth =       304,
+    UnfinishedSouthwest =   305,
+    UnfinishedWest =        306,
+    UnfinishedNorthwest =   307,
+    UnfinishedUp =          308,
+    UnfinishedDown =        309,
 };
 
 class Room {
@@ -68,6 +81,7 @@ public:
     bool        has_exit(Direction dir) const;  // Checks if an Exit exists in the specified Direction.
     uint32_t    id() const;     // Retrieves the hashed ID of this Room.
     const std::string&  id_str() const; // Retrieves the string ID of this Room.
+    bool        is_unfinished(Direction dir) const; // Checks if this Room has an unfinished link in a specified direction.
     bool        link_tag(Direction dir, LinkTag tag) const; // Checks a LinkTag on a specified Link.
                 // Loads only the changes to this Room from a save file. Should only be called by a parent Region.
     void        load_delta(trailmix::file::FileReader* file);
@@ -105,9 +119,10 @@ private:
     static constexpr uint32_t   ROOM_DELTA_LINK_UNCHANGED = 101;    // Marks this Link as existing but unchanged.
     static constexpr uint32_t   ROOM_DELTA_LINK_CHANGED =   201;    // Marks this Link as existing and modified.
 
-    static const std::map<Direction, std::string> direction_names_; // Static map that converts a Direction enum into string names.
+    static const std::map<Direction, std::string> direction_names_;     // Static map that converts a Direction enum into string names.
     static const std::map<Direction, Direction> reverse_direction_map_; // Static map that inverts a Direction (e.g. east -> west).
-    static const std::map<std::string, RoomTag> tag_map_;   // Used during loading YAML data, to convert RoomTag text names into RoomTag enums.
+    static const std::map<std::string, RoomTag> tag_map_;               // Used during loading YAML data, to convert RoomTag text names into RoomTag enums.
+    static const std::vector<RoomTag> unfinished_directions_;           // Lookup table for unfinished exit links.
 
     // Turns a Direction into an int for array access, produces a standard error on invalid input.
     int link_id(Direction dir, const std::string& caller, bool fail_on_null = true) const;

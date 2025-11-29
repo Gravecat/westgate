@@ -18,7 +18,7 @@ ARROW_PARK:
     south: ARROW_PARK_S
   map: "{g}O"
   short_name: park
-  tags: [ Trees ]
+  tags: [ Trees, UnfinishedNorth, UnfinishedEast, UnfinishedWest ]
 
 ARROW_PARK_S:
   coords: [ 0, 1, 0 ]
@@ -41,4 +41,4 @@ ARROW_TRENCH:
     up: ARROW_PARK_S
   map: "^"
   short_name: trench
-  tags: [ Underground ]
+  tags: [ Underground, UnfinishedEast, UnfinishedSouthwest ]
