@@ -463,9 +463,9 @@ NIGHT_STORMY_INDOORS:       "Wailing wind blows rain through the darkness outsid
 MIDNIGHT_RAIN_INDOORS:      "Rain falls heavily at midnight, heard yet unseen in the darkness outside."
 DAWN_RAIN_INDOORS:          "Through the veils of rain outside, the clouds to the east pale."
 SUNRISE_RAIN_INDOORS:       "Rain falls outside in the dawn's light."
-MORNING_RAIN_INDOORS:       "It's a wan grey morning. Rain patters to the strets outside."
+MORNING_RAIN_INDOORS:       "It's a wan grey morning. Rain patters to the $GROUND|STREET$ outside."
 NOON_RAIN_INDOORS:          "Droplets splash in puddles outside at mid-day."
-SUNSET_RAIN_INDOORS:        "The shower soaks the strets outside as twilight deepens."
+SUNSET_RAIN_INDOORS:        "The shower soaks the $GROUND|STREET$ outside as twilight deepens."
 DUSK_RAIN_INDOORS:          "A rainy late afternoon gives way to evening."
 NIGHT_RAIN_INDOORS:         "Raindrops sprinkle down from a night sky outside, obscured by dark grey clouds."
 
@@ -514,7 +514,7 @@ SUNSET_LIGHTSNOW_INDOORS:   "Snow flurries fall from a darkening grey sky outsid
 DUSK_LIGHTSNOW_INDOORS:     "Through the drifting snowflakes outside, the translucent pale grey of the sky deepens."
 NIGHT_LIGHTSNOW_INDOORS:    "The night outside is raw. Snow flurries drift down from the overcast sky."
 
-MIDNIGHT_SLEET_INDOORS:     "Sleet spatters the strets outside from the midnight sky."
+MIDNIGHT_SLEET_INDOORS:     "Sleet spatters the $GROUND|STREET$ outside from the midnight sky."
 DAWN_SLEET_INDOORS:         "A faint gleam touches the eastern sky through the sleet and the howling wind."
 SUNRISE_SLEET_INDOORS:      "Freezing rain falls outside in the grey light of dawn."
 MORNING_SLEET_INDOORS:      "Icing rain plates the $LAND|STREET$ outside with silver in the cold light of morning."

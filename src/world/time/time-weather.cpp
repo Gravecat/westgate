@@ -262,6 +262,7 @@ void TimeWeather::replace_tokens(string &str, bool in_city)
 {
     if (in_city)
     {
+        find_and_replace(str, "$GROUND|STREET$", "street");
         find_and_replace(str, "$LAND|CITY$", "city");
         find_and_replace(str, "$LAND|STREET$", "street");
         find_and_replace(str, "$LAND|STREETS$", "streets");
@@ -270,6 +271,7 @@ void TimeWeather::replace_tokens(string &str, bool in_city)
     }
     else
     {
+        find_and_replace(str, "$GROUND|STREET$", "ground");
         find_and_replace(str, "$LAND|CITY$", "land");
         find_and_replace(str, "$LAND|STREET$", "land");
         find_and_replace(str, "$LAND|STREETS$", "land");
