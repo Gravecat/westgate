@@ -53,8 +53,10 @@ vector<string> Automap::generate_map(Room* start_room)
         if (++depth > 3) return;
         for (unsigned int i = 1; i <= 10; i++)
         {
-            Room* new_room = room->get_link(static_cast<Direction>(i));
+            const Direction dir = static_cast<Direction>(i);
+            Room* new_room = room->get_link(dir);
             if (!new_room) continue;
+            if (room->link_tag(dir, LinkTag::MapNoFollow)) continue;
             const int magnitude = 2;
             self(self, new_room, depth + 1, offset + (direction_to_xyz_[i - 1] * magnitude));
         }
