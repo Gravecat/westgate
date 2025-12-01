@@ -184,7 +184,7 @@ void Game::title_screen()
 
     switch(terminal::get_number(1, 3))
     {
-        case 1: new_game(1, "ARROW_PARK"); break;
+        case 1: new_game(0, "ARROW_PARK"); break;
         case 2: load_game(0); break;
         case 3:
             print("{B}Farewell!");
