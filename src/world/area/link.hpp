@@ -44,6 +44,8 @@ enum class LinkTag : uint16_t {
 
     // Tags regarding the map properties of this exit.
     MapNoFollow =   300,    // Don't follow this exit when drawing the automap.
+    DoubleLength =  301,    // This exit is extra-long (passes through where one room would be).
+    TripleLength =  302,    // As above, but passes through two rooms.
 };
 
 class Link

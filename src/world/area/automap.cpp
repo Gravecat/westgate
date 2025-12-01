@@ -57,7 +57,7 @@ vector<string> Automap::generate_map(Room* start_room)
             Room* new_room = room->get_link(dir);
             if (!new_room) continue;
             if (room->link_tag(dir, LinkTag::MapNoFollow)) continue;
-            const int magnitude = 2;
+            const int magnitude = (room->link_tag(dir, LinkTag::TripleLength) ? 6 : (room->link_tag(dir, LinkTag::DoubleLength) ? 4 : 2));
             self(self, new_room, depth + 1, offset + (direction_to_xyz_[i - 1] * magnitude));
         }
     };
@@ -80,6 +80,7 @@ vector<string> Automap::generate_map(Room* start_room)
         for (int i = 1; i <= 8; i++)
         {
             bool unfinished_link = false;
+            unsigned int line_length = 1;
             const Direction dir = static_cast<Direction>(i);
             std::string link_colour = "{K}";
             if (!room->get_link(dir))
@@ -91,23 +92,30 @@ vector<string> Automap::generate_map(Room* start_room)
                 }
                 else continue;
             }
-            const unsigned int link_vec_pos = vec_pos + link_offsets.at(i);
-            const char current_sym = game_map.at(link_vec_pos).at(game_map.at(link_vec_pos).size() - 1);
-            const char new_sym = link_symbols.at(i);
-            if (!unfinished_link && room->link_tag(dir, LinkTag::Openable) && !room->link_tag(dir, LinkTag::Open))
+
+            if (!unfinished_link) line_length = (room->link_tag(dir, LinkTag::TripleLength) ? 5 : (room->link_tag(dir, LinkTag::DoubleLength) ? 3 : 1));
+            for (unsigned int l = 1; l <= line_length; l++)
             {
-                if (room->link_tag(dir, LinkTag::AwareOfLock)) link_colour = "{R}";
-                else link_colour = "{y}";
+                const unsigned int link_vec_pos = vec_pos + (link_offsets.at(i) * l);
+                if (link_vec_pos >= 7 * 7) continue;
+
+                const char current_sym = game_map.at(link_vec_pos).at(game_map.at(link_vec_pos).size() - 1);
+                const char new_sym = link_symbols.at(i);
+                if (!unfinished_link && room->link_tag(dir, LinkTag::Openable) && !room->link_tag(dir, LinkTag::Open))
+                {
+                    if (room->link_tag(dir, LinkTag::AwareOfLock)) link_colour = "{R}";
+                    else link_colour = "{y}";
+                }
+                
+                // Check for overlapping / \ links, and turn them into an X.
+                if (current_sym == 'X') continue;
+                else if ((current_sym == '/' && new_sym == '\\') || (current_sym == '\\' && new_sym == '/') || current_sym == '+')
+                {
+                    game_map.at(link_vec_pos).pop_back();
+                    game_map.at(link_vec_pos) += "X";
+                }
+                else game_map.at(link_vec_pos) = link_colour + string(1, new_sym);
             }
-            
-            // Check for overlapping / \ links, and turn them into an X.
-            if (current_sym == 'X') continue;
-            else if ((current_sym == '/' && new_sym == '\\') || (current_sym == '\\' && new_sym == '/') || current_sym == '+')
-            {
-                game_map.at(link_vec_pos).pop_back();
-                game_map.at(link_vec_pos) += "X";
-            }
-            else game_map.at(link_vec_pos) = link_colour + string(1, new_sym);
         }
     }
 
