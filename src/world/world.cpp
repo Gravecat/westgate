@@ -12,7 +12,9 @@
 #include "core/terminal.hpp"
 #include "misc/namegen.hpp"
 #include "trailmix/sys/binpath.hpp"
+#include "trailmix/text/conversion.hpp"
 #include "trailmix/text/hash.hpp"
+#include "trailmix/time/timer.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/region.hpp"
 #include "world/entity/player.hpp"
@@ -28,6 +30,8 @@ using std::vector;
 using trailmix::sys::BinPath;
 using trailmix::text::hash::murmur3;
 using westgate::terminal::print;
+using trailmix::text::conversion::ftos;
+using trailmix::time::Timer;
 namespace fs = std::filesystem;
 
 #ifdef WESTGATE_BUILD_DEBUG
@@ -39,8 +43,10 @@ namespace westgate {
 // Sets up the World object and loads static data into memory.
 World::World() : automap_ptr_(make_unique<Automap>()), namegen_ptr_(make_unique<ProcNameGen>()), time_weather_ptr_(make_unique<TimeWeather>())
 {
+    Timer init_world;
     core().log("Loading static data into memory.");
     namegen_ptr_->load_namelists();
+    core().log("Static data loaded in " + ftos(init_world.elapsed() / 1000.0f, 3) + " seconds.");
 }
 
 // Destructor, explicitly frees memory used.
