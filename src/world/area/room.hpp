@@ -84,7 +84,7 @@ public:
     bool        link_tag(Direction dir, LinkTag tag) const; // Checks a LinkTag on a specified Link.
                 // Loads only the changes to this Room from a save file. Should only be called by a parent Region.
     void        load_delta(trailmix::file::FileReader* file);
-    void        look() const;   // Look around you. Just look around you.
+    void        look(); // Look around you. Just look around you.
     const std::string   map_char() const;   // Retrieves the map character for this Room.
     const std::string&  name() const;   // Retrieves the full name of this Room.
     uint32_t    region() const; // Returns the ID of the Region this Room belongs to.

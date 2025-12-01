@@ -301,7 +301,7 @@ void Room::load_delta(FileReader* file)
 }
 
 // Look around you. Just look around you.
-void Room::look() const
+void Room::look()
 {
     const bool automap_enabled = !player().player_tag(PlayerTag::AutomapOff);
     const unsigned int term_width = terminal::get_width();
