@@ -100,13 +100,11 @@ void World::create_region_saves(int save_slot)
 }
 
 #ifdef WESTGATE_BUILD_DEBUG
-// When in debug mode, mark room coordinates and name hashes as used, to track overlaps.
-void World::debug_mark_room(const string& room_name, Vector3 coords)
+// When in debug mode, mark name hashes as used, to track overlaps.
+void World::debug_mark_room(const string& room_name)
 {
     const uint32_t room_name_hash = murmur3(room_name);
-    if (room_coords_used_.count(coords) > 0) throw runtime_error("Room coordinate collision detected: " + coords.string() + " [" + room_name + "]");
     if (room_name_hashes_used_.count(room_name_hash) > 0) throw runtime_error("Room name hash collision detected: " + room_name);
-    room_coords_used_.insert(coords);
     room_name_hashes_used_.insert(room_name_hash);
 }
 #endif

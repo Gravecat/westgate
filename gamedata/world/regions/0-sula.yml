@@ -6,10 +6,9 @@
 
 REGION_IDENTIFIER:
   name: The Floating Island of Sula
-  version: 3
+  version: 4
 
 SULA_PLAINS:
-  coords: [ 0, 0, 100 ]
   desc: "A wide field of grassy plains surrounds you, occasional bright flowers punctuating the green with a flash of colour. To the east stands a small wooden
     shack - more of a shed, really - while to the north is a grid of paved stones."
   exits:
@@ -20,7 +19,6 @@ SULA_PLAINS:
   tags: [ AlwaysSpring ]
 
 SULA_SHACK:
-  coords: [ 1, 0, 100 ]
   desc: "The interior of this small wooden shack reveals it to be more of a shed than anything, various shelves attached to the walls holding miscellaneous
     bric-a-brac, while a few dusty barrels and crates occupy the east wide. The only door leads back outside, to the west."
   exits:
@@ -30,7 +28,6 @@ SULA_SHACK:
   tags: [ Indoors ]
 
 SULA_STONE_1:
-  coords: [ -1, -3, 100 ]
   desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
     passage except in certain directions."
   exits:
@@ -40,7 +37,6 @@ SULA_STONE_1:
   name: [ Paved Stones, paved stone ]
 
 SULA_STONE_2:
-  coords: [ 0, -3, 100 ]
   desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
     passage except in certain directions."
   exits:
@@ -51,7 +47,6 @@ SULA_STONE_2:
   name: [ Paved Stones, paved stone ]
 
 SULA_STONE_3:
-  coords: [ 1, -3, 100 ]
   desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
     passage except in certain directions."
   exits:
@@ -60,7 +55,6 @@ SULA_STONE_3:
   name: [ Paved Stones, paved stone ]
 
 SULA_STONE_4:
-  coords: [ -1, -2, 100 ]
   desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
     passage except in certain directions."
   exits:
@@ -71,7 +65,6 @@ SULA_STONE_4:
   name: [ Paved Stones, paved stone ]
 
 SULA_STONE_5:
-  coords: [ 0, -2, 100 ]
   desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
     passage except in certain directions."
   exits:
@@ -82,7 +75,6 @@ SULA_STONE_5:
   name: [ Paved Stones, paved stone ]
 
 SULA_STONE_6:
-  coords: [ 1, -2, 100 ]
   desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
     passage except in certain directions."
   exits:
@@ -93,7 +85,6 @@ SULA_STONE_6:
   name: [ Paved Stones, paved stone ]
 
 SULA_STONE_7:
-  coords: [ -1, -1, 100 ]
   desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
     passage except in certain directions."
   exits:
@@ -103,7 +94,6 @@ SULA_STONE_7:
   name: [ Paved Stones, paved stone ]
 
 SULA_STONE_8:
-  coords: [ 0, -1, 100 ]
   desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
     passage except in certain directions."
   exits:
@@ -114,7 +104,6 @@ SULA_STONE_8:
   name: [ Paved Stones, paved stone ]
 
 SULA_STONE_9:
-  coords: [ 1, -1, 100 ]
   desc: "Nine large, paved stone blocks are arranged on the grassy field here, each about a meter wide, with oddly-positioned fences between them blocking
     passage except in certain directions."
   exits:

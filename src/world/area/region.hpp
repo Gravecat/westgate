@@ -33,7 +33,7 @@ private:
     void        load_delta(int save_slot);  // Loads delta changes from a saved game file.
 
     static constexpr uint32_t   REGION_SAVE_VERSION =       3;  // The expected version for saving/loading binary game data.
-    static constexpr uint32_t   REGION_YAML_VERSION =       3;  // The expected version for region YAML data.
+    static constexpr uint32_t   REGION_YAML_VERSION =       4;  // The expected version for region YAML data.
 
     uint32_t    id_;    // The ID of the loaded region file.
     std::string name_;  // The name of this Region.

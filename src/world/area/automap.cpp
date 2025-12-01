@@ -20,18 +20,6 @@ namespace westgate {
 // Lookup table for converting Direction enums into X,Y vector directions (e.g. {-1, 0}).
 const Vector3 Automap::direction_to_xyz_[10] = { {0,-1,0}, {1,-1,0}, {1,0,0}, {1,1,0}, {0,1,0}, {-1,1,0}, {-1,0,0}, {-1,-1,0}, {0,0,1}, {0,0,-1} };
 
-// Adds a room to the vector coordinate cache.
-void Automap::add_room_vec(uint32_t room_id, Vector3 vec)
-{ room_vecs_.insert({vec, room_id}); }
-
-// Retrieves a Room pointer for a specified coordinate in the world, or nullptr if it can't be found.
-Room* Automap::find_room(Vector3 pos)
-{
-    auto result = room_vecs_.find(pos);
-    if (result == room_vecs_.end()) return nullptr;
-    else return world().find_room(result->second);
-}
-
 // Generates a map centred on the specified Room.
 vector<string> Automap::generate_map(Room* start_room)
 {
