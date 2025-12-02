@@ -4,8 +4,6 @@ Westgate is an open-source, text-based, sandbox role-playing game currently in t
 
 Westgate is copyright © 2025 [Raine "Gravecat" Simmons](https://github.com/Gravecat) and [the project contributors](https://github.com/Gravecat/westgate/graphs/contributors). The game is free and open-source, licensed under the [GNU Affero General Public License v3 or any later version](../LICENSE).
 
-[Trailmix](https://github.com/Gravecat/trailmix) copyright © 2025 Raine "Gravecat" Simmons.
-
 [Fantasy Name Generator](https://github.com/skeeto/fantasyname) by skeeto.
 
 [MurmurHash3](https://github.com/aappleby/smhasher/tree/master) by Austin Appleby.

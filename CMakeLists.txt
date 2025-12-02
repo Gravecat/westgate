@@ -5,7 +5,7 @@
 # SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.16)
 project(westgate LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -35,6 +35,8 @@ set(WESTGATE_CPPS
 
 # Third-party code being built as separate object files.
 add_subdirectory(src/3rdparty/fantasyname)
+#add_subdirectory(src/3rdparty/murmurhash3)
+#add_subdirectory(src/3rdparty/rapidyaml)
 
 # Automatically generate version strings used in-game and in the Windows resource file, from this specified game version.
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/version.txt" WESTGATE_VERSION)
@@ -177,6 +179,8 @@ if(TARGET_WINDOWS)
     $<$<BOOL:${TARGET_MINGW}>:mingw32>
 	shlwapi
 	ntdll
+    murmurhash3
+    rapidyaml
   )
 endif(TARGET_WINDOWS)
 

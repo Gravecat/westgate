@@ -15,3 +15,6 @@
 
 src/3rdparty/** linguist-vendored
 src/3rdparty/fantasyname/CMakeLists.txt -linguist-vendored
+src/3rdparty/murmurhash3/CMakeLists.txt -linguist-vendored
+src/3rdparty/rapidyaml/CMakeLists.txt -linguist-vendored
+src/3rdparty/rapidyaml/rapidyaml.cpp -linguist-vendored
