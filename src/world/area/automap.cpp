@@ -17,57 +17,77 @@ using trailmix::text::ansi::flatten_tags;
 
 namespace westgate {
 
-// Adds a room to the vector coordinate cache.
-void Automap::add_room_vec(uint32_t room_id, Vector3 vec)
-{ room_vecs_.insert({vec, room_id}); }
-
-// Retrieves a Room pointer for a specified coordinate in the world, or nullptr if it can't be found.
-Room* Automap::find_room(Vector3 pos)
-{
-    auto result = room_vecs_.find(pos);
-    if (result == room_vecs_.end()) return nullptr;
-    else return world().find_room(result->second);
-}
+// Lookup table for converting Direction enums into X,Y vector directions (e.g. {-1, 0}).
+const Vector3 Automap::direction_to_xyz_[10] = { {0,-1,0}, {1,-1,0}, {1,0,0}, {1,1,0}, {0,1,0}, {-1,1,0}, {-1,0,0}, {-1,-1,0}, {0,0,1}, {0,0,-1} };
 
 // Generates a map centred on the specified Room.
-vector<string> Automap::generate_map(const Room* start_room)
+vector<string> Automap::generate_map(Room* start_room)
 {
     // Lookup tables for drawing room links in the game map vector.
     static const vector<int> link_offsets = { 0, -7, -6, 1, 8, 7, 6, -1, -8 };
     static const vector<char> link_symbols = { '\0', '|', '/', '-', '\\', '|', '/', '-', '\\' };
 
     // Get the room coordinates, and initialize the blank map.
-    const Vector3 room_coords = start_room->coords();
     vector<string> game_map(7 * 7, "{0} ");
 
-    // Paint the rooms onto the map.
-    for (int room_x = 0; room_x <= 2; room_x++)
-    {
-        for (int room_y = 0; room_y <= 2; room_y++)
+    // Determine which rooms are nearby.
+    std::vector<Room*> nearby_rooms;
+    std::vector<Vector3> nearby_coords;
+    auto map_rooms = [&nearby_rooms, &nearby_coords](auto self, Room* room, int depth, Vector3 offset) {
+        if (std::find(nearby_rooms.begin(), nearby_rooms.end(), room) != nearby_rooms.end()) return;
+        if (!room->tag(RoomTag::Explored)) return;
+        nearby_rooms.push_back(room);
+        nearby_coords.push_back(offset);
+        if (++depth > 3) return;
+        for (unsigned int i = 1; i <= 10; i++)
         {
-            // Look up the room, and paint it into the appropriate cell on the map if it exists and is explored.
-            const unsigned int vec_pos = ((room_x * 2)) + (room_y * 14) + 8;
-            const Vector3 coord = room_coords + Vector3(room_x - 1, room_y - 1, 0);
-            Room* room = find_room(coord);
-            if (!room || !room->tag(RoomTag::Explored)) continue;
-            game_map.at(vec_pos) = (room_x == 1 && room_y == 1 ? "{R}@" : room->map_char());
+            const Direction dir = static_cast<Direction>(i);
+            Room* new_room = room->get_link(dir);
+            if (!new_room) continue;
+            if (room->link_tag(dir, LinkTag::MapNoFollow)) continue;
+            const int magnitude = (room->link_tag(dir, LinkTag::TripleLength) ? 6 : (room->link_tag(dir, LinkTag::DoubleLength) ? 4 : 2));
+            self(self, new_room, depth + 1, offset + (direction_to_xyz_[i - 1] * magnitude));
+        }
+    };
+    map_rooms(map_rooms, start_room, 0, {3, 3, 0});
 
-            // Draw the room's exits onto the map.
-            for (int i = 1; i <= 8; i++)
+    // Paint the rooms onto the map.
+    for (size_t r = 0; r < nearby_rooms.size(); r++)
+    {
+        const Vector3 coord = nearby_coords.at(r);
+        core().log(coord.string());
+        // Ignore any rooms that are outside of the space we're using to paint the map, or any that aren't on the same vertical level.
+        if (coord.z != 0 || coord.x < 0 || coord.y < 0 || coord.x > 5 || coord.y > 5) continue;
+
+        // Paint the room into the appropriate cell on the map.
+        Room* room = nearby_rooms.at(r);
+        const size_t vec_pos = (coord.x + (coord.y * 7));
+        game_map.at(vec_pos) = (vec_pos == 24 ? "{R}@" : room->map_char());
+
+        // Draw the room's exits onto the map.
+        for (int i = 1; i <= 8; i++)
+        {
+            bool unfinished_link = false;
+            unsigned int line_length = 1;
+            const Direction dir = static_cast<Direction>(i);
+            std::string link_colour = "{K}";
+            if (!room->get_link(dir))
             {
-                bool unfinished_link = false;
-                const Direction dir = static_cast<Direction>(i);
-                std::string link_colour = "{K}";
-                if (!room->get_link(dir))
+                if (room->is_unfinished(dir))
                 {
-                    if (room->is_unfinished(dir))
-                    {
-                        unfinished_link = true;
-                        link_colour = "{r}";
-                    }
-                    else continue;
+                    unfinished_link = true;
+                    link_colour = "{r}";
                 }
-                const unsigned int link_vec_pos = vec_pos + link_offsets.at(i);
+                else continue;
+            }
+
+            if (!unfinished_link) line_length = (room->link_tag(dir, LinkTag::TripleLength) ? 5 : (room->link_tag(dir, LinkTag::DoubleLength) ? 3 : 1));
+            for (unsigned int l = 1; l <= line_length; l++)
+            {
+                Vector3 new_pos = coord + (direction_to_xyz_[i - 1] * static_cast<int>(l));
+                if (new_pos.x < 0 || new_pos.y < 0 || new_pos.x > 6 || new_pos.y > 6) break;
+                const unsigned int link_vec_pos = vec_pos + (link_offsets.at(i) * l);
+
                 const char current_sym = game_map.at(link_vec_pos).at(game_map.at(link_vec_pos).size() - 1);
                 const char new_sym = link_symbols.at(i);
                 if (!unfinished_link && room->link_tag(dir, LinkTag::Openable) && !room->link_tag(dir, LinkTag::Open))

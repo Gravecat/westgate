@@ -41,6 +41,11 @@ enum class LinkTag : uint16_t {
     Gate =          200,    // This 'door' should be called a gate.
     Window =        201,    // ... You know how this goes, I'm not gonna comment all of these.
     Grate =         202,
+
+    // Tags regarding the map properties of this exit.
+    MapNoFollow =   300,    // Don't follow this exit when drawing the automap.
+    DoubleLength =  301,    // This exit is extra-long (passes through where one room would be).
+    TripleLength =  302,    // As above, but passes through two rooms.
 };
 
 class Link

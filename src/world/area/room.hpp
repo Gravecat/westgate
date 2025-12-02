@@ -11,7 +11,6 @@
 #include <map>
 #include <set>
 
-#include "trailmix/math/vector3.hpp"
 #include "world/area/link.hpp"
 #include "world/entity/entity.hpp"
 
@@ -60,7 +59,7 @@ enum class RoomTag : uint16_t {
 
 class Room {
 public:
-    static constexpr uint32_t   ROOM_SAVE_VERSION = 8;  // The expected version for saving/loading binary game data.
+    static constexpr uint32_t   ROOM_SAVE_VERSION = 9;  // The expected version for saving/loading binary game data.
 
     static const std::string&   direction_name(Direction dir);  // Gets the string name of a Direction enum.
     static RoomTag              parse_room_tag(const std::string &tag); // Parses a string RoomTag name into a RoomTag enum.
@@ -74,7 +73,6 @@ public:
     void        clear_link_tags(Direction dir, std::list<LinkTag> tags_list, bool mark_delta = true);   // Clears multiple LinkTags at once.
     void        clear_tag(RoomTag the_tag, bool mark_delta = true); // Clears a RoomTag from this Room.
     void        clear_tags(std::list<RoomTag> tags_list, bool mark_delta = true);   // Clears multiple RoomTags at the same time.
-    const trailmix::math::Vector3 coords() const;   // Retrieves the coordinates of this Room.
     const std::string   door_name(Direction dir) const; // Returns the name of the door (door, gate, etc.) on the specified Link, if any.
     Room*       get_link(Direction dir);    // Gets the Room linked in the specified direction, or nullptr if none is linked.
     bool        has_exit(Direction dir) const;  // Checks if an Exit exists in the specified Direction.
@@ -84,13 +82,11 @@ public:
     bool        link_tag(Direction dir, LinkTag tag) const; // Checks a LinkTag on a specified Link.
                 // Loads only the changes to this Room from a save file. Should only be called by a parent Region.
     void        load_delta(trailmix::file::FileReader* file);
-    void        look() const;   // Look around you. Just look around you.
+    void        look(); // Look around you. Just look around you.
     const std::string   map_char() const;   // Retrieves the map character for this Room.
     const std::string&  name() const;   // Retrieves the full name of this Room.
     uint32_t    region() const; // Returns the ID of the Region this Room belongs to.
     void        save_delta(trailmix::file::FileWriter* file);   // Saves only the changes to this Room in a save file. Should only be called by a parent Region.
-                // Sets the coordinates of this room. Does not affect delta, as this should only ever be done when loading YAML.
-    void        set_coords(trailmix::math::Vector3 new_coords);
     void        set_desc(const std::string& new_desc, bool mark_delta = true);  // Sets the description of this Room.
     void        set_link(Direction dir, uint32_t new_exit, bool mark_delta = true); // Sets an exit link from this Room to another.
     void        set_link_tag(Direction dir, LinkTag tag, bool mark_delta = true);   // Sets a LinkTag on a specifieid Link.
@@ -127,7 +123,6 @@ private:
     // Turns a Direction into an int for array access, produces a standard error on invalid input.
     int link_id(Direction dir, const std::string& caller, bool fail_on_null = true) const;
 
-    trailmix::math::Vector3 coords_;    // The coordinates of this Room in the game world.
     std::string desc_;          // The text description of this Room, as shown to the player.
     std::unique_ptr<Link>   links_[10]; // Any and all Links leading out of this Room.
     uint32_t    id_;            // The Room's unique hashed ID.

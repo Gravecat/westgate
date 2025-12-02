@@ -15,7 +15,6 @@
 #include "trailmix/file/yaml.hpp"
 #include "trailmix/sys/binpath.hpp"
 #include "trailmix/text/hash.hpp"
-#include "trailmix/text/formatting.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/region.hpp"
 #include "world/world.hpp"
@@ -29,7 +28,6 @@ using trailmix::file::FileWriter;
 using trailmix::file::YAML;
 using trailmix::math::Vector3;
 using trailmix::sys::BinPath;
-using trailmix::text::formatting::strip_trailing_newlines;
 using trailmix::text::hash::murmur3;
 namespace fs = std::filesystem;
 
@@ -174,28 +172,12 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
         room_ptr->set_name(name_vec[0], name_vec[1]);
 
         if (!room_yaml.key_exists("desc")) throw runtime_error(error_str + "Missing room description.");
-        room_ptr->set_desc(strip_trailing_newlines(room_yaml.val("desc")), false);
+        room_ptr->set_desc(room_yaml.val("desc"), false);
 
-        if (!room_yaml.key_exists("coords")) throw runtime_error(error_str + "Missing room coordinates.");
-        if (!room_yaml.get_child("coords").is_seq()) throw runtime_error(error_str + "Coordinate data not correctly set (expected sequence).");
-        const vector<string> coord_vec = room_yaml.get_seq("coords");
-        if (coord_vec.size() != 3) FileReader::standard_error("Coord data sequence length incorrect", 3, coord_vec.size(), {key});
-        vector<int32_t> coord_int_vec(3);
-        for (int i = 0; i < 3; i++)
-        {
-            try
-            { coord_int_vec.at(i) = std::stol(coord_vec.at(i));}
-            catch(const std::invalid_argument&)
-            { throw runtime_error(error_str + "Coordinate data could not be processed (not a number?)"); }
-            catch(const std::out_of_range&)
-            { throw runtime_error(error_str + "Coordinate data could not be processed (out of range?)"); }
-        }
-        Vector3 room_coords = Vector3(coord_int_vec.at(0), coord_int_vec.at(1), coord_int_vec.at(2));
 #ifdef WESTGATE_BUILD_DEBUG
-        // In debug mode, if we're doing the initial new-game saved-data creation, check for room coordinate and name hash collisions.
-        if (!update_world) world().debug_mark_room(key, room_coords);
+        // In debug mode, if we're doing the initial new-game saved-data creation, check for name hash collisions.
+        if (!update_world) world().debug_mark_room(key);
 #endif
-        room_ptr->set_coords(room_coords);
 
         if (!room_yaml.key_exists("map")) throw runtime_error(error_str + "Missing map character.");
         room_ptr->set_map_char(room_yaml.val("map"), false);
@@ -232,12 +214,8 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
             }
         }
 
-        // If requested, update the lookup tables for Rooms and Regions.
-        if (update_world)
-        {
-            world().add_room_to_region(room_ptr->id(), id_);
-            world().automap().add_room_vec(room_ptr->id(), room_ptr->coords());
-        }
+        // If requested, update the lookup tables for Regions.
+        if (update_world) world().add_room_to_region(room_ptr->id(), id_);
 
         // Add the Room to the Region.
         rooms_.insert({room_ptr->id(), std::move(room_ptr)});

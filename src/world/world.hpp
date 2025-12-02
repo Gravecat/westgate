@@ -11,7 +11,6 @@
 #include <unordered_map>
 
 #ifdef WESTGATE_BUILD_DEBUG
-#include "trailmix/math/vector3.hpp"
 #include <set>
 #endif
 
@@ -47,8 +46,8 @@ public:
     void            unload_region(uint32_t id); // Removes a Region from memory, saving it first.
 
 #ifdef WESTGATE_BUILD_DEBUG
-                    // When in debug mode, mark room coordinates and name hashes as used, to track overlaps.
-    void            debug_mark_room(const std::string& room_name, trailmix::math::Vector3 coords);
+                    // When in debug mode, mark name hashes as used, to track overlaps.
+    void            debug_mark_room(const std::string& room_name);
 #endif
 
 private:
@@ -59,7 +58,6 @@ private:
     std::unique_ptr<TimeWeather>    time_weather_ptr_;  // Pointer to the time/weather manager object.
 
 #ifdef WESTGATE_BUILD_DEBUG
-    std::set<trailmix::math::Vector3>   room_coords_used_;  // When in debug mode, this keeps track of Room coordinates, so we can track overlaps.
     std::set<uint32_t>  room_name_hashes_used_; // When in debug mode, keeps track of which room names have been used; again, for overlap tracking.
 #endif
 };

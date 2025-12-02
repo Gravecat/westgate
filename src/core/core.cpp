@@ -20,6 +20,8 @@
 #include "core/terminal.hpp"
 #include "trailmix/file/yaml.hpp"
 #include "trailmix/sys/binpath.hpp"
+#include "trailmix/text/conversion.hpp"
+#include "trailmix/time/timer.hpp"
 
 using std::exception;
 using std::runtime_error;
@@ -28,6 +30,8 @@ using std::to_string;
 using std::vector;
 using trailmix::file::YAML;
 using trailmix::sys::BinPath;
+using trailmix::text::conversion::ftos;
+using trailmix::time::Timer;
 namespace fs = std::filesystem;
 
 namespace westgate {
@@ -204,6 +208,7 @@ void Core::hook_signals()   // Hook system failure signals.
 // Sets up the core game classes and data, and the terminal subsystem.
 void Core::init_core(vector<string> parameters)
 {
+    Timer init_timer;
     open_log(); // Creates and opens the log.txt file.
     bool set_title = rang::rang_implementation::supportsColor();
 
@@ -239,6 +244,7 @@ void Core::init_core(vector<string> parameters)
     if (set_title) terminal::set_window_title("Westgate v" + version::VERSION_STRING + " (" + version::BUILD_TIMESTAMP + ")");
     find_gamedata();
     game_ptr_ = std::make_unique<Game>();
+    this->log("Core initialized in " + ftos(init_timer.elapsed() / 1000.0f, 3) + " seconds.");
 }
 
 // Catches a segfault or other fatal signal.
