@@ -9,17 +9,14 @@
 #include "3rdparty/fantasyname/namegen.hpp"
 #include "core/core.hpp"
 #include "misc/namegen.hpp"
-#include "trailmix/file/fileutils.hpp"
-#include "trailmix/file/yaml.hpp"
-#include "trailmix/math/random.hpp"
+#include "util/filex.hpp"
+#include "util/random.hpp"
+#include "util/yaml.hpp"
 #include "world/entity/entity.hpp"
 
 
 using std::runtime_error;
 using std::string;
-using trailmix::file::fileutils::file_to_vec;
-using trailmix::file::YAML;
-using trailmix::math::rnd;
 
 namespace westgate {
 
@@ -33,10 +30,10 @@ string ProcNameGen::consonant()
 // Loads the namelists from the data files.
 void ProcNameGen::load_namelists()
 {
-    names_f = file_to_vec(core().datafile("namegen/names-f.txt"));
-    names_m = file_to_vec(core().datafile("namegen/names-m.txt"));
-    names_s_a = file_to_vec(core().datafile("namegen/surname-a.txt"));
-    names_s_b = file_to_vec(core().datafile("namegen/surname-b.txt"));
+    names_f = FileX::file_to_vec(core().datafile("namegen/names-f.txt"));
+    names_m = FileX::file_to_vec(core().datafile("namegen/names-m.txt"));
+    names_s_a = FileX::file_to_vec(core().datafile("namegen/surname-a.txt"));
+    names_s_b = FileX::file_to_vec(core().datafile("namegen/surname-b.txt"));
 
     YAML yaml(core().datafile("namegen/namegen-strings.yml"));
     if (!yaml.is_map()) throw runtime_error("namegen-strings.yml: Invalid file format");

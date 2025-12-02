@@ -10,11 +10,10 @@
 #include "core/core.hpp"
 #include "core/game.hpp"
 #include "parser/parser.hpp"
-#include "trailmix/file/filereader.hpp"
-#include "trailmix/file/filewriter.hpp"
-#include "trailmix/file/yaml.hpp"
-#include "trailmix/sys/binpath.hpp"
-#include "trailmix/text/hash.hpp"
+#include "util/binpath.hpp"
+#include "util/filex.hpp"
+#include "util/strx.hpp"
+#include "util/yaml.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/region.hpp"
 #include "world/world.hpp"
@@ -23,12 +22,6 @@ using std::runtime_error;
 using std::string;
 using std::to_string;
 using std::vector;
-using trailmix::file::FileReader;
-using trailmix::file::FileWriter;
-using trailmix::file::YAML;
-using trailmix::math::Vector3;
-using trailmix::sys::BinPath;
-using trailmix::text::hash::murmur3;
 namespace fs = std::filesystem;
 
 namespace westgate {
@@ -42,7 +35,7 @@ Region::~Region()
 
 // Attempts to find a room by its string ID.
 Room* Region::find_room(const string& id) const
-{ return find_room(murmur3(id)); }
+{ return find_room(StrX::murmur3(id)); }
 
 // Attempts to find a room by its hashed ID.
 Room* Region::find_room(uint32_t id) const
@@ -190,17 +183,17 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
             for (auto &exit_key : room_exit_keys)
             {
                 YAML exit_yaml = exits_yaml.get_child(exit_key);
-                Direction dir = parser::parse_direction(murmur3(exit_key));
+                Direction dir = parser::parse_direction(StrX::murmur3(exit_key));
                 if (exit_yaml.is_seq()) // For Links with LinkTags attached.
                 {
-                    room_ptr->set_link(dir, murmur3(exit_yaml.get(0)), false);
+                    room_ptr->set_link(dir, StrX::murmur3(exit_yaml.get(0)), false);
                     if (exit_yaml.size() > 1)
                     {
                         for (size_t i = 1; i < exit_yaml.size(); i++)
                             room_ptr->set_link_tag(dir, Link::parse_link_tag(exit_yaml.get(i)), false);
                     }
                 }
-                else room_ptr->set_link(dir, murmur3(exits_yaml.val(exit_key)), false);
+                else room_ptr->set_link(dir, StrX::murmur3(exits_yaml.val(exit_key)), false);
             }
         }
 

@@ -8,16 +8,13 @@
 #include <cctype>
 
 #include "core/core.hpp"
-#include "trailmix/file/filereader.hpp"
-#include "trailmix/file/filewriter.hpp"
+#include "util/filex.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/entity.hpp"
 
 using std::runtime_error;
 using std::string;
 using std::to_string;
-using trailmix::file::FileReader;
-using trailmix::file::FileWriter;
 
 namespace westgate {
 

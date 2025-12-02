@@ -6,12 +6,10 @@
 
 #include "core/terminal.hpp"
 #include "actions/cheats.hpp"
-#include "trailmix/text/manipulation.hpp"
 #include "world/time/time-weather.hpp"
 #include "world/world.hpp"
 
 using std::to_string;
-using trailmix::text::manipulation::str_toupper;
 using westgate::terminal::print;
 
 namespace westgate::actions::cheats {

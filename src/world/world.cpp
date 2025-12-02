@@ -11,10 +11,9 @@
 #include "core/game.hpp"
 #include "core/terminal.hpp"
 #include "misc/namegen.hpp"
-#include "trailmix/sys/binpath.hpp"
-#include "trailmix/text/conversion.hpp"
-#include "trailmix/text/hash.hpp"
-#include "trailmix/time/timer.hpp"
+#include "util/binpath.hpp"
+#include "util/strx.hpp"
+#include "util/timer.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/region.hpp"
 #include "world/entity/player.hpp"
@@ -27,16 +26,8 @@ using std::string;
 using std::to_string;
 using std::unique_ptr;
 using std::vector;
-using trailmix::sys::BinPath;
-using trailmix::text::hash::murmur3;
 using westgate::terminal::print;
-using trailmix::text::conversion::ftos;
-using trailmix::time::Timer;
 namespace fs = std::filesystem;
-
-#ifdef WESTGATE_BUILD_DEBUG
-using namespace trailmix::math;
-#endif
 
 namespace westgate {
 
@@ -46,7 +37,7 @@ World::World() : automap_ptr_(make_unique<Automap>()), namegen_ptr_(make_unique<
     Timer init_world;
     core().log("Loading static data into memory.");
     namegen_ptr_->load_namelists();
-    core().log("Static data loaded in " + ftos(init_world.elapsed() / 1000.0f, 3) + " seconds.");
+    core().log("Static data loaded in " + StrX::ftos(init_world.elapsed() / 1000.0f, 3) + " seconds.");
 }
 
 // Destructor, explicitly frees memory used.
@@ -103,7 +94,7 @@ void World::create_region_saves(int save_slot)
 // When in debug mode, mark name hashes as used, to track overlaps.
 void World::debug_mark_room(const string& room_name)
 {
-    const uint32_t room_name_hash = murmur3(room_name);
+    const uint32_t room_name_hash = StrX::murmur3(room_name);
     if (room_name_hashes_used_.count(room_name_hash) > 0) throw runtime_error("Room name hash collision detected: " + room_name);
     room_name_hashes_used_.insert(room_name_hash);
 }
@@ -111,7 +102,7 @@ void World::debug_mark_room(const string& room_name)
 
 // Attempts to find a room by its string ID.
 Room* World::find_room(const std::string& id, uint32_t region_id)
-{ return find_room(murmur3(id), region_id); }
+{ return find_room(StrX::murmur3(id), region_id); }
 
 // Attempts to find a room by its hashed ID.
 Room* World::find_room(uint32_t id, uint32_t region_id)

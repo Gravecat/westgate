@@ -14,15 +14,15 @@ class World;    // defined in world/world.hpp
 
 class Game {
 public:
-                    Game();         // Constructor, sets up the game manager.
-                    ~Game();        // Destructor, cleans up attached classes.
-    void            begin();        // Starts the game, in the form of a title screen followed by the main game loop.
-    void            leave_game();   // Shuts things down cleanly and exits the game.
-    Player&         player() const; // Returns a reference to the Player object.
-    void            save(bool chatty = true);   // Save the game, if there's a game in progress.
-    int             save_slot() const;  // Returns the currently-used saved game slot.
-    void            set_player(Player* player_ptr); // Sets the Player pointer. Use with caution.
-    World&          world() const;  // Returns a reference to the World object.
+            Game();         // Constructor, sets up the game manager.
+            ~Game();        // Destructor, cleans up attached classes.
+    void    begin();        // Starts the game, in the form of a title screen followed by the main game loop.
+    void    leave_game();   // Shuts things down cleanly and exits the game.
+    Player& player() const; // Returns a reference to the Player object.
+    void    save(bool chatty = true);   // Save the game, if there's a game in progress.
+    int     save_slot() const;  // Returns the currently-used saved game slot.
+    void    set_player(Player* player_ptr); // Sets the Player pointer. Use with caution.
+    World&  world() const;  // Returns a reference to the World object.
 
 private:
     static constexpr uint32_t   MISC_DATA_SAVE_VERSION = 4; // The version of the misc data file in save files. Changing this will make save files incompatible.

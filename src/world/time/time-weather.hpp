@@ -12,15 +12,12 @@
 #include <cstdint>
 #include <map>
 
-namespace trailmix::file
-{
-class FileReader;   // defined in trailmix/file/filereader.hpp
-class FileWriter;   // defined in trailmix/file/filewriter.hpp
-}
+namespace westgate {
 
 enum class Direction : uint8_t; // defined in world/area/link.hpp
 
-namespace westgate {
+class FileReader;   // defined in util/filereader.hpp
+class FileWriter;   // defined in util/filewriter.hpp
 
 class TimeWeather
 {
@@ -38,12 +35,12 @@ public:
     int         day_of_month();             // Returns the current day of the month.
     std::string day_of_month_string();      // Returns the day of the month in the form of a string like "1st" or "19th".
     LightDark   light_dark();               // Checks whether it's light or dark right now.
-    void        load_data(trailmix::file::FileReader* file);    // Loads the time/weather data from the specified save file.
+    void        load_data(FileReader* file);    // Loads the time/weather data from the specified save file.
     std::string month_name();               // Returns the name of the current month.
     LunarPhase  moon_phase();               // Gets the current lunar phase.
     bool        pass_time(float seconds, bool allow_interrupt = false); // Causes time to pass.
     Season      room_season();              // Retrieves the season override (if any) for the current Room.
-    void        save_data(trailmix::file::FileWriter* file);    // Saves the time/weather data to the specified save file.
+    void        save_data(FileWriter* file);    // Saves the time/weather data to the specified save file.
     std::string season_str(Season season);  // Converts a season integer to a string.
     std::string string_map(const std::string& key); // Retrieves a message directly from the string map, with tags processed.
     void        tick();                     // Advances time by the smallest possible gradient; useful for loops waiting for something to happen.

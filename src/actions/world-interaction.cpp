@@ -8,8 +8,7 @@
 #include "core/core.hpp"
 #include "core/terminal.hpp"
 #include "parser/parser.hpp"
-#include "trailmix/math/vector3.hpp"
-#include "trailmix/text/conversion.hpp"
+#include "util/strx.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/player.hpp"
 #include "world/time/time-weather.hpp"
@@ -17,8 +16,6 @@
 #include "world/world.hpp"
 
 using std::string;
-using trailmix::math::Vector3;
-using trailmix::text::conversion::number_to_text;
 using westgate::terminal::print;
 
 namespace westgate::actions::world_interaction {
@@ -164,7 +161,7 @@ void wait(PARSER_FUNCTION)
             print("{Y}I don't understand. Please specify how long you want to wait in {G}seconds{Y}, {G}minutes{Y}, {G}hours{Y} or {G}days{Y}.");
             return;
     }
-    print("You prepare to wait for " + number_to_text(original_amount) + " " + time_str + (original_amount > 1 ? "s" : "") +
+    print("You prepare to wait for " + StrX::number_to_text(original_amount) + " " + time_str + (original_amount > 1 ? "s" : "") +
         ". Time passes...");
     world().time_weather().pass_time(amount, true);
 }

@@ -7,12 +7,8 @@
 #include "core/core.hpp"
 #include "core/game.hpp"
 #include "core/terminal.hpp"
-#include "trailmix/file/filereader.hpp"
-#include "trailmix/file/filewriter.hpp"
-#include "trailmix/text/hash.hpp"
-#include "trailmix/text/ansiutils.hpp"
-#include "trailmix/text/conversion.hpp"
-#include "trailmix/text/formatting.hpp"
+#include "util/filex.hpp"
+#include "util/strx.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/region.hpp"
 #include "world/area/room.hpp"
@@ -26,13 +22,6 @@ using std::string;
 using std::to_string;
 using std::unique_ptr;
 using std::vector;
-using trailmix::file::FileReader;
-using trailmix::file::FileWriter;
-using trailmix::text::ansi::ansi_vector_split;
-using trailmix::text::conversion::number_to_text;
-using trailmix::text::formatting::CL_MODE_USE_AND;
-using trailmix::text::formatting::comma_list;
-using trailmix::text::hash::murmur3;
 using westgate::terminal::print;
 
 namespace westgate {
@@ -65,7 +54,7 @@ Room::Room() : desc_("Missing room description."), links_{}, id_(0), map_char_("
 Room::Room(const string& new_id) : Room()
 {
     id_str_ = new_id;
-    id_ = murmur3(new_id);
+    id_ = StrX::murmur3(new_id);
 }
 
 // Adds an Entity to this room directly. Use transfer() to move Entities between rooms.
@@ -307,12 +296,12 @@ void Room::look()
             "simply type: {C}automap off\n");
     }
 
-    vector<string> room_desc = ansi_vector_split("  "+ desc_, desc_width);
+    vector<string> room_desc = StrX::ansi_vector_split("  "+ desc_, desc_width);
     room_desc.insert(room_desc.begin(), "{C}" + name_[0]);
 
     if (can_see_outside())
     {
-        vector<string> weather_desc = ansi_vector_split("{K}  " + world().time_weather().weather_desc(), desc_width);
+        vector<string> weather_desc = StrX::ansi_vector_split("{K}  " + world().time_weather().weather_desc(), desc_width);
         room_desc.insert(room_desc.end(), weather_desc.begin(), weather_desc.end());
     }
 
@@ -334,12 +323,12 @@ void Room::look()
             else exit_tags.push_back("closed");
         }
 
-        if (exit_tags.size()) exit_name += " (" + comma_list(exit_tags) + ")";
+        if (exit_tags.size()) exit_name += " (" + StrX::comma_list(exit_tags) + ")";
         exits_list.push_back(exit_name);
     }
-    if (exits_list.size()) exits_list_str = string("  {c}There ") + (exits_list.size() > 1 ? "are " : "is ") + number_to_text(exits_list.size()) +
-        " obvious exit" + (exits_list.size() > 1 ? "s" : "") + ": " + comma_list(exits_list, CL_MODE_USE_AND) + ".";
-    exits_list = ansi_vector_split(exits_list_str, desc_width);
+    if (exits_list.size()) exits_list_str = string("  {c}There ") + (exits_list.size() > 1 ? "are " : "is ") + StrX::number_to_text(exits_list.size()) +
+        " obvious exit" + (exits_list.size() > 1 ? "s" : "") + ": " + StrX::comma_list(exits_list, StrX::CL_MODE_USE_AND) + ".";
+    exits_list = StrX::ansi_vector_split(exits_list_str, desc_width);
     room_desc.insert(room_desc.end(), exits_list.begin(), exits_list.end());
 
     // Generate the room map (if any), then combine the room map and room description together.

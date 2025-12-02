@@ -9,7 +9,7 @@
 
 #include <unordered_map>
 
-#include "trailmix/math/vector3.hpp"
+#include "util/vector3.hpp"
 
 namespace westgate {
 
@@ -21,7 +21,7 @@ public:
     std::vector<std::string>    generate_map(Room* start_room); // Generates a map centred on the specified coordinate.
 
 private:
-    static const trailmix::math::Vector3    direction_to_xyz_[10];  // Lookup table for converting Direction enums into X,Y,Z vector directions (e.g. {-1,0,0}).
+    static const Vector3    direction_to_xyz_[10];  // Lookup table for converting Direction enums into X,Y,Z vector directions (e.g. {-1,0,0}).
 };
 
 }   // namespace westgate

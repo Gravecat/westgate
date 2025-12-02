@@ -14,12 +14,10 @@
 #include "world/area/link.hpp"
 #include "world/entity/entity.hpp"
 
-namespace trailmix::file {
-class FileReader;   // defined in trailmix/file/filereader.hpp
-class FileWriter;   // defined in trailmix/file/filewriter.hpp
-}
-
 namespace westgate {
+
+class FileReader;   // defined in util/filereader.hpp
+class FileWriter;   // defined in util/filewriter.hpp
 
 // Tags are kinda like flags that can be set on Rooms, except using std::set.
 enum class RoomTag : uint16_t {
@@ -80,13 +78,12 @@ public:
     const std::string&  id_str() const; // Retrieves the string ID of this Room.
     bool        is_unfinished(Direction dir) const; // Checks if this Room has an unfinished link in a specified direction.
     bool        link_tag(Direction dir, LinkTag tag) const; // Checks a LinkTag on a specified Link.
-                // Loads only the changes to this Room from a save file. Should only be called by a parent Region.
-    void        load_delta(trailmix::file::FileReader* file);
+    void        load_delta(FileReader* file);   // Loads only the changes to this Room from a save file. Should only be called by a parent Region.
     void        look(); // Look around you. Just look around you.
     const std::string   map_char() const;   // Retrieves the map character for this Room.
     const std::string&  name() const;   // Retrieves the full name of this Room.
     uint32_t    region() const; // Returns the ID of the Region this Room belongs to.
-    void        save_delta(trailmix::file::FileWriter* file);   // Saves only the changes to this Room in a save file. Should only be called by a parent Region.
+    void        save_delta(FileWriter* file);   // Saves only the changes to this Room in a save file. Should only be called by a parent Region.
     void        set_desc(const std::string& new_desc, bool mark_delta = true);  // Sets the description of this Room.
     void        set_link(Direction dir, uint32_t new_exit, bool mark_delta = true); // Sets an exit link from this Room to another.
     void        set_link_tag(Direction dir, LinkTag tag, bool mark_delta = true);   // Sets a LinkTag on a specifieid Link.

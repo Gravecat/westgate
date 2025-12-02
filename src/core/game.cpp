@@ -11,11 +11,10 @@
 #include "core/game.hpp"
 #include "core/terminal.hpp"
 #include "parser/parser.hpp"
-#include "trailmix/file/filereader.hpp"
-#include "trailmix/file/filewriter.hpp"
-#include "trailmix/sys/binpath.hpp"
-#include "trailmix/text/conversion.hpp"
-#include "trailmix/time/timer.hpp"
+#include "util/binpath.hpp"
+#include "util/filex.hpp"
+#include "util/strx.hpp"
+#include "util/timer.hpp"
 #include "world/area/region.hpp"
 #include "world/entity/player.hpp"
 #include "world/time/time-weather.hpp"
@@ -24,12 +23,7 @@
 using std::runtime_error;
 using std::string;
 using std::to_string;
-using trailmix::file::FileReader;
-using trailmix::file::FileWriter;
-using trailmix::sys::BinPath;
 using westgate::terminal::print;
-using trailmix::text::conversion::ftos;
-using trailmix::time::Timer;
 namespace fs = std::filesystem;
 
 namespace westgate {
@@ -99,7 +93,7 @@ void Game::load_game(int save_slot)
     world_ptr_->load_region(current_region);
 
     print("{c}Saved game loaded successfully!");
-    core().log("Saved game loaded in " + ftos(load_timer.elapsed() / 1000.0f, 3) + " seconds.");
+    core().log("Saved game loaded in " + StrX::ftos(load_timer.elapsed() / 1000.0f, 3) + " seconds.");
 }
 
 // brøether, may i have the lööps
@@ -121,7 +115,7 @@ void Game::new_game(const uint32_t starting_region, const string& starting_room)
     // Save the game silently, to store the player character.
     save(false);
 
-    core().log("New game initialized in " + ftos(new_game_timer.elapsed() / 1000.0f, 3) + " seconds.");
+    core().log("New game initialized in " + StrX::ftos(new_game_timer.elapsed() / 1000.0f, 3) + " seconds.");
 }
 
 // Returns a reference to the Player object.

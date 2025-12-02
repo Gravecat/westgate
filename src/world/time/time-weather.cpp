@@ -8,12 +8,10 @@
 
 #include "core/core.hpp"
 #include "core/terminal.hpp"
-#include "trailmix/file/filereader.hpp"
-#include "trailmix/file/filewriter.hpp"
-#include "trailmix/file/yaml.hpp"
-#include "trailmix/math/random.hpp"
-#include "trailmix/text/formatting.hpp"
-#include "trailmix/text/manipulation.hpp"
+#include "util/filex.hpp"
+#include "util/random.hpp"
+#include "util/strx.hpp"
+#include "util/yaml.hpp"
 #include "world/area/link.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/player.hpp"
@@ -26,13 +24,6 @@ using std::runtime_error;
 using std::string;
 using std::to_string;
 using std::vector;
-using trailmix::file::FileReader;
-using trailmix::file::FileWriter;
-using trailmix::file::YAML;
-using trailmix::math::rnd;
-using trailmix::text::formatting::process_conditional_tags;
-using trailmix::text::manipulation::decode_compressed_string;
-using trailmix::text::manipulation::find_and_replace;
 using westgate::terminal::print;
 namespace fs = std::filesystem;
 
@@ -68,7 +59,7 @@ TimeWeather::TimeWeather() : time_passed_(0), time_passed_subsecond_(0)
         {
             const int map_id = key.at(4) - '0';
             if (map_id < 0 || map_id > 8) throw runtime_error("Invalid weather map strings.");
-            weather_change_map_.at(map_id) = decode_compressed_string(val);
+            weather_change_map_.at(map_id) = StrX::decode_compressed_string(val);
         }
         else tw_string_map_.insert({key, val});
     }
@@ -333,27 +324,27 @@ std::string TimeWeather::string_map(const std::string& key)
         return "";
     }
     std::string out = result->second;
-    process_conditional_tags(out, "outside", !indoors);
-    process_conditional_tags(out, "inside", indoors);
+    StrX::process_conditional_tags(out, "outside", !indoors);
+    StrX::process_conditional_tags(out, "inside", indoors);
     if (in_city)
     {
-        find_and_replace(out, "$GROUND|STREET$", "street");
-        find_and_replace(out, "$LAND|CITY$", "city");
-        find_and_replace(out, "$LAND|STREET$", "street");
-        find_and_replace(out, "$LAND|STREETS$", "streets");
-        find_and_replace(out, "$LANDSCAPE|CITY$", "city");
-        find_and_replace(out, "$LANDSCAPE|STREETS$", "streets");
+        StrX::find_and_replace(out, "$GROUND|STREET$", "street");
+        StrX::find_and_replace(out, "$LAND|CITY$", "city");
+        StrX::find_and_replace(out, "$LAND|STREET$", "street");
+        StrX::find_and_replace(out, "$LAND|STREETS$", "streets");
+        StrX::find_and_replace(out, "$LANDSCAPE|CITY$", "city");
+        StrX::find_and_replace(out, "$LANDSCAPE|STREETS$", "streets");
     }
     else
     {
-        find_and_replace(out, "$GROUND|STREET$", "ground");
-        find_and_replace(out, "$LAND|CITY$", "land");
-        find_and_replace(out, "$LAND|STREET$", "land");
-        find_and_replace(out, "$LAND|STREETS$", "land");
-        find_and_replace(out, "$LANDSCAPE|CITY$", "landscape");
-        find_and_replace(out, "$LANDSCAPE|STREETS$", "landscape");
+        StrX::find_and_replace(out, "$GROUND|STREET$", "ground");
+        StrX::find_and_replace(out, "$LAND|CITY$", "land");
+        StrX::find_and_replace(out, "$LAND|STREET$", "land");
+        StrX::find_and_replace(out, "$LAND|STREETS$", "land");
+        StrX::find_and_replace(out, "$LANDSCAPE|CITY$", "landscape");
+        StrX::find_and_replace(out, "$LANDSCAPE|STREETS$", "landscape");
     }
-    find_and_replace(out, "$WIND_DIR$", Room::direction_name(wind_direction_));
+    StrX::find_and_replace(out, "$WIND_DIR$", Room::direction_name(wind_direction_));
     return out;
 }
 

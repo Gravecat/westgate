@@ -22,6 +22,11 @@ set(WESTGATE_CPPS
   src/core/terminal.cpp
   src/misc/namegen.cpp
   src/parser/parser.cpp
+  src/util/binpath.cpp
+  src/util/filex.cpp
+  src/util/strx.cpp
+  src/util/timer.cpp
+  src/util/yaml.cpp
   src/world/area/automap.cpp
   src/world/area/link.cpp
   src/world/area/region.cpp
@@ -35,8 +40,8 @@ set(WESTGATE_CPPS
 
 # Third-party code being built as separate object files.
 add_subdirectory(src/3rdparty/fantasyname)
-#add_subdirectory(src/3rdparty/murmurhash3)
-#add_subdirectory(src/3rdparty/rapidyaml)
+add_subdirectory(src/3rdparty/murmurhash3)
+add_subdirectory(src/3rdparty/rapidyaml)
 
 # Automatically generate version strings used in-game and in the Windows resource file, from this specified game version.
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/version.txt" WESTGATE_VERSION)
@@ -132,7 +137,6 @@ target_link_libraries(westgate PRIVATE
   fantasyname
   murmurhash3
   rapidyaml
-  trailmix
 )
 
 # Include directories.
@@ -183,21 +187,3 @@ if(TARGET_WINDOWS)
     rapidyaml
   )
 endif(TARGET_WINDOWS)
-
-# This project makes pretty heavy use of my Trailmix utility library: https://github.com/Gravecat/trailmix
-include(FetchContent)
-set(TRAILMIX_MURMURHASH TRUE)
-set(TRAILMIX_YAML TRUE)
-set(FETCHCONTENT_BASE_DIR "${CMAKE_BINARY_DIR}/trailmix")
-FetchContent_Declare(
-    trailmix
-    GIT_REPOSITORY https://github.com/Gravecat/trailmix.git
-    GIT_TAG        v0.9.2
-)
-FetchContent_MakeAvailable(trailmix)
-
-# Post-build, make a 'bin' folder and copy the binary file in there.
-add_custom_command(TARGET westgate POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/bin"
-  COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:westgate>$<$<BOOL:${TARGET_MINGW}>:.exe>" "${CMAKE_BINARY_DIR}/bin"
-)

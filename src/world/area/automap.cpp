@@ -5,15 +5,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 #include "core/core.hpp"
-#include "trailmix/text/ansiutils.hpp"
+#include "util/strx.hpp"
 #include "world/area/automap.hpp"
 #include "world/area/room.hpp"
 #include "world/world.hpp"
 
 using std::string;
 using std::vector;
-using trailmix::math::Vector3;
-using trailmix::text::ansi::flatten_tags;
 
 namespace westgate {
 
@@ -115,7 +113,7 @@ vector<string> Automap::generate_map(Room* start_room)
         map_out.at(y) = " ";
         for (int x = 0; x < 7; x++)
             map_out.at(y) += game_map.at(x + (y * 7));
-        map_out.at(y) = flatten_tags(map_out.at(y) + "   " + "{0}");
+        map_out.at(y) = StrX::flatten_tags(map_out.at(y) + "   " + "{0}");
     }
 
     // Crop any excess space from the map.

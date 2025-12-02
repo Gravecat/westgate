@@ -4,11 +4,10 @@
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-#include "core/terminal.hpp"
 #include "actions/silly.hpp"
-#include "trailmix/math/random.hpp"
+#include "core/terminal.hpp"
+#include "util/random.hpp"
 
-using trailmix::math::rnd;
 using westgate::terminal::print;
 
 namespace westgate::actions::silly {
