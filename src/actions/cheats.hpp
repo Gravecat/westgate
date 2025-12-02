@@ -12,6 +12,5 @@
 namespace westgate::actions::cheats {
 
 void    hash(PARSER_FUNCTION);  // Hashes words into integers.
-void    weather_desc(PARSER_FUNCTION);  // Retrieves a specified weather-map description.
 
 }   // namespace westgate::actions::cheats
