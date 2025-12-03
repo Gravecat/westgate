@@ -296,7 +296,11 @@ void Room::look()
             "simply type: {C}automap off\n");
     }
 
-    vector<string> room_desc = StrX::ansi_vector_split("  "+ desc_, desc_width);
+    string processed_desc = desc_;
+    TimeWeather::TimeOfDay tod  = world().time_weather().time_of_day(false);
+    StrX::process_conditional_tags(processed_desc, "daydawn", tod == TimeWeather::TimeOfDay::DAWN || tod == TimeWeather::TimeOfDay::DAY);
+    StrX::process_conditional_tags(processed_desc, "nightdusk", tod == TimeWeather::TimeOfDay::NIGHT || tod == TimeWeather::TimeOfDay::DUSK);
+    vector<string> room_desc = StrX::ansi_vector_split("  " + processed_desc, desc_width);
     room_desc.insert(room_desc.begin(), "{C}" + name_[0]);
 
     if (can_see_outside())
