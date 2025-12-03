@@ -25,7 +25,7 @@ public:
     World&  world() const;  // Returns a reference to the World object.
 
 private:
-    static constexpr uint32_t   MISC_DATA_SAVE_VERSION = 4; // The version of the misc data file in save files. Changing this will make save files incompatible.
+    static constexpr uint32_t   MISC_DATA_SAVE_VERSION = 5; // The version of the misc data file in save files. Changing this will make save files incompatible.
 
     Player* player_ptr_;    // Pointer to the player-character object. Ownership of the object lies with the Room they're in.
     int     save_id_;       // The current saved-game ID (or -1 for none).
@@ -33,7 +33,7 @@ private:
 
     void    load_game(int save_slot);   // Loads an existing saved game.
     void    main_loop();        // brøether, may i have the lööps
-    void    new_game(const uint32_t starting_region, const std::string& starting_room); // Sets up for a new game!
+    void    new_game(int starting_region, const std::string& starting_room);    // Sets up for a new game!
     void    save_misc_data();   // Writes a misc save file, which contains everything that isn't in the region saves.
     void    title_screen();     // Every game needs a title screen!
 };

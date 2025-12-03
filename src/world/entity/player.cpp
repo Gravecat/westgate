@@ -50,7 +50,7 @@ void Player::clear_player_tags(std::list<PlayerTag> tags_list) { for (auto the_t
 bool Player::player_tag(PlayerTag the_tag) const { return (player_tags_.count(the_tag) > 0); }
 
 // Checks what Region the Player is currently in.
-uint32_t Player::region() const { return region_; }
+int Player::region() const { return region_; }
 
 // Saves this Player to a save game file.
 void Player::save(FileWriter* file)

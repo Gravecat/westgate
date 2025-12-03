@@ -370,7 +370,7 @@ RoomTag Room::parse_room_tag(const std::string &tag)
 }
 
 // Returns the ID of the Region this Room belongs to.
-uint32_t Room::region() const
+int Room::region() const
 { return world().find_room_region(id_); }
 
 // Reverses a Direction (e.g. north becomes south).

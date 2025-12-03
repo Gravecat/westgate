@@ -80,7 +80,7 @@ void Game::load_game(int save_slot)
     if (file->read_string() != "MISC_DATA") throw runtime_error("Invalid save data header!");
 
     // Check what Region the player is in.
-    const uint32_t current_region = file->read_data<uint32_t>();
+    const int current_region = file->read_data<int>();
 
     // Load the time/weather data.
     world_ptr_->time_weather().load_data(file.get());
@@ -100,7 +100,7 @@ void Game::load_game(int save_slot)
 void Game::main_loop() { while(true) { parser::process_input(terminal::get_input()); } }
 
 // Sets up for a new game!
-void Game::new_game(const uint32_t starting_region, const string& starting_room)
+void Game::new_game(int starting_region, const string& starting_room)
 {
     Timer new_game_timer;
 
@@ -143,7 +143,7 @@ void Game::save_misc_data()
     file->write_string("MISC_DATA");
 
     // The only misc data to write for now is the player's region ID.
-    file->write_data<uint32_t>(player_ptr_->region());
+    file->write_data<int>(player_ptr_->region());
 
     // And the time/weather data, which is saved elsewhere.
     world_ptr_->time_weather().save_data(file.get());

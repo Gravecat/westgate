@@ -29,7 +29,7 @@ public:
     void        clear_player_tag(PlayerTag the_tag);    // Clears a PlayerTag from this Player.
     void        clear_player_tags(std::list<PlayerTag> tags_list);  // Clears multiple PlayerTags at the same time.
     bool        player_tag(PlayerTag the_tag) const;    // Checks if a PlayerTag is set on this Player.
-    uint32_t    region() const;     // Checks what Region the Player is currently in.
+    int         region() const;     // Checks what Region the Player is currently in.
     void        save(FileWriter* file) override;    // Saves this Player to a save game file.
     void        set_parent_entity(Entity* new_entity_parent = nullptr) override;    // This is a big no-no. We're overriding this method for safety reasons.
     void        set_parent_room(Room* new_room_parent = nullptr) override;  // Sets a new Room as the parent of this Player.
@@ -44,7 +44,7 @@ private:
     // Identifiers for blocks of data in the save file, used to quickly catch errors when loading old or invalid data.
     static constexpr uint32_t   PLAYER_SAVE_TAGS =      1;
 
-    unsigned int    region_;    // The current Region the Player is in.
+    int region_;    // The current Region the Player is in.
     std::set<PlayerTag> player_tags_;   // Any and all PlayerTags on the Player.
 };
 

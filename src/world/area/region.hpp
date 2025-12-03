@@ -25,17 +25,17 @@ public:
     Room*       find_room(const std::string& id) const; // Attempts to find a room by its string ID.
     Room*       find_room(uint32_t id) const;   // Attempts to find a room by its hashed ID.
     uint32_t    id() const;                     // Retrieves this Region's unique ID.
-    void        load(int save_slot, uint32_t region_id);    // Loads this Region's YAML data, then applies delta changes from saved game binary data.
+    void        load(int save_slot, int region_id); // Loads this Region's YAML data, then applies delta changes from saved game binary data.
     void        load_from_gamedata(const std::string& filename, bool update_world = false); // Loads a Region from YAML game data.
     void        save_delta(int save_slot, bool no_changes = false); // Saves only the changes to this Region in a save file.
 
 private:
     void        load_delta(int save_slot);  // Loads delta changes from a saved game file.
 
-    static constexpr uint32_t   REGION_SAVE_VERSION =       3;  // The expected version for saving/loading binary game data.
+    static constexpr uint32_t   REGION_SAVE_VERSION =       4;  // The expected version for saving/loading binary game data.
     static constexpr uint32_t   REGION_YAML_VERSION =       4;  // The expected version for region YAML data.
 
-    uint32_t    id_;    // The ID of the loaded region file.
+    int         id_;    // The ID of the loaded region file.
     std::string name_;  // The name of this Region.
     std::unordered_map<uint32_t, std::unique_ptr<Room>> rooms_; // All the Rooms stored within this Region.
 };

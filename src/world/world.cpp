@@ -49,7 +49,7 @@ World::~World()
 }
 
 // Updates the room_regions_ map to keep track of what Region each Room is in.
-void World::add_room_to_region(uint32_t room_id, uint32_t region_id)
+void World::add_room_to_region(uint32_t room_id, int region_id)
 { room_regions_.insert({room_id, region_id}); }
 
 // Returns a reference to the automap object.
@@ -101,11 +101,11 @@ void World::debug_mark_room(const string& room_name)
 #endif
 
 // Attempts to find a room by its string ID.
-Room* World::find_room(const std::string& id, uint32_t region_id)
+Room* World::find_room(const std::string& id, int region_id)
 { return find_room(StrX::murmur3(id), region_id); }
 
 // Attempts to find a room by its hashed ID.
-Room* World::find_room(uint32_t id, uint32_t region_id)
+Room* World::find_room(uint32_t id, int region_id)
 {
     auto region = regions_.find(region_id);
     if (region == regions_.end())
@@ -121,7 +121,7 @@ Room* World::find_room(uint32_t id)
 { return find_room(id, find_room_region(id)); }
 
 // Attempts to find the Region that a specified Room belongs to.
-uint32_t World::find_room_region(uint32_t id) const
+int World::find_room_region(uint32_t id) const
 {
     auto result = room_regions_.find(id);
     if (result == room_regions_.end()) throw runtime_error("Unable to locate room " + to_string(id));
@@ -129,7 +129,7 @@ uint32_t World::find_room_region(uint32_t id) const
 }
 
 // Specifies a Region to be loaded into memory.
-Region* World::load_region(uint32_t id)
+Region* World::load_region(int id)
 {
     auto region = regions_.find(id);
     if (region != regions_.end()) return region->second.get();  // It's already loaded.
@@ -225,7 +225,7 @@ TimeWeather& World::time_weather() const
 }
 
 // Removes a Region from memory, saving it first.
-void World::unload_region(uint32_t id)
+void World::unload_region(int id)
 {
     if (player().region() == id) throw runtime_error("Attempt to unload player-occupied region!");
     auto region = regions_.find(id);

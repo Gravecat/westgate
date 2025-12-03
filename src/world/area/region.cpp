@@ -53,7 +53,7 @@ Room* Region::find_room(uint32_t id) const
 uint32_t Region::id() const { return id_; }
 
 // Loads this Region's YAML data, then applies delta changes from saved game binary data.
-void Region::load(int save_slot, uint32_t region_id)
+void Region::load(int save_slot, int region_id)
 {
     // Check all the YAML files in the regions data folder.
     const fs::path regions_folder = core().datafile("world/regions");
@@ -96,7 +96,7 @@ void Region::load_delta(int save_slot)
     const uint32_t delta_ver = file->read_data<uint32_t>();
     if (delta_ver != REGION_SAVE_VERSION) FileReader::standard_error("Invalid region deltas save version" + err_file, delta_ver, REGION_SAVE_VERSION);
     if (file->read_string().compare("REGION_DELTA")) throw runtime_error("Invalid region deltas" + err_file);
-    const uint32_t delta_id = file->read_data<uint32_t>();
+    const int delta_id = file->read_data<int>();
     if (delta_id != id_) FileReader::standard_error("Mismatched region delta ID" + err_file, delta_id, id_);
 
     // Load the Room deltas, if any.
@@ -231,7 +231,7 @@ void Region::save_delta(int save_slot, bool no_changes)
     file->write_header();
     file->write_data<uint32_t>(REGION_SAVE_VERSION);
     file->write_string("REGION_DELTA");
-    file->write_data<uint32_t>(id_);
+    file->write_data<int>(id_);
 
     if (!no_changes)
     {

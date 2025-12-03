@@ -82,7 +82,7 @@ public:
     void        look(); // Look around you. Just look around you.
     const std::string   map_char() const;   // Retrieves the map character for this Room.
     const std::string&  name() const;   // Retrieves the full name of this Room.
-    uint32_t    region() const; // Returns the ID of the Region this Room belongs to.
+    int         region() const; // Returns the ID of the Region this Room belongs to.
     void        save_delta(FileWriter* file);   // Saves only the changes to this Room in a save file. Should only be called by a parent Region.
     void        set_desc(const std::string& new_desc, bool mark_delta = true);  // Sets the description of this Room.
     void        set_link(Direction dir, uint32_t new_exit, bool mark_delta = true); // Sets an exit link from this Room to another.
