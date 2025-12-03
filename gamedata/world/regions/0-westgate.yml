@@ -17,4 +17,4 @@ THE_CROWN_AND_SKULL:
     to an upper floor, while behind the side of the bar is a heavy wooden door marked with a crudely-painted red X."
   map: "{y}^"
   name: [ The Crown & Skull, Crown & Skull ]
-  tags: [ City, Indoors, PermalockNorthwest, UnfinishedEast, UnfinishedUp, Windows ]
+  tags: [ City, Indoors, PermalockNorthwest, UnfinishedEast, UnfinishedUp ]
