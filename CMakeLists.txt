@@ -43,6 +43,9 @@ add_subdirectory(src/3rdparty/fantasyname)
 add_subdirectory(src/3rdparty/murmurhash3)
 add_subdirectory(src/3rdparty/rapidyaml)
 
+# Tell CMake to move the finished binary into a 'bin' folder.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 # Automatically generate version strings used in-game and in the Windows resource file, from this specified game version.
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/version.txt" WESTGATE_VERSION)
 string(REPLACE "." "," WESTGATE_VERSION_COMMA "${WESTGATE_VERSION}")
