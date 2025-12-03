@@ -271,6 +271,7 @@ void print(const string& text, bool newline)
             default: invalid_tag = true; break;
         }
         if (tag.size() > 2 || !tag.size()) invalid_tag = true;
+        if (!tag.compare("nl")) invalid_tag = false;
         if (invalid_tag) invalid_tags.push_back(tag);
     }
 

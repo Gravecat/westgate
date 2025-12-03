@@ -52,19 +52,22 @@ vector<string> StrX::ansi_vector_split(const string& str, uint32_t line_length)
         size_t found_open = word.find_last_of('{');
         size_t found_closed = word.find_first_of('}', found_open);
         size_t word_len = 0;
+        bool newline_tag = false;
         if (found_open != string::npos && found_closed != string::npos)
         {
-            last_tag = word.substr(found_open, found_closed - found_open + 1);
+            string tag_found = word.substr(found_open, found_closed - found_open + 1);
+            if (!tag_found.compare("{nl}")) newline_tag = true;
+            else last_tag = tag_found;
             word_len = ansi_strlen(word);
         }
         else word_len = word.size();
 
         // Decide whether or not we're starting a new line.
-        if (current_pos && (current_pos + word_len >= line_length))
+        if ((current_pos && (current_pos + word_len >= line_length)) || newline_tag)
         {
             result.push_back(current_line);
-            current_line = last_tag + word;
-            current_pos = word_len + 1;
+            current_line = (newline_tag ? "  " : "") + last_tag + word;
+            current_pos = word_len + (newline_tag ? 3 : 1);
         }
         else
         {
