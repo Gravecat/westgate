@@ -43,7 +43,7 @@ enum class RoomTag : uint16_t {
     AlwaysAutumn =  209,    // The weather system will be locked to autumn (fall) for this room.
 
     // Markers for exits in a Room that are planned but currently unfinished.
-    UnfinishedNorth =       300,
+    UnfinishedNorth =       300,    // Marked in-game as unfinished, show on the map as red links.
     UnfinishedNortheast =   301,
     UnfinishedEast =        302,
     UnfinishedSoutheast =   303,
@@ -53,6 +53,16 @@ enum class RoomTag : uint16_t {
     UnfinishedNorthwest =   307,
     UnfinishedUp =          308,
     UnfinishedDown =        309,
+    PermalockNorth =        310,    // Fake room exits, which act like locked doors that can never be opened.
+    PermalockNortheast =    311,
+    PermalockEast =         312,
+    PermalockSoutheast =    313,
+    PermalockSouth =        314,
+    PermalockSouthwest =    315,
+    PermalockWest =         316,
+    PermalockNorthwest =    317,
+    PermalockUp =           318,
+    PermalockDown =         319,
 };
 
 class Room {
@@ -76,7 +86,7 @@ public:
     bool        has_exit(Direction dir) const;  // Checks if an Exit exists in the specified Direction.
     uint32_t    id() const;     // Retrieves the hashed ID of this Room.
     const std::string&  id_str() const; // Retrieves the string ID of this Room.
-    bool        is_unfinished(Direction dir) const; // Checks if this Room has an unfinished link in a specified direction.
+    bool        is_unfinished(Direction dir, bool permalock) const; // Checks if this Room has an unfinished or permalock link in a specified direction.
     bool        link_tag(Direction dir, LinkTag tag) const; // Checks a LinkTag on a specified Link.
     void        load_delta(FileReader* file);   // Loads only the changes to this Room from a save file. Should only be called by a parent Region.
     void        look(); // Look around you. Just look around you.
@@ -115,7 +125,7 @@ private:
     static const std::string    direction_names_[11];       // Lookup table to convert a Direction enum into a string name.
     static const Direction      reverse_direction_map_[11]; // Lookup table that inverts a Direction (e.g. east -> west).
     static const std::map<std::string, RoomTag> tag_map_;   // Used during loading YAML data, to convert RoomTag text names into RoomTag enums.
-    static const RoomTag        unfinished_directions_[10]; // Lookup table for unfinished exit links.
+    static const RoomTag        unfinished_directions_[20]; // Lookup table for unfinished exit links.
 
     // Turns a Direction into an int for array access, produces a standard error on invalid input.
     int link_id(Direction dir, const std::string& caller, bool fail_on_null = true) const;

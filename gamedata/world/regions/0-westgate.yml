@@ -8,14 +8,6 @@ REGION_IDENTIFIER:
   name: Westgate
   version: 4
 
-CNS_BACK_ROOM:
-  desc: "tbc"
-  exits:
-    southeast: [ THE_CROWN_AND_SKULL, Openable, Permalock ]
-  map: "{y}v"
-  name: [ unfinished back room, unfinished ]
-  tags: [ City, Indoors, UnfinishedDown ]
-
 THE_CROWN_AND_SKULL:
   desc: "The warped wooden floorboards creak in protest as you step into an inn that has seen better days, the scents of sweat and stale beer hanging in the
     air. [daydawn:Sunlight][nightdusk:Pale moonlight] filters in through dusty, cracked windows and rickety shutters, though most of the light in this dingy
@@ -23,8 +15,6 @@ THE_CROWN_AND_SKULL:
     {nl}The heavy door - barred at night - leads east to the streets outside, while the bar occupying the west side of the room is lit by flickering candles
     from an old wooden chandelier overhead, numerous barrels and shelves stacked with bottles offering solace in these trying times. A rickety staircase leads
     to an upper floor, while behind the side of the bar is a heavy wooden door marked with a crudely-painted red X."
-  exits:
-    northwest: [ CNS_BACK_ROOM, Openable, Permalock ]
   map: "{y}^"
   name: [ The Crown & Skull, Crown & Skull ]
-  tags: [ City, Indoors, UnfinishedEast, UnfinishedUp, Windows ]
+  tags: [ City, Indoors, PermalockNorthwest, UnfinishedEast, UnfinishedUp, Windows ]

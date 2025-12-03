@@ -40,12 +40,17 @@ const std::map<std::string, RoomTag> Room::tag_map_ = { {"Explored", RoomTag::Ex
     { "UnfinishedNorth", RoomTag::UnfinishedNorth }, { "UnfinishedNortheast", RoomTag::UnfinishedNortheast }, { "UnfinishedEast", RoomTag::UnfinishedEast },
     { "UnfinishedSoutheast", RoomTag::UnfinishedSoutheast }, { "UnfinishedSouth", RoomTag::UnfinishedSouth },
     { "UnfinishedSouthwest", RoomTag::UnfinishedSouthwest }, { "UnfinishedWest", RoomTag::UnfinishedWest },
-    { "UnfinishedNorthwest", RoomTag::UnfinishedNorthwest }, { "UnfinishedUp", RoomTag::UnfinishedUp }, { "UnfinishedDown", RoomTag::UnfinishedDown } };
+    { "UnfinishedNorthwest", RoomTag::UnfinishedNorthwest }, { "UnfinishedUp", RoomTag::UnfinishedUp }, { "UnfinishedDown", RoomTag::UnfinishedDown },
+    { "PermalockNorth", RoomTag::PermalockNorth }, { "PermalockNortheast", RoomTag::PermalockNortheast }, { "PermalockEast", RoomTag::PermalockEast },
+    { "PermalockSoutheast", RoomTag::PermalockSoutheast }, { "PermalockSouth", RoomTag::PermalockSouth }, { "PermalockSouthwest", RoomTag::PermalockSouthwest },
+    { "PermalockWest", RoomTag::PermalockWest }, { "PermalockNorthwest", RoomTag::PermalockNorthwest }, { "PermalockUp", RoomTag::PermalockUp },
+    { "PermalockDown", RoomTag::PermalockDown } };
 
-// Lookup table for unfinished exit links.
-const RoomTag Room::unfinished_directions_[10] = { RoomTag::UnfinishedNorth, RoomTag::UnfinishedNortheast, RoomTag::UnfinishedEast,
+// Lookup table for unfinished or permalocked exit links.
+const RoomTag Room::unfinished_directions_[20] = { RoomTag::UnfinishedNorth, RoomTag::UnfinishedNortheast, RoomTag::UnfinishedEast,
     RoomTag::UnfinishedSoutheast, RoomTag::UnfinishedSouth, RoomTag::UnfinishedSouthwest, RoomTag::UnfinishedWest, RoomTag::UnfinishedNorthwest,
-    RoomTag::UnfinishedUp, RoomTag::UnfinishedDown };
+    RoomTag::UnfinishedUp, RoomTag::UnfinishedDown, RoomTag::PermalockNorth, RoomTag::PermalockNortheast, RoomTag::PermalockEast, RoomTag::PermalockSoutheast,
+    RoomTag::PermalockSouth, RoomTag::PermalockSouthwest, RoomTag::PermalockWest, RoomTag::PermalockNorthwest, RoomTag::PermalockUp, RoomTag::PermalockDown };
 
 // Creates a blank Room with default values and no ID.
 Room::Room() : desc_("Missing room description."), links_{}, id_(0), map_char_("{M}?"), name_{"undefined", "undefined"} { }
@@ -164,10 +169,10 @@ uint32_t Room::id() const { return id_; }
 const string& Room::id_str() const { return id_str_; }
 
 // Checks if this Room has an unfinished link in a specified direction.
-bool Room::is_unfinished(Direction dir) const
+bool Room::is_unfinished(Direction dir, bool permalock) const
 {
     if (dir == Direction::NONE || dir > Direction::DOWN) throw runtime_error("Invalid direction call from is_unfinished [" + id_str_ + "]");
-    return tag(unfinished_directions_[static_cast<int>(dir) - 1]);
+    return tag(unfinished_directions_[static_cast<int>(dir) + (permalock ? 9 : -1)]);
 }
 
 // Turns a Direction into an int for array access, produces a standard error on invalid input.

@@ -71,10 +71,15 @@ vector<string> Automap::generate_map(Room* start_room)
             std::string link_colour = "{K}";
             if (!room->get_link(dir))
             {
-                if (room->is_unfinished(dir))
+                if (room->is_unfinished(dir, false))
                 {
                     unfinished_link = true;
                     link_colour = "{r}";
+                }
+                else if (room->is_unfinished(dir, true))
+                {
+                    unfinished_link = true;
+                    link_colour = "{R}";
                 }
                 else continue;
             }

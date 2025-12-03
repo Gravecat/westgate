@@ -48,7 +48,12 @@ void open_close(PARSER_FUNCTION)
     Room* room = player().parent_room();
     if (!room->get_link(dir))
     {
-        print("{Y}There isn't anything to " + open_close + " in that direction.");
+        if (room->is_unfinished(dir, true))
+        {
+            if (open) print("{Y}You try to open it, but it's locked.");
+            else print("{Y}It's already closed.");
+        }
+        else print("{Y}There isn't anything to " + open_close + " in that direction.");
         return;
     }
     if (!room->link_tag(dir, LinkTag::Openable))
@@ -97,7 +102,8 @@ void travel(PARSER_FUNCTION)
     Room* room_target = room_here->get_link(dir);
     if (!room_target)
     {
-        if (room_here->is_unfinished(dir)) print("{Y}You can't travel in that direction; that part of the game is not yet finished.");
+        if (room_here->is_unfinished(dir, false)) print("{Y}You can't travel in that direction; that part of the game is not yet finished.");
+        else if (room_here->is_unfinished(dir, true)) print("{Y}You can't go that way, it's locked.");
         else print("{Y}You can't travel in that direction.");
         return;
     }
