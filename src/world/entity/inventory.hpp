@@ -26,8 +26,14 @@ class Item; // defined in world/entity/item.hpp
 
 class Inventory {
 public:
+    void    add(std::unique_ptr<Item> item);    // Adds an Item to this Inventory (use std::move).
+    Item*   at(size_t index);       // Returns a pointer to a specified Item in this Inventory.
+    void    erase(size_t index);    // Removes an Item from this Inventory.
+    size_t  size() const;           // Returns the amount of Items in this Inventory.
+    void    transfer(Inventory* new_inv, size_t index); // Moves an item from this Inventory into another.
 
 private:
+    std::vector<std::unique_ptr<Item>>  items_; // The Items stored in this Inventory.
 };
 
 }   // namespace westgate
