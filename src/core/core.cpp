@@ -240,7 +240,9 @@ void Core::init_core(vector<string> parameters)
     if (set_title) terminal::set_window_title("Westgate v" + version::VERSION_STRING + " (" + version::BUILD_TIMESTAMP + ")");
     find_gamedata();
     game_ptr_ = std::make_unique<Game>();
+#ifdef WESTGATE_BUILD_DEBUG
     this->log("Core initialized in " + StrX::ftos(init_timer.elapsed() / 1000.0f, 3) + " seconds.");
+#endif
 }
 
 // Catches a segfault or other fatal signal.

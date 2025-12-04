@@ -37,7 +37,9 @@ World::World() : automap_ptr_(make_unique<Automap>()), namegen_ptr_(make_unique<
     Timer init_world;
     core().log("Loading static data into memory.");
     namegen_ptr_->load_namelists();
+#ifdef WESTGATE_BUILD_DEBUG
     core().log("Static data loaded in " + StrX::ftos(init_world.elapsed() / 1000.0f, 3) + " seconds.");
+#endif
 }
 
 // Destructor, explicitly frees memory used.

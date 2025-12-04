@@ -115,7 +115,9 @@ void Game::new_game(int starting_region, const string& starting_room)
     // Save the game silently, to store the player character.
     save(false);
 
+#ifdef WESTGATE_BUILD_DEBUG
     core().log("New game initialized in " + StrX::ftos(new_game_timer.elapsed() / 1000.0f, 3) + " seconds.");
+#endif
 }
 
 // Returns a reference to the Player object.
