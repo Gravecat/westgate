@@ -53,7 +53,6 @@ vector<string> Automap::generate_map(Room* start_room)
     for (size_t r = 0; r < nearby_rooms.size(); r++)
     {
         const Vector3 coord = nearby_coords.at(r);
-        core().log(coord.string());
         // Ignore any rooms that are outside of the space we're using to paint the map, or any that aren't on the same vertical level.
         if (coord.z != 0 || coord.x < 0 || coord.y < 0 || coord.x > 5 || coord.y > 5) continue;
 
