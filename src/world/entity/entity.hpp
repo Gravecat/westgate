@@ -30,7 +30,7 @@ class FileWriter;   // defined in util/filewriter.hpp
 class Room;         // defined in world/room.hpp
 
 // Used to allow Entity to self-identify its derived class.
-enum class EntityType : uint8_t { ENTITY, MOBILE, PLAYER };
+enum class EntityType : uint8_t { ENTITY, MOBILE, PLAYER, ITEM };
 
 // The genders of things in the game.
 enum class Gender : uint8_t { NONE, HE, SHE, THEY, IT };

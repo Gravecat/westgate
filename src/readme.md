@@ -1,7 +1,8 @@
 # src folder details
 
 ## [3rdparty](3rdparty)
-Third-party code included in full in this project. Some of this stuff is header-only, some is full-on code that's compiled separately in CMake and linked into the project.
+Third-party code included in full in this project. Some of this stuff is header-only, some is full-on code that's compiled separately in CMake and linked into
+the project.
 
 There are some very minor modifications here and there, but for the most part, this is pretty much stock code.
 
@@ -31,9 +32,12 @@ Utility functions, some extremely generic, some specialized for this project. Sh
 ## [world](world)
 Class definitions for various parts of the game world.
 
-[world/area](world/area) contains `Room` (a location in the game world), `Region` (a collection of Rooms), `Link` (a connection between Rooms), and the automap code.
+[world/area](world/area) contains `Room` (a location in the game world), `Region` (a collection of Rooms), `Link` (a connection between Rooms), and the automap
+code.
 
-[world/entity](world/entity) contains `Entity` and its derived classes, `Mobile` (things that move around in the game world) and `Player` (a type of Mobile specialized for the player character).
+[world/entity](world/entity) contains `Entity` and its derived classes, `Item` (things that can be picked up and used), `Mobile` (things that move around in the
+game world) and `Player` (a type of Mobile specialized for the player character). `Inventory` is also included here, a management class that handles collections
+of Items being contained in one place.
 
 [world/time](world/time) contains the timing systems and the time/weather handler.
 
