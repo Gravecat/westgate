@@ -18,7 +18,7 @@
 
 #include <windows.h>
 
-IDI_APP_ICON ICON "@CMAKE_CURRENT_SOURCE_DIR@/src/3rdparty/app-icon/ghost.ico"
+IDI_APP_ICON ICON "@CMAKE_CURRENT_SOURCE_DIR@/src/3rdparty/app-icon/shield.ico"
 
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION @WESTGATE_VERSION_COMMA@
