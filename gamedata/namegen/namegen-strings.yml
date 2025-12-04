@@ -14,15 +14,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU Affero General Public License for more details.
 
-consonant_block: >-
-  bbbbbbbbbbbbbbbbbbbbcccccccccccccccccccccccccccccccccccccccddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddffffffffffffffffffffffffffffff
-  gggggggggggggggggggggggggggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjkkkkkkkkkkk
-  llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-  nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnppppppppppppppppppppppppppp
-  qrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
-  ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
-  ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-  vvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwwwwwwwxxyyyyyyyyyyyyyyyyyyz
+consonant_block: 20b39c60d30f28g85hjj11k66l34m94n27pq83r88s127t14v23wxx18yz
 pv3_c: [ "b", "c", "ch", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "qu", "r", "s", "sh", "t", "th", "v", "w", "y", "sp", "st", "sk", "sc", "pr", "tr",
   "kr", "cr", "br", "dr", "gr", "fr", "thr", "shr", "bl", "fl", "kl", "pl", "sl" ]
 pv3_d: [ "aw", "ei", "ow", "ou", "ie", "ea", "ai", "oy" ]
@@ -34,4 +26,4 @@ pv3_k: [ "b", "c", "d", "f", "g", "j", "l", "m", "n", "p", "qu", "r", "s", "t", 
 pv3_v: [ "a", "e", "i", "o", "u" ]
 pv3_x: [ "e", "i", "o", "aw", "ow", "oy" ]
 v4_template: "!<ss|<B|C|D><V|v><s|C|D|sV>>"
-vowel_block: "aaaaeeeeeeiiiioooou"
+vowel_block: "4a6e4i4ou"
