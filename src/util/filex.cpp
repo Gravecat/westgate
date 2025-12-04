@@ -156,8 +156,12 @@ string FileX::file_to_string(const string& filename)
 }
 
 // Loads a text file into a vector, one string for each line of the file.
-vector<string> FileX::file_to_vec(const string& filename)
+vector<string> FileX::file_to_vec(const string& filename, uint8_t flags)
 {
+    const bool flag_ignore_blank_lines = (flags & FTV_FLAG_IGNORE_BLANK_LINES) == FTV_FLAG_IGNORE_BLANK_LINES;
+    const bool flag_ignore_comments = (flags & FTV_FLAG_IGNORE_COMMENTS) == FTV_FLAG_IGNORE_COMMENTS;
+    const bool flag_no_strip_newlines = (flags & FTV_FLAG_NO_STRIP_NEWLINES) == FTV_FLAG_NO_STRIP_NEWLINES;
+
     if (!fs::exists(filename)) throw runtime_error("Invalid file: " + filename);
     vector<string> lines;
     std::ifstream file(filename);
@@ -166,7 +170,12 @@ vector<string> FileX::file_to_vec(const string& filename)
     string line;
     while (std::getline(file, line))
     {
-        if (!line.empty() && (line.back() == '\r' || line.back() == '\n')) line.pop_back();
+        if (!line.empty())
+        {
+            if (!flag_no_strip_newlines && (line.back() == '\r' || line.back() == '\n')) line.pop_back();
+            if (flag_ignore_comments && line.at(0) == '#') continue;
+        }
+        else if (flag_ignore_blank_lines) continue;
         lines.push_back(line);
     }
     file.close();

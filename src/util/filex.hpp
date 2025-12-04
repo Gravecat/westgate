@@ -76,8 +76,14 @@ private:
 
 class FileX {
 public:
+    // Fags for file_to_vec()
+    static constexpr uint8_t    FTV_FLAG_IGNORE_BLANK_LINES =   1;  // Ignores any blank lines in the file.
+    static constexpr uint8_t    FTV_FLAG_IGNORE_COMMENTS =      2;  // Ignores any comments (lines starting with #) in the file.
+    static constexpr uint8_t    FTV_FLAG_NO_STRIP_NEWLINES =    4;  // Tells file_to_vec() to NOT strip trailing \r or \n newlines from the file.
+
     static std::string  file_to_string(const std::string& filename);    // Loads a text file into an std::string.
-    static std::vector<std::string> file_to_vec(const std::string& filename);   // Loads a text file into a vector, one string for each line of the file.
+    // Loads a text file into a vector, one string for each line of the file.
+    static std::vector<std::string> file_to_vec(const std::string& filename, uint8_t flags = 0);
 };
 
 }   // westgate namespace
