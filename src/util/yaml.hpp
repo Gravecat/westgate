@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include "core/pch.hpp" // precompiled header
 
 #include <map>
 

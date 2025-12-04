@@ -17,14 +17,12 @@
  */
 
 #pragma once
+#include "core/pch.hpp" // precompiled header
 
-#include <cstdint>
 #include <cstring>
 #include <ctime>
 #include <filesystem>
 #include <fstream>
-#include <string>
-#include <vector>
 
 namespace westgate {
 

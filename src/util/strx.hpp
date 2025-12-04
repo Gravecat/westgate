@@ -17,10 +17,9 @@
  */
 
 #pragma once
+#include "core/pch.hpp" // precompiled header
 
 #include <map>
-#include <string>
-#include <vector>
 
 namespace westgate {
 

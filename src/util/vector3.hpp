@@ -17,11 +17,10 @@
  */
 
 #pragma once
+#include "core/pch.hpp" // precompiled header
 
-#include <cstdint>
 #include <functional>
 #include <initializer_list>
-#include <string>
 
 namespace westgate {
 
