@@ -1,4 +1,4 @@
-// misc/namegen.cpp -- Procedural name generation for NPCs.
+// util/namegen.cpp -- Procedural name generation for NPCs.
 
 // SPDX-FileType: SOURCE
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
@@ -8,8 +8,8 @@
 
 #include "3rdparty/fantasyname/namegen.hpp"
 #include "core/core.hpp"
-#include "misc/namegen.hpp"
 #include "util/filex.hpp"
+#include "util/namegen.hpp"
 #include "util/random.hpp"
 #include "util/yaml.hpp"
 #include "world/entity/entity.hpp"

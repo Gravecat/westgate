@@ -1,4 +1,4 @@
-// misc/namegen.hpp -- Procedural name generation for NPCs.
+// util/namegen.hpp -- Procedural name generation for NPCs.
 
 // SPDX-FileType: SOURCE
 // SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
