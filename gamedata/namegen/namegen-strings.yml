@@ -1,14 +1,34 @@
 # namegen/namegen-strings.yml -- Miscellaneous strings used in procedural name generation.
 
 # SPDX-FileType: SOURCE
-# SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
+# SPDX-FileCopyrightText: Copyright (c) 2025 Raine "Gravecat" Simmons <gc@gravecat.com>
 # SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
 
-consonant_block: "bbbbbbbbbbbbbbbbbbbbcccccccccccccccccccccccccccccccccccccccddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddffffffffffffffffffffffffffffffgggggggggggggggggggggggggggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjkkkkkkkkkkkllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnpppppppppppppppppppppppppppqrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssstttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwwwwwwwxxyyyyyyyyyyyyyyyyyyz"
-pv3_c: [ "b", "c", "ch", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "qu", "r", "s", "sh", "t", "th", "v", "w", "y", "sp", "st", "sk", "sc", "pr", "tr", "kr", "cr", "br", "dr", "gr", "fr", "thr", "shr", "bl", "fl", "kl", "pl", "sl" ]
+consonant_block: >-
+  bbbbbbbbbbbbbbbbbbbbcccccccccccccccccccccccccccccccccccccccddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddffffffffffffffffffffffffffffff
+  gggggggggggggggggggggggggggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjkkkkkkkkkkk
+  llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+  nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnppppppppppppppppppppppppppp
+  qrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+  ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+  ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+  vvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwwwwwwwxxyyyyyyyyyyyyyyyyyyz
+pv3_c: [ "b", "c", "ch", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "qu", "r", "s", "sh", "t", "th", "v", "w", "y", "sp", "st", "sk", "sc", "pr", "tr",
+  "kr", "cr", "br", "dr", "gr", "fr", "thr", "shr", "bl", "fl", "kl", "pl", "sl" ]
 pv3_d: [ "aw", "ei", "ow", "ou", "ie", "ea", "ai", "oy" ]
 pv3_e: [ "b", "c", "ch", "d", "f", "g", "dg", "l", "m", "n", "p", "r", "s", "t", "th", "v", "z" ]
-pv3_f: [ "b", "tch", "d", "ff", "g", "gh", "ck", "ll", "m", "n", "ng", "p", "r", "ss", "sh", "t", "tt", "th", "x", "y", "zz", "rp", "rt", "rk", "rc", "rd", "rb", "rg", "rf", "rth", "rsh", "sp", "st", "sk", "sc", "lb", "lf", "lk", "lp", "ls" ]
+pv3_f: [ "b", "tch", "d", "ff", "g", "gh", "ck", "ll", "m", "n", "ng", "p", "r", "ss", "sh", "t", "tt", "th", "x", "y", "zz", "rp", "rt", "rk", "rc", "rd",
+  "rb", "rg", "rf", "rth", "rsh", "sp", "st", "sk", "sc", "lb", "lf", "lk", "lp", "ls" ]
 pv3_i: [ "ex", "in", "un", "re", "de" ]
 pv3_k: [ "b", "c", "d", "f", "g", "j", "l", "m", "n", "p", "qu", "r", "s", "t", "v", "sp", "st", "sk", "sc" ]
 pv3_v: [ "a", "e", "i", "o", "u" ]

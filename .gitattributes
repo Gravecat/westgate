@@ -1,6 +1,10 @@
-# This is all pretty standard stuff, mostly telling GitHub Linguist what file types are, as well as excluding any third-party code from
-# counting towards the stats. A lot of this stuff is auto-detected by GitHub Linguist, but it's not perfect. Just gonna specify a bunch
-# of them to make absolutely sure it knows what's what.
+# .gitattributes -- This is all pretty standard stuff, mostly telling GitHub Linguist what file types are, as well as excluding any third-party code from
+# counting towards the stats. A lot of this stuff is auto-detected by GitHub Linguist, but it's not perfect. Just gonna specify a bunch of them to make
+# absolutely sure it knows what's what.
+
+# This file is dedicated to the public domain under CC0 1.0 Universal. To the extent possible under law,
+# Raine "Gravecat" Simmons has waived all copyright and related or neighbouring rights to this file.
+# See https://creativecommons.org/publicdomain/zero/1.0/ for details.
 
 *.cpp text linguist-language=C++
 *.cpp.in text linguist-language=C++

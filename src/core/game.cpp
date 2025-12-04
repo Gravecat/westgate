@@ -1,8 +1,20 @@
 // core/game.cpp -- The Game object is the central game manager, handling the main loop, saving/loading, and starting of new games.
 
-// SPDX-FileType: SOURCE
-// SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
-// SPDX-License-Identifier: AGPL-3.0-or-later
+/*
+ * SPDX-FileType: SOURCE
+ * SPDX-FileCopyrightText: Copyright (c) 2025 Raine "Gravecat" Simmons <gc@gravecat.com>
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ */
 
 #include <filesystem>
 

@@ -1,9 +1,21 @@
-// util/binpath.cpp -- Some very nasty platform-specific code for determining the path of the binary file at runtime.
-// Based on and modified from code I found on StackOverflow: https://stackoverflow.com/questions/1528298/get-path-of-executable
+// util/binpath.cpp -- Platform-specific code for determining the path of the binary at runtime.
+// Originally based on code by Atul R on Stack Overflow, licensed under CC BY-SA 4.0:
+// https://stackoverflow.com/questions/1528298/get-path-of-executable
+// Modified by Raine Simmons. This adapted version is licensed under the GNU GPL v3.
 
-// SPDX-FileType: SOURCE
-// SPDX-FileCopyrightText: Copyright 2025 Raine Simmons <gc@gravecat.com>
-// SPDX-License-Identifier: MIT
+// Copyright (c) 2025 Raine "Gravecat" Simmons
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <algorithm>
 #include <cstring>

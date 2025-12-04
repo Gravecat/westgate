@@ -1,10 +1,23 @@
 // world/time/time-weather.hpp -- The time and weather system.
-// Weather system originally based on Keran's MUSH/MUX Weather and Time Code Package Version 4.0 beta, copyright (c) 1996-1998 Keran (keranset@mail1.nai.net).
+// Weather system originally based on Keran's MUSH/MUX Weather and Time Code Package Version 4.0 beta, copyright (c) 1996-1998 Keran <keranset@mail1.nai.net>.
 // https://www.mushcode.com/File/Kerans-Weather-System-And-Time-Code-4-0-(PennMUSH)
+// Very heavily modified/rewritten into C++ by Raine "Gravecat" Simmons.
 
-// SPDX-FileType: SOURCE
-// SPDX-FileCopyrightText: Copyright 2021, 2025 Raine Simmons <gc@gravecat.com>
-// SPDX-License-Identifier: AGPL-3.0-or-later
+/*
+ * SPDX-FileType: SOURCE
+ * SPDX-FileCopyrightText: Copyright (c) 2025 Raine "Gravecat" Simmons <gc@gravecat.com>, (c) 1996-1998 Keran <keranset@mail1.nai.net>.
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ */
 
 #include "core/core.hpp"
 #include "core/terminal.hpp"

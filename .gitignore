@@ -1,5 +1,8 @@
-# Pretty basic stuff, just blocking temporary files, binary objects, and other
-# junk that may show up in the folder but doesn't belong in the repo.
+# .gitignore -- Pretty basic stuff, just blocking temporary files, binary objects, and other junk that may show up in the folder but doesn't belong in the repo.
+
+# This file is dedicated to the public domain under CC0 1.0 Universal. To the extent possible under law,
+# Raine "Gravecat" Simmons has waived all copyright and related or neighbouring rights to this file.
+# See https://creativecommons.org/publicdomain/zero/1.0/ for details.
 
 # Unwanted/temporary files.
 ~$*
