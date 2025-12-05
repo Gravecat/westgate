@@ -21,7 +21,14 @@
 #include <sstream>
 #include <sys/stat.h>
 
-#include "util/binpath.hpp"
+#if defined(WESTGATE_TARGET_APPLE)
+#include <mach-o/dyld.h>    // _NSGetExecutablePath()
+#elif defined(WESTGATE_TARGET_LINUX)
+#include <unistd.h>         // readlink
+#elif defined(WESTGATE_TARGET_WINDOWS)
+#include <windows.h>        // GetModuleFileNameW
+#endif
+
 #include "util/filex.hpp"
 #include "util/random.hpp"
 #include "util/strx.hpp"
@@ -103,7 +110,7 @@ void FileReader::standard_error(const string &err, int64_t data, int64_t expecte
 // Constructor, opens a binary file.
 FileWriter::FileWriter(const string& filename)
 {
-    const string bp_filename = BinPath::game_path(filename);
+    const string bp_filename = FileX::game_path(filename);
     fs::remove(bp_filename);
     file_out_.open(bp_filename.c_str(), std::ios::binary | std::ios::out);
 }
@@ -143,6 +150,11 @@ void FileWriter::write_string(string str)
 
 /* FILEX */
 
+string FileX::exe_dir;  // The path to the binary.
+
+// Given a path or filename, combines it with the current executable path and returns the combined, full path.
+string FileX::game_path(const string& path) { return merge_paths(get_executable_dir(), path); }
+
 // Loads a text file into an std::string.
 string FileX::file_to_string(const string& filename)
 {
@@ -181,5 +193,35 @@ vector<string> FileX::file_to_vec(const string& filename, uint8_t flags)
     file.close();
     return lines;
 }
+
+// Platform-agnostic way to find this binary's runtime directory.
+string FileX::get_executable_dir()
+{
+    string result;
+#if defined(WESTGATE_TARGET_WINDOWS)
+    wchar_t buf[MAX_PATH];
+    GetModuleFileNameW(nullptr, buf, MAX_PATH);
+    std::wstring ws(buf);
+    result = string(ws.begin(), ws.end());
+#elif defined(WESTGATE_TARGET_LINUX)
+    char buf[1024];
+    ssize_t n = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
+    if (n < 0) return "";
+    buf[n] = '\0';
+    result = string(buf);
+#elif defined(WESTGATE_TARGET_APPLE)
+    char buf[1024];
+    uint32_t size = sizeof(buf);
+    if (_NSGetExecutablePath(buf, &size) != 0) return "";
+    result = string(buf);
+#else
+    #error Unsupported/unknown target platform!
+#endif
+    if (exe_dir.empty()) exe_dir = fs::path(result).parent_path().string();
+    return exe_dir;
+}
+
+// Merges two path strings together.
+string FileX::merge_paths(const string& path_a, const string& path_b) { return (fs::path(path_a) / path_b).string(); }
 
 }   // westgate namespace

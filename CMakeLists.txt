@@ -30,7 +30,6 @@ set(WESTGATE_CPPS
   src/core/game.cpp
   src/core/terminal.cpp
   src/parser/parser.cpp
-  src/util/binpath.cpp
   src/util/filex.cpp
   src/util/namegen.cpp
   src/util/strx.cpp
