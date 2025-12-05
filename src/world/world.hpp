@@ -45,7 +45,7 @@ public:
     void            add_room_to_region(uint32_t room_id, int region_id);    // Updates the room_regions_ map to keep track of what Region each Room is in.
     Automap&        automap() const;    // Returns a reference to the automap object.
     void            create_region_saves(int save_slot); // Loads region data from YAML, and saves it as a new save file in the specified slot.
-    Room*           find_room(const std::string& id, int region_id);    // Attempts to find a room by its string ID.
+    Room*           find_room(std::string_view id, int region_id);    // Attempts to find a room by its string ID.
     Room*           find_room(uint32_t id, int region_id);  // Attempts to find a room by its hashed ID.
     Room*           find_room(uint32_t id);     // As above, but doesn't specify Region ID. This is more computationally expensive.
     int             find_room_region(uint32_t id) const;    // Attempts to find the Region that a specified Room belongs to.
@@ -59,7 +59,7 @@ public:
 
 #ifdef WESTGATE_BUILD_DEBUG
                     // When in debug mode, mark name hashes as used, to track overlaps.
-    void            debug_mark_room(const std::string& room_name);
+    void            debug_mark_room(std::string_view room_name);
 #endif
 
 private:

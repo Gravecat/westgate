@@ -32,6 +32,7 @@
 #include "world/area/room.hpp"
 
 using std::string;
+using std::string_view;
 using std::vector;
 using westgate::terminal::print;
 
@@ -101,11 +102,11 @@ Direction parse_direction(uint32_t hash)
 }
 
 // Attempts to parse a string into a number; invalid results are set to INT_MIN.
-int32_t parse_number(const std::string &num)
+int32_t parse_number(string_view num)
 {
     int32_t result = 0;
     try
-    { result = std::stol(num); }
+    { result = std::stol(string{num}); }
     catch(const std::invalid_argument&)
     { return INT_MIN; }
     catch(const std::out_of_range&)
@@ -114,7 +115,7 @@ int32_t parse_number(const std::string &num)
 }
 
 // Processes input from the player.
-void process_input(const string& input)
+void process_input(string_view input)
 {
     if (!input.size()) return;  // Nothing to do here.
 

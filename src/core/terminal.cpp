@@ -37,6 +37,7 @@
 
 using std::cout;
 using std::string;
+using std::string_view;
 using std::to_string;
 using std::vector;
 
@@ -129,7 +130,7 @@ unsigned int get_width()
 }
 
 // Prints a string of text with std::cout, processing ANSI colour tags.
-void print(const string& text, bool newline)
+void print(string_view text, bool newline)
 {
     // Handle blank text by just printing a newline.
     if (!text.size())
@@ -215,7 +216,7 @@ void print(const string& text, bool newline)
         print_formatted(after_space, false);
     };
 
-    string output = text;
+    string output = string{text};
     vector<string> invalid_tags;
     while(output.size())
     {
@@ -294,10 +295,10 @@ void print(const string& text, bool newline)
 }
 
 // Attempts to set the title of the console window. May not work on all platforms.
-void set_window_title(const string& new_title)
+void set_window_title(string_view new_title)
 {
 #ifdef WESTGATE_TARGET_WINDOWS
-    SetConsoleTitleA(new_title.c_str());
+    SetConsoleTitleA(string{new_title}.c_str());
 #else
     cout << "\033]2;" << new_title << "\007" << std::flush;
 #endif

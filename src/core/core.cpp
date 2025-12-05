@@ -38,6 +38,7 @@
 using std::exception;
 using std::runtime_error;
 using std::string;
+using std::string_view;
 using std::to_string;
 using std::vector;
 namespace fs = std::filesystem;
@@ -112,7 +113,7 @@ Core& Core::core()
 }
 
 // Returns the full path to a specified game data file.
-const string Core::datafile(const string file)
+const string Core::datafile(string_view file)
 {
     if (!gamedata_location_.size()) throw runtime_error("Could not locate valid gamedata folder!");
     return FileX::merge_paths(gamedata_location_, file);
@@ -179,7 +180,7 @@ void Core::great_googly_moogly_its_all_gone_to_shit()   // Applies the most powe
 }
 
 // Stops the game and displays an error messge.
-void Core::halt(string error)
+void Core::halt(string_view error)
 {
     check_stderr();
     this->log("Critical error occurred, halting execution.", CORE_CRITICAL);
@@ -287,7 +288,7 @@ void Core::intercept_signal(int sig)
 }
 
 // Logs a message in the system log file.
-void Core::log(string msg, int type)
+void Core::log(string_view msg, int type)
 {
     if (!syslog_.is_open()) return;
     if (!lock_stderr_) check_stderr();
@@ -312,7 +313,7 @@ void Core::log(string msg, int type)
 #endif
     std::strftime(&buffer[0], 32, "%H:%M:%S", ptm);
     string time_str = &buffer[0];
-    msg = "[" + time_str + "] " + txt_tag + msg;
+    msg = "[" + time_str + "] " + txt_tag + string{msg};
     syslog_ << msg << std::endl;
     delete[] buffer;
 
@@ -320,7 +321,7 @@ void Core::log(string msg, int type)
 }
 
 // Reports a non-fatal error, which will be logged but will not halt execution unless it cascades.
-void Core::nonfatal(string error, int type)
+void Core::nonfatal(string_view error, int type)
 {
     if (cascade_failure_ || dead_already_) return;
     int cascade_weight = 0;

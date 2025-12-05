@@ -30,6 +30,7 @@
 
 using std::runtime_error;
 using std::string;
+using std::string_view;
 
 namespace westgate {
 
@@ -104,12 +105,13 @@ string ProcNameGen::namegen_v1()
 }
 
 // Generates a name with the v4 generator (front-end to Skeeto's fantasy name generator).
-string ProcNameGen::namegen_v4(const string& pattern, unsigned int max_len, unsigned int min_len)
+string ProcNameGen::namegen_v4(string_view pattern, unsigned int max_len, unsigned int min_len)
 {
+    const string pattern_str = string{pattern};
     string result;
     do
     {
-        NameGen::Generator ng(pattern);
+        NameGen::Generator ng(pattern_str);
         result = ng.toString();
     } while (result.size() < min_len || result.size() > max_len);
     return result;

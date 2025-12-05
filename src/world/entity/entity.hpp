@@ -70,7 +70,7 @@ public:
     void                remove_inventory();     // Removes an Inventory pointer from this Entity.
     virtual void        save(FileWriter* file); // Saves this Entity to a save game file.
     void                set_gender(Gender new_gender);  // Sets the gender of this Entity.
-    void                set_name(const std::string& new_name);  // Sets the name of this Entity.
+    void                set_name(std::string_view new_name);    // Sets the name of this Entity.
     virtual void        set_parent_entity(Entity* new_entity_parent = nullptr); // Sets a new Entity as the parent of this Entity, or nullptr for none.
     virtual void        set_parent_room(Room* new_room_parent = nullptr);       // Sets a new Room as the parent of this Entity, or nullptr for none.
     void                set_tag(EntityTag the_tag);     // Sets an EntityTag on this Entity.

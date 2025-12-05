@@ -35,6 +35,7 @@
 
 using std::runtime_error;
 using std::string;
+using std::string_view;
 using std::to_string;
 using std::vector;
 namespace fs = std::filesystem;
@@ -177,14 +178,15 @@ void FileWriter::write_string(string str)
 string FileX::exe_dir;  // The path to the binary.
 
 // Given a path or filename, combines it with the current executable path and returns the combined, full path.
-string FileX::game_path(const string& path) { return merge_paths(get_executable_dir(), path); }
+string FileX::game_path(string_view path) { return merge_paths(get_executable_dir(), path); }
 
 // Loads a text file into an std::string.
-string FileX::file_to_string(const string& filename)
+string FileX::file_to_string(string_view filename)
 {
-    if (!fs::exists(filename)) throw runtime_error("Invalid file: " + filename);
-    std::ifstream file(filename);
-    if (!file.is_open()) throw runtime_error("Cannot open file: " + filename);
+    string filename_str = string(filename);
+    if (!fs::exists(filename)) throw runtime_error("Invalid file: " + filename_str);
+    std::ifstream file(filename_str);
+    if (!file.is_open()) throw runtime_error("Cannot open file: " + filename_str);
     std::stringstream buffer;
     buffer << file.rdbuf();
     file.close();
@@ -192,16 +194,17 @@ string FileX::file_to_string(const string& filename)
 }
 
 // Loads a text file into a vector, one string for each line of the file.
-vector<string> FileX::file_to_vec(const string& filename, uint8_t flags)
+vector<string> FileX::file_to_vec(string_view filename, uint8_t flags)
 {
     const bool flag_ignore_blank_lines = (flags & FTV_FLAG_IGNORE_BLANK_LINES) == FTV_FLAG_IGNORE_BLANK_LINES;
     const bool flag_ignore_comments = (flags & FTV_FLAG_IGNORE_COMMENTS) == FTV_FLAG_IGNORE_COMMENTS;
     const bool flag_no_strip_newlines = (flags & FTV_FLAG_NO_STRIP_NEWLINES) == FTV_FLAG_NO_STRIP_NEWLINES;
 
-    if (!fs::exists(filename)) throw runtime_error("Invalid file: " + filename);
+    string filename_str = string{filename};
+    if (!fs::exists(filename)) throw runtime_error("Invalid file: " + filename_str);
     vector<string> lines;
-    std::ifstream file(filename);
-    if (!file.is_open()) throw runtime_error("Cannot open file: " + filename);
+    std::ifstream file(filename_str);
+    if (!file.is_open()) throw runtime_error("Cannot open file: " + filename_str);
 
     string line;
     while (std::getline(file, line))
@@ -249,6 +252,6 @@ string FileX::get_executable_dir()
 }
 
 // Merges two path strings together.
-string FileX::merge_paths(const string& path_a, const string& path_b) { return (fs::path(path_a) / path_b).string(); }
+string FileX::merge_paths(string_view path_a, string_view path_b) { return (fs::path(path_a) / path_b).string(); }
 
 }   // westgate namespace

@@ -45,7 +45,7 @@ private:
 
     void    load_game(int save_slot);   // Loads an existing saved game.
     void    main_loop();        // brøether, may i have the lööps
-    void    new_game(int starting_region, const std::string& starting_room);    // Sets up for a new game!
+    void    new_game(int starting_region, std::string_view starting_room);    // Sets up for a new game!
     void    save_misc_data();   // Writes a misc save file, which contains everything that isn't in the region saves.
     void    title_screen();     // Every game needs a title screen!
 };

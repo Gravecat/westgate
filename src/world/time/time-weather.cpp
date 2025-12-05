@@ -35,6 +35,7 @@
 
 using std::runtime_error;
 using std::string;
+using std::string_view;
 using std::to_string;
 using std::vector;
 using westgate::terminal::print;
@@ -325,15 +326,16 @@ void TimeWeather::save_data(FileWriter* file)
 }
 
 // Retrieves a message directly from the string map, with tags processed.
-std::string TimeWeather::string_map(const std::string& key)
+std::string TimeWeather::string_map(string_view key)
 {
+    const string key_str = string{key};
     const Room* player_room = player().parent_room();
     const bool indoors = player_room->tag(RoomTag::Indoors) || player_room->tag(RoomTag::Underground);
     const bool in_city = player_room->tag(RoomTag::City);
-    auto result = tw_string_map_.find(key);
+    auto result = tw_string_map_.find(key_str);
     if (result == tw_string_map_.end())
     {
-        core().nonfatal("Unable to retrieve time/weather string: " + key, Core::CORE_ERROR);
+        core().nonfatal("Unable to retrieve time/weather string: " + key_str, Core::CORE_ERROR);
         return "";
     }
     std::string out = result->second;

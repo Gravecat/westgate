@@ -80,12 +80,12 @@ public:
     static constexpr uint8_t    FTV_FLAG_NO_STRIP_NEWLINES =    4;  // Tells file_to_vec() to NOT strip trailing \r or \n newlines from the file.
 
     // Given a path or filename, combines it with the current executable path and returns the combined, full path.
-    static std::string  game_path(const std::string& path);
+    static std::string  game_path(std::string_view path);
     static std::string  get_executable_dir();   // Platform-agnostic way to find this binary's runtime directory.
-    static std::string  file_to_string(const std::string& filename);    // Loads a text file into an std::string.
+    static std::string  file_to_string(std::string_view filename);  // Loads a text file into an std::string.
     // Loads a text file into a vector, one string for each line of the file.
-    static std::vector<std::string> file_to_vec(const std::string& filename, uint8_t flags = 0);
-    static std::string  merge_paths(const std::string& path_a, const std::string& path_b);  // Merges two path strings together.
+    static std::vector<std::string> file_to_vec(std::string_view filename, uint8_t flags = 0);
+    static std::string  merge_paths(std::string_view path_a, std::string_view path_b);  // Merges two path strings together.
 
 private:
     static std::string  exe_dir;    // The path to the game's binary directory.

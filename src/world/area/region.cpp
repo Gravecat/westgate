@@ -31,6 +31,7 @@
 
 using std::runtime_error;
 using std::string;
+using std::string_view;
 using std::to_string;
 using std::vector;
 namespace fs = std::filesystem;
@@ -45,7 +46,7 @@ Region::~Region()
 { rooms_.clear(); }
 
 // Attempts to find a room by its string ID.
-Room* Region::find_room(const string& id) const
+Room* Region::find_room(string_view id) const
 { return find_room(StrX::murmur3(id)); }
 
 // Attempts to find a room by its hashed ID.
@@ -132,31 +133,32 @@ void Region::load_delta(int save_slot)
 }
 
 // Loads a Region from YAML game data.
-void Region::load_from_gamedata(const string& filename, bool update_world)
+void Region::load_from_gamedata(string_view filename, bool update_world)
 {
     // Determine this region's ID from the filename.
+    const std::string filename_str = string{filename};
     auto dash_pos = filename.find_first_of('-');
-    if (dash_pos == string::npos) throw runtime_error("Cannot determine region ID: " + filename);
-    try { id_ = std::stoul(filename.substr(0, dash_pos)); }
-    catch (std::invalid_argument&) { throw runtime_error("Invalid region ID: " + filename); }
+    if (dash_pos == string::npos) throw runtime_error("Cannot determine region ID: " + filename_str);
+    try { id_ = std::stoul(filename_str.substr(0, dash_pos)); }
+    catch (std::invalid_argument&) { throw runtime_error("Invalid region ID: " + filename_str); }
 
     // Determine the full path for the data file, and ensure the file exists.
-    const string full_filename = core().datafile("world/regions/" + filename);
-    if (!fs::exists(full_filename)) throw runtime_error("Could not locate region file: " + filename);
+    const string full_filename = core().datafile("world/regions/" + filename_str);
+    if (!fs::exists(full_filename)) throw runtime_error("Could not locate region file: " + filename_str);
 
     // Load the YAML file into memory.
     const YAML yaml(full_filename);
-    if (!yaml.is_map()) throw runtime_error(filename + ": Invalid file format!");
+    if (!yaml.is_map()) throw runtime_error(filename_str + ": Invalid file format!");
 
     // Get the region identifier data.
     const YAML region_id = yaml.get_child("REGION_IDENTIFIER");
-    if (!region_id.is_map()) throw runtime_error(filename + ": Cannot find region identifier data!");
-    if (!region_id.key_exists("version")) throw runtime_error(filename + ": Missing version in identifier data!");
+    if (!region_id.is_map()) throw runtime_error(filename_str + ": Cannot find region identifier data!");
+    if (!region_id.key_exists("version")) throw runtime_error(filename_str + ": Missing version in identifier data!");
     uint32_t region_version;
     try { region_version = std::stoul(region_id.val("version")); }
-    catch (std::invalid_argument&) { throw runtime_error(filename + ": Invalid region version identifier!"); }
-    if (region_version != REGION_YAML_VERSION) FileReader::standard_error("Invalid region version", region_version, REGION_YAML_VERSION, {filename});
-    if (!region_id.key_exists("name")) throw runtime_error(filename + ": Missing region name in identifier data!");
+    catch (std::invalid_argument&) { throw runtime_error(filename_str + ": Invalid region version identifier!"); }
+    if (region_version != REGION_YAML_VERSION) FileReader::standard_error("Invalid region version", region_version, REGION_YAML_VERSION, {filename_str});
+    if (!region_id.key_exists("name")) throw runtime_error(filename_str + ": Missing region name in identifier data!");
     name_ = region_id.val("name");
 
     // Get all the keys in this region, and iterate over them one at a time.
@@ -166,7 +168,7 @@ void Region::load_from_gamedata(const string& filename, bool update_world)
         if (key == "REGION_IDENTIFIER") continue;   // Skip the region identifier section, we did that already.
 
         const YAML room_yaml = yaml.get_child(key);
-        const string error_str = filename + " [" + key + "]: ";
+        const string error_str = filename_str + " [" + key + "]: ";
         auto room_ptr = std::make_unique<Room>(key);
 
         if (!room_yaml.key_exists("name")) throw runtime_error(error_str + "Missing name data.");

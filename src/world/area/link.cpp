@@ -20,12 +20,14 @@
 #include "world/area/link.hpp"
 
 using std::runtime_error;
+using std::string;
+using std::string_view;
 using std::to_string;
 
 namespace westgate {
 
 // Used during loading YAML data, to convert LinkTag text names into LinkTag enums.
-const std::map<std::string, LinkTag> Link::tag_map_ = { { "Openable", LinkTag::Openable }, { "Door", LinkTag::Door }, { "SeeThrough", LinkTag::SeeThrough },
+const std::map<string, LinkTag> Link::tag_map_ = { { "Openable", LinkTag::Openable }, { "Door", LinkTag::Door }, { "SeeThrough", LinkTag::SeeThrough },
     { "Open", LinkTag::Open }, { "Gate", LinkTag::Gate }, { "Window", LinkTag::Window }, { "Lockable", LinkTag:: Lockable }, { "Locked", LinkTag::Locked },
     { "Permalock", LinkTag::Permalock }, { "AwareOfLock", LinkTag::AwareOfLock }, { "Grate", LinkTag::Grate }, { "MapNoFollow", LinkTag::MapNoFollow },
     { "DoubleLength", LinkTag::DoubleLength }, { "TripleLength", LinkTag::TripleLength } };
@@ -54,7 +56,7 @@ void Link::clear_tags(std::list<LinkTag> tags_list, bool mark_delta)
 }
 
 // Returns the name of the door (door, gate, etc.) on this Link, if any.
-const std::string Link::door_name() const
+const string Link::door_name() const
 {
     if (!tag(LinkTag::Openable)) return "";
     if (tag(LinkTag::Gate)) return "gate";
@@ -90,10 +92,11 @@ void Link::load_delta(FileReader* file)
 }
 
 // Parses a string LinkTag name into a LinkTag enum.
-LinkTag Link::parse_link_tag(const std::string &tag)
+LinkTag Link::parse_link_tag(string_view tag)
 {
-    auto result = tag_map_.find(tag);
-    if (result == tag_map_.end()) throw runtime_error("Invalid LinkTag: " + tag);
+    const string tag_str = string{tag};
+    auto result = tag_map_.find(tag_str);
+    if (result == tag_map_.end()) throw runtime_error("Invalid LinkTag: " + tag_str);
     return result->second;
 }
 

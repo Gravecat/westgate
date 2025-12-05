@@ -33,6 +33,7 @@
 
 using std::runtime_error;
 using std::string;
+using std::string_view;
 using std::to_string;
 using westgate::terminal::print;
 namespace fs = std::filesystem;
@@ -111,7 +112,7 @@ void Game::load_game(int save_slot)
 void Game::main_loop() { while(true) { parser::process_input(terminal::get_input()); } }
 
 // Sets up for a new game!
-void Game::new_game(int starting_region, const string& starting_room)
+void Game::new_game(int starting_region, string_view starting_room)
 {
     Timer new_game_timer;
 

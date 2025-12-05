@@ -26,15 +26,16 @@
 #include "util/strx.hpp"
 
 using std::string;
+using std::string_view;
 using std::to_string;
 using std::vector;
 
 namespace westgate {
 
 // Strips all ANSI colour tags like {M} from a string.
-string StrX::ansi_strip(const string& str)
+string StrX::ansi_strip(string_view str)
 {
-    string result = str;
+    string result = string{str};
     while(true)
     {
         size_t found_open = result.find_first_of('{');
@@ -45,11 +46,11 @@ string StrX::ansi_strip(const string& str)
 }
 
 // Returns the length of a specified string, not counting the ANSI colour tags like {G} or {kR}.
-size_t StrX::ansi_strlen(const string &str)
+size_t StrX::ansi_strlen(std::string_view str)
 { return ansi_strip(str).length(); }
 
 // Splits an ANSI-tagged string across multiple lines of text.
-vector<string> StrX::ansi_vector_split(const string& str, uint32_t line_length)
+vector<string> StrX::ansi_vector_split(string_view str, uint32_t line_length)
 {
     string current_line, last_tag;
     vector<string> result, words = string_explode(str, " ");
@@ -95,16 +96,16 @@ vector<string> StrX::ansi_vector_split(const string& str, uint32_t line_length)
 // debug build, we're not expecting maximum optimization and speed here.
 #ifdef WESTGATE_BUILD_DEBUG
 std::map<uint32_t, std::string> StrX::backward_hash_map_;
-void StrX::check_hash_collision(const string& str, uint32_t hash)
+void StrX::check_hash_collision(string_view str, uint32_t hash)
 {
     auto result_b = backward_hash_map_.find(hash);
     if (result_b == backward_hash_map_.end())
     {
-        backward_hash_map_.insert({hash, str});
+        backward_hash_map_.insert({hash, string{str}});
         return;
     }
     if (!result_b->second.compare(str)) return;
-   std::cerr << "Hash collision detected! " + str + " and " + result_b->second + " both hash to " + to_string(hash);
+   std::cerr << "Hash collision detected! " + string{str} + " and " + result_b->second + " both hash to " + to_string(hash);
 }
 #endif  // WESTGATE_BUILD_DEBUG
 
@@ -130,9 +131,9 @@ string StrX::comma_list(vector<string> vec, uint8_t mode)
 }
 
 // Decodes a compressed string (e.g. 4cab2z becomes ccccabzz).
-string StrX::decode_compressed_string(string cb)
+string StrX::decode_compressed_string(string_view str)
 {
-    string result;
+    string result, cb = string{str};
     while(cb.size())
     {
         string letter = cb.substr(0, 1);
@@ -157,7 +158,7 @@ string StrX::decode_compressed_string(string cb)
 }
 
 // Find and replace one string with another.
-bool StrX::find_and_replace(string& input, const string& to_find, const string& to_replace)
+bool StrX::find_and_replace(string& input, string_view to_find, string_view to_replace)
 {
     string::size_type pos = 0;
     const string::size_type find_len = to_find.length(), replace_len = to_replace.length();
@@ -173,9 +174,9 @@ bool StrX::find_and_replace(string& input, const string& to_find, const string& 
 }
 
 // 'Flattens' ANSI tags, by erasing redundant tags in the string.
-string StrX::flatten_tags(const string& str)
+string StrX::flatten_tags(string_view str)
 {
-    string output, to_check = str, last_tag;
+    string output, last_tag, to_check = string{str};
 
     while(true)
     {
@@ -208,7 +209,7 @@ string StrX::ftos(double num, int precision)
 }
 
 // Hashes a string with MurmurHash3.
-uint32_t StrX::murmur3(const string& str)
+uint32_t StrX::murmur3(string_view str)
 {
     const uint32_t seed = 0x9747b28c;
     uint32_t hash = 0;  // Shouldn't matter, but I don't like uninitialized variables on principle.
@@ -274,11 +275,12 @@ string StrX::number_to_text(int64_t num)
 
 // Allows adding conditional tags to a string in the form of [tag_name:conditional text here] and either including or removing the conditional text depending on
 // whether the bool is true or false.
-void StrX::process_conditional_tags(string& str, const string& tag, bool active)
+void StrX::process_conditional_tags(string& str, string_view tag, bool active)
 {
+    string tag_str = string{tag};
     do
     {
-        const size_t start = str.find("[" + tag);
+        const size_t start = str.find("[" + tag_str);
         const size_t end = str.find("]", start);
         if (start == string::npos || end == string::npos) return;
         if (active)
@@ -292,35 +294,38 @@ void StrX::process_conditional_tags(string& str, const string& tag, bool active)
 }
 
 // Converts a string to lower-case.
-string StrX::str_tolower(string str)
+string StrX::str_tolower(string_view str)
 {
-    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-    return str;
+    string output = string{str};
+    std::transform(output.begin(), output.end(), output.begin(), ::tolower);
+    return output;
 }
 
 // Converts a string to upper-case.
-string StrX::str_toupper(string str)
+string StrX::str_toupper(string_view str)
 {
-    std::transform(str.begin(), str.end(), str.begin(), ::toupper);
-    return str;
+    string output = string{str};
+    std::transform(output.begin(), output.end(), output.begin(), ::toupper);
+    return output;
 }
 
 // String split/explode function.
-vector<string> StrX::string_explode(string str, const string& separator)
+vector<string> StrX::string_explode(string_view str, string_view separator)
 {
     vector<string> results;
 
     string::size_type pos = str.find(separator, 0);
     const size_t pit = separator.length();
+    string line = string{str};
 
     while(pos != string::npos)
     {
         if (pos == 0) results.push_back("");
-        else results.push_back(str.substr(0, pos));
-        str.erase(0, pos + pit);
-        pos = str.find(separator, 0);
+        else results.push_back(line.substr(0, pos));
+        line.erase(0, pos + pit);
+        pos = line.find(separator, 0);
     }
-    results.push_back(str);
+    results.push_back(line);
 
     return results;
 }

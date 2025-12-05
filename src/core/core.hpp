@@ -36,19 +36,20 @@ public:
 
     void                check_stderr();                 // Checks stderr for any updates, puts them in the log if any exist.
     static Core&        core();                         // Returns a reference to the singleton Core object.
-    const std::string   datafile(const std::string file);   // Returns the full path to a specified game data file.
+    const std::string   datafile(std::string_view file);   // Returns the full path to a specified game data file.
     void                destroy_core(int exit_code);    // Destroys the singleton Core object and ends execution.
     void                find_gamedata();                // Attempts to locate the gamedata folder.
     Game&               game() const;                   // Returns a reference to the Game manager object.
-    void                halt(std::string error);        // Stops the game and displays an error messge.
+    void                halt(std::string_view error);   // Stops the game and displays an error messge.
     void                halt(const std::exception &e);  // As above, but with an exception instead of a string.
-    void                init_core(std::vector<std::string> parameters);   // Sets up the core game classes and data, and the terminal subsystem.
+    void                init_core(std::vector<std::string> parameters);     // Sets up the core game classes and data, and the terminal subsystem.
     void                intercept_signal(int sig);      // Catches a segfault or other fatal signal.
-    void                log(std::string msg, int type = CORE_INFO); // Logs a message in the system log file.
-    void                nonfatal(std::string error, int type);  // Reports a non-fatal error, which will be logged but won't halt execution unless it cascades.
+    void                log(std::string_view msg, int type = CORE_INFO);    // Logs a message in the system log file.
+                        // Reports a non-fatal error, which will be logged but won't halt execution unless it cascades.
+    void                nonfatal(std::string_view error, int type);
 
 private:
-    static constexpr int        ERROR_CASCADE_THRESHOLD =       25; // The amount cascade_count can reach within CASCADE_TIMEOUT seconds before it triggers abort.
+    static constexpr int        ERROR_CASCADE_THRESHOLD =       25; // The amount cascade_count can reach within CASCADE_TIMEOUT seconds before it aborts.
     static constexpr int        ERROR_CASCADE_TIMEOUT =         30; // The number of seconds without an error to reset the cascade timer.
     static constexpr int        ERROR_CASCADE_WEIGHT_CRITICAL = 20; // The amount a critical type log entry will add to the cascade timer.
     static constexpr int        ERROR_CASCADE_WEIGHT_ERROR =    5;  // The amount an error type log entry will add to the cascade timer.

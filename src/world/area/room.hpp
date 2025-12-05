@@ -82,11 +82,11 @@ public:
     static constexpr uint32_t   ROOM_SAVE_VERSION = 10; // The expected version for saving/loading binary game data.
 
     static const std::string&   direction_name(Direction dir);  // Gets the string name of a Direction enum.
-    static RoomTag              parse_room_tag(const std::string &tag); // Parses a string RoomTag name into a RoomTag enum.
+    static RoomTag              parse_room_tag(std::string_view tag);   // Parses a string RoomTag name into a RoomTag enum.
     static Direction            reverse_direction(Direction dir);   // Reverses a Direction (e.g. north becomes south).
 
                 Room(); // Creates a blank Room with default values and no ID.
-                Room(const std::string& new_id);    // Creates a Room with a specified ID.
+                Room(std::string_view new_id);  // Creates a Room with a specified ID.
     void        add_entity(std::unique_ptr<Entity> entity); // Adds an Entity to this room directly. Use transfer() to move Entities between rooms.
     bool        can_see_outside() const;    // Checks if we can see the outside world from here.
     void        clear_link_tag(Direction dir, LinkTag the_tag, bool mark_delta = true); // Clears a LinkTag from a specified Link.
@@ -106,12 +106,12 @@ public:
     const std::string&  name() const;   // Retrieves the full name of this Room.
     int         region() const; // Returns the ID of the Region this Room belongs to.
     void        save_delta(FileWriter* file);   // Saves only the changes to this Room in a save file. Should only be called by a parent Region.
-    void        set_desc(const std::string& new_desc, bool mark_delta = true);  // Sets the description of this Room.
+    void        set_desc(std::string_view new_desc, bool mark_delta = true);    // Sets the description of this Room.
     void        set_link(Direction dir, uint32_t new_exit, bool mark_delta = true); // Sets an exit link from this Room to another.
     void        set_link_tag(Direction dir, LinkTag tag, bool mark_delta = true);   // Sets a LinkTag on a specifieid Link.
     void        set_link_tags(Direction dir, std::list<LinkTag> tags_list, bool mark_delta = true); // Sets multiple LinkTags at once.
-    void        set_map_char(const std::string& new_char, bool mark_delta = true);  // Sets the map character for this Room.
-    void        set_name(const std::string& new_name = "", const std::string& new_short_name = "", bool mark_delta = true); // Sets the name of this Room.
+    void        set_map_char(std::string_view new_char, bool mark_delta = true);    // Sets the map character for this Room.
+    void        set_name(std::string_view new_name = "", std::string_view new_short_name = "", bool mark_delta = true); // Sets the name of this Room.
     void        set_tag(RoomTag the_tag, bool mark_delta = true);   // Sets a RoomTag on this Room.
     void        set_tags(std::list<RoomTag> tags_list, bool mark_delta = true); // Sets multiple RoomTags at the same time.
     const std::string&  short_name() const; // Retrieves the short name of this Room.
@@ -140,7 +140,7 @@ private:
     static const RoomTag        unfinished_directions_[20]; // Lookup table for unfinished exit links.
 
     // Turns a Direction into an int for array access, produces a standard error on invalid input.
-    int link_id(Direction dir, const std::string& caller, bool fail_on_null = true) const;
+    int link_id(Direction dir, std::string_view caller, bool fail_on_null = true) const;
 
     std::string desc_;          // The text description of this Room, as shown to the player.
     std::unique_ptr<Link>   links_[10]; // Any and all Links leading out of this Room.
