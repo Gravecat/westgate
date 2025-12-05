@@ -25,6 +25,7 @@
 
 namespace westgate {
 
+class Inventory;    // defined in world/entity/inventory.hpp
 class FileReader;   // defined in util/filereader.hpp
 class FileWriter;   // defined in util/filewriter.hpp
 class Room;         // defined in world/room.hpp
@@ -52,16 +53,19 @@ class Entity {
 public:
                         Entity() = delete;  // No default constructor; use nullptr on the constructor below.
                         Entity(FileReader* file);   // Creates a blank Entity, then loads its data from a FileReader.
-    virtual             ~Entity() = default;    // Virtual destructor. Nothing here yet.
+    virtual             ~Entity();  // Virtual destructor.
+    void                add_inventory();    // Adds an Inventory to this Entity if it doesn't already have one.
     void                clear_tag(EntityTag the_tag);   // Clears an EntityTag from this Entity.
     void                clear_tags(std::list<EntityTag> tags_list); // Clears multiple EntityTags at the same time.
     Gender              gender() const; // Retrieves the gender (if any) of this Entity.
     const std::string   he_she(bool capitalize_first = false) const;    // Returns a gender string (he/she/it/they/etc.)
-    const std::string   himself_herself() const;        // Returns a gender string (himself/herself/theirself/etc.)
-    const std::string   his_her() const;                // Returns a gender string (his/her/its/their/etc.)
+    const std::string   himself_herself() const;    // Returns a gender string (himself/herself/theirself/etc.)
+    const std::string   his_her() const;    // Returns a gender string (his/her/its/their/etc.)
+    Inventory*          inv();  // Returns a pointer to the attached Inventory, if any.
     const std::string   name(uint32_t flags = 0) const; // Retrieves the name of this Entity.
     Entity*             parent_entity() const;  // Retrieves the Entity (if any) containing this Entity.
     Room*               parent_room() const;    // Retrieves the Room (if any) containing this Entity.
+    void                remove_inventory();     // Removes an Inventory pointer from this Entity.
     virtual void        save(FileWriter* file); // Saves this Entity to a save game file.
     void                set_gender(Gender new_gender);  // Sets the gender of this Entity.
     void                set_name(const std::string& new_name);  // Sets the name of this Entity.
@@ -86,6 +90,7 @@ private:
     static constexpr uint32_t   ENTITY_SAVE_PROPS =     1;
     static constexpr uint32_t   ENTITY_SAVE_TAGS =      2;
 
+    std::unique_ptr<Inventory>  inventory_; // An Inventory attached to this Entity, if any.
     std::set<EntityTag> tags_;  // Any and all tags on this Entity.
 };
 

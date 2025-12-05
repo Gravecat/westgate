@@ -23,6 +23,8 @@
 #include "util/filex.hpp"
 #include "world/area/room.hpp"
 #include "world/entity/entity.hpp"
+#include "world/entity/inventory.hpp"
+#include "world/entity/item.hpp"
 
 using std::runtime_error;
 using std::string;
@@ -51,6 +53,16 @@ Entity::Entity(FileReader* file) : gender_(Gender::NONE), name_("undefined entit
     size_t tag_count = file->read_data<size_t>();
     for (size_t t = 0; t < tag_count; t++)
         set_tag(file->read_data<EntityTag>());
+}
+
+// Virtual destructor. Nothing here yet, but this needs to be defined *here* and not inline in entity.hpp
+Entity::~Entity() = default;
+
+// Adds an Inventory to this Entity if it doesn't already have one.
+void Entity::add_inventory()
+{
+    if (inventory_) core().nonfatal("Attempt to add Inventory to Entity where one already exists [" + name_ + "]", Core::CORE_ERROR);
+    inventory_ = std::make_unique<Inventory>();
 }
 
 // Clears an EntityTag from this Entity.
@@ -105,6 +117,9 @@ const string Entity::his_her() const
     }
 }
 
+// Returns a pointer to the attached Inventory, if any.
+Inventory* Entity::inv() { return inventory_.get(); }
+
 // Retrieves the name of this Entity.
 const string Entity::name(uint32_t flags) const
 {
@@ -140,6 +155,13 @@ Entity* Entity::parent_entity() const { return parent_entity_; }
 
 // Retrieves the Room (if any) containing this Entity.
 Room* Entity::parent_room() const { return parent_room_; }
+
+// Removes an Inventory pointer from this Entity.
+void Entity::remove_inventory()
+{
+    if (!inventory_) core().nonfatal("Attempt to remove non-existent Inventory from Entity [" + name_ + "]", Core::CORE_ERROR);
+    inventory_.reset(nullptr);
+}
 
 // Saves this Entity to a save game file.
 void Entity::save(FileWriter* file)

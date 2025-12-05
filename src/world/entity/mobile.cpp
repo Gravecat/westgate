@@ -26,6 +26,7 @@ namespace westgate {
 Mobile::Mobile(FileReader* file) : Entity(file)
 {
     name_ = "undefined mobile";
+    add_inventory();
 
     if (!file) return;
     // file loading code goes here
