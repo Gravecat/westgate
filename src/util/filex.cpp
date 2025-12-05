@@ -199,21 +199,24 @@ string FileX::get_executable_dir()
 {
     string result;
 #if defined(WESTGATE_TARGET_WINDOWS)
-    wchar_t buf[MAX_PATH];
+    wchar_t *buf = new wchar_t[MAX_PATH];
     GetModuleFileNameW(nullptr, buf, MAX_PATH);
     std::wstring ws(buf);
     result = string(ws.begin(), ws.end());
+    delete[] buf;
 #elif defined(WESTGATE_TARGET_LINUX)
-    char buf[1024];
+    char *buf = new char[1024];
     ssize_t n = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
-    if (n < 0) return "";
+    if (n < 0) throw runtime_error("Could not determine binary path!");
     buf[n] = '\0';
     result = string(buf);
+    delete[] buf;
 #elif defined(WESTGATE_TARGET_APPLE)
-    char buf[1024];
+    char *buf = new char[1024];
     uint32_t size = sizeof(buf);
-    if (_NSGetExecutablePath(buf, &size) != 0) return "";
+    if (_NSGetExecutablePath(buf, &size) != 0) throw runtime_error("Could not determine binary path!");
     result = string(buf);
+    delete[] buf;
 #else
     #error Unsupported/unknown target platform!
 #endif
