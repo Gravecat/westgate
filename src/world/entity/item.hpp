@@ -25,7 +25,12 @@ namespace westgate {
 
 class Item : public Entity {
 public:
+                        Item() = delete;    // No default constructor; use nullptr on the constructor below.
+                        Item(FileReader* file); // Creates a blank Item, then loads its data from a FileReader.
+    virtual             ~Item() = default;  // Virtual destructor, in case Item is used by a further derived class in the future.
+    virtual void        save(FileWriter* file) override;    // Saves this Item to a save game file.
     virtual EntityType  type() const override { return EntityType::ITEM; }  // Self-identifies this Entity's derived class.
+
 private:
 };
 

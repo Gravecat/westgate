@@ -20,4 +20,14 @@
 
 namespace westgate {
 
+// Creates a blank Item, then loads its data from a FileReader.
+Item::Item(FileReader* file) : Entity(file)
+{
+    if (!file) return;
+    // file loading code goes here
+}
+
+// Saves this Item to a save game file.
+void Item::save(FileWriter* file) { Entity::save(file); }
+
 }   // namespace westgate
