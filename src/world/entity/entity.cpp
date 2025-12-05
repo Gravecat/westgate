@@ -25,6 +25,8 @@
 #include "world/entity/entity.hpp"
 #include "world/entity/inventory.hpp"
 #include "world/entity/item.hpp"
+#include "world/entity/mobile.hpp"
+#include "world/entity/player.hpp"
 
 using std::runtime_error;
 using std::string;
@@ -53,6 +55,11 @@ Entity::Entity(FileReader* file) : gender_(Gender::NONE), name_("undefined entit
     size_t tag_count = file->read_data<size_t>();
     for (size_t t = 0; t < tag_count; t++)
         set_tag(file->read_data<EntityTag>());
+
+    // Load the Entity's Inventory, if any.
+    const uint32_t inv_tag = file->read_data<uint32_t>();
+    if (inv_tag != ENTITY_SAVE_INVENTORY) FileReader::standard_error("Invalid tag in entity save data", inv_tag, ENTITY_SAVE_INVENTORY);
+    if (file->read_data<bool>()) inventory_ = std::make_unique<Inventory>(file);
 }
 
 // Virtual destructor. Nothing here yet, but this needs to be defined *here* and not inline in entity.hpp
@@ -61,8 +68,8 @@ Entity::~Entity() = default;
 // Adds an Inventory to this Entity if it doesn't already have one.
 void Entity::add_inventory()
 {
-    if (inventory_) core().nonfatal("Attempt to add Inventory to Entity where one already exists [" + name_ + "]", Core::CORE_ERROR);
-    inventory_ = std::make_unique<Inventory>();
+    if (inventory_) inventory_->clear();
+    else inventory_ = std::make_unique<Inventory>();
 }
 
 // Clears an EntityTag from this Entity.
@@ -119,6 +126,21 @@ const string Entity::his_her() const
 
 // Returns a pointer to the attached Inventory, if any.
 Inventory* Entity::inv() { return inventory_.get(); }
+
+// Loads an Entity from a File, returning a unique_ptr to the appropriate class.
+std::unique_ptr<Entity> Entity::load_entity(FileReader* file)
+{
+    if (!file) throw runtime_error("Attempt to load Entity from null file pointer!");
+    EntityType type = file->read_data<EntityType>();
+    switch(type)
+    {
+        case EntityType::ENTITY: return std::make_unique<Entity>(file); break;
+        case EntityType::MOBILE: return std::make_unique<Mobile>(file); break;
+        case EntityType::PLAYER: return std::make_unique<Player>(file); break;
+        case EntityType::ITEM: return std::make_unique<Item>(file); break;
+        default: throw runtime_error("Attempt to load unknown entity type: " + to_string(static_cast<int>(type)));
+    }
+}
 
 // Retrieves the name of this Entity.
 const string Entity::name(uint32_t flags) const
@@ -182,6 +204,15 @@ void Entity::save(FileWriter* file)
     file->write_data<size_t>(tags_.size());
     for (auto &tag : tags_)
         file->write_data<EntityTag>(tag);
+
+    // Save this Entity's Inventory, if any.
+    file->write_data<uint32_t>(ENTITY_SAVE_INVENTORY);
+    if (inventory_)
+    {
+        file->write_data<bool>(true);
+        inventory_->save(file);
+    }
+    else file->write_data<bool>(false);
 }
 
 // Sets the gender of this Entity.

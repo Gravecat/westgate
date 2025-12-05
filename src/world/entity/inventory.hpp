@@ -22,17 +22,25 @@
 
 namespace westgate {
 
-class Item; // defined in world/entity/item.hpp
+class Item;         // defined in world/entity/item.hpp
+class FileReader;   // defined in util/filex.hpp
+class FileWriter;   // defined in util/filex.cpp
 
 class Inventory {
 public:
+            Inventory() = default;  // A blank constructor will make an empty Inventory, ready to go.
+            Inventory(FileReader* file);    // Creates a blank Inventory, then loads it from the specified file.
     void    add(std::unique_ptr<Item> item);    // Adds an Item to this Inventory (use std::move).
     Item*   at(size_t index);       // Returns a pointer to a specified Item in this Inventory.
+    void    clear();                // Deletes everything from this Inventory.
     void    erase(size_t index);    // Removes an Item from this Inventory.
+    void    save(FileWriter* file); // Saves this Entity to a save game file.
     size_t  size() const;           // Returns the amount of Items in this Inventory.
     void    transfer(Inventory* new_inv, size_t index); // Moves an item from this Inventory into another.
 
 private:
+    static constexpr uint32_t   INVENTORY_SAVE_VERSION =    1;  // The expected version for saving/loading binary game data.
+
     std::vector<std::unique_ptr<Item>>  items_; // The Items stored in this Inventory.
 };
 

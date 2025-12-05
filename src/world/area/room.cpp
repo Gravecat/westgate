@@ -218,16 +218,7 @@ void Room::load_delta(FileReader* file)
                 const size_t entity_count = file->read_data<size_t>();
                 entities_.reserve(entity_count);
                 for (size_t i = 0; i < entity_count; i++)
-                {
-                    EntityType type = file->read_data<EntityType>();
-                    switch(type)
-                    {
-                        case EntityType::ENTITY: add_entity(std::make_unique<Entity>(file)); break;
-                        case EntityType::MOBILE: add_entity(std::make_unique<Mobile>(file)); break;
-                        case EntityType::PLAYER: add_entity(std::make_unique<Player>(file)); break;
-                        default: throw runtime_error("Attempt to load unknown entity type: " + to_string(static_cast<int>(type)));
-                    }
-                }
+                    add_entity(Entity::load_entity(file));
                 break;
             }
 
