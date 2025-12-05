@@ -79,8 +79,8 @@ void Link::load_delta(FileReader* file)
             case LINK_DELTA_EXIT: links_to_ = file->read_data<uint32_t>(); break;
             case LINK_DELTA_TAGS:
             {
-                size_t tag_count = file->read_data<size_t>();
-                for (size_t i = 0; i < tag_count; i++)
+                uint32_t tag_count = file->read_data<uint32_t>();
+                for (uint32_t i = 0; i < tag_count; i++)
                     set_tag(file->read_data<LinkTag>(), false);
                 break;
             }
@@ -108,7 +108,7 @@ void Link::save_delta(FileWriter* file)
     if (tag(LinkTag::ChangedTags))
     {
         file->write_data<uint32_t>(LINK_DELTA_TAGS);
-        file->write_data<size_t>(tags_.size());
+        file->write_data<uint32_t>(tags_.size());
         for (auto &tag : tags_)
             file->write_data<LinkTag>(tag);
     }

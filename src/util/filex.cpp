@@ -21,7 +21,14 @@
 #include <sstream>
 #include <sys/stat.h>
 
-#include "util/binpath.hpp"
+#if defined(WESTGATE_TARGET_APPLE)
+#include <mach-o/dyld.h>    // _NSGetExecutablePath()
+#elif defined(WESTGATE_TARGET_LINUX)
+#include <unistd.h>         // readlink
+#elif defined(WESTGATE_TARGET_WINDOWS)
+#include <windows.h>        // GetModuleFileNameW
+#endif
+
 #include "util/filex.hpp"
 #include "util/random.hpp"
 #include "util/strx.hpp"
@@ -64,11 +71,23 @@ bool FileReader::check_footer()
 
 bool FileReader::check_header()
 {
-    uint8_t check[3];
-    check[0] = read_data<uint8_t>();
-    check[1] = read_data<uint8_t>();
-    check[2] = read_data<uint8_t>();
-    return (check[0] == 0xC0 && check[1] == 0xFF && check[2] == 0xEE);
+    if (read_data<uint8_t>() != 0xC0) return false;
+    if (read_data<uint8_t>() != 0xFF) return false;
+    if (read_data<uint8_t>() != 0xEE) return false;
+
+    // Check the sizes of data types; if the game was saved on a platform with weird data type sizes, like int being 16-bit, we need to know before trying to
+    // load the binary data on this platform.
+    if (read_data<uint8_t>() != sizeof(char)) return false;
+    if (read_data<uint8_t>() != sizeof(short)) return false;
+    if (read_data<uint8_t>() != sizeof(int)) return false;
+    if (read_data<uint8_t>() != sizeof(long)) return false;
+    if (read_data<uint8_t>() != sizeof(long long)) return false;
+    if (read_data<uint8_t>() != sizeof(float)) return false;
+    if (read_data<uint8_t>() != sizeof(double)) return false;
+    if (read_data<uint8_t>() != sizeof(long double)) return false;
+    if (read_data<uint8_t>() != sizeof(bool)) return false;
+    if (read_data<uint8_t>() != sizeof(wchar_t)) return false;
+    return true;
 }
 
 // Reads a blob of binary data, in the form of a std::vector<char>
@@ -103,7 +122,7 @@ void FileReader::standard_error(const string &err, int64_t data, int64_t expecte
 // Constructor, opens a binary file.
 FileWriter::FileWriter(const string& filename)
 {
-    const string bp_filename = BinPath::game_path(filename);
+    const string bp_filename = FileX::game_path(filename);
     fs::remove(bp_filename);
     file_out_.open(bp_filename.c_str(), std::ios::binary | std::ios::out);
 }
@@ -131,6 +150,18 @@ void FileWriter::write_header()
     write_data<uint8_t>(0xC0);
     write_data<uint8_t>(0xFF);
     write_data<uint8_t>(0xEE);
+
+    // Write the sizes of the standard data types, so that we can throw an error if they're not what we expected. This is extra important for stuff like bool.
+    write_data<uint8_t>(sizeof(char));
+    write_data<uint8_t>(sizeof(short));
+    write_data<uint8_t>(sizeof(int));
+    write_data<uint8_t>(sizeof(long));
+    write_data<uint8_t>(sizeof(long long));
+    write_data<uint8_t>(sizeof(float));
+    write_data<uint8_t>(sizeof(double));
+    write_data<uint8_t>(sizeof(long double));
+    write_data<uint8_t>(sizeof(bool));
+    write_data<uint8_t>(sizeof(wchar_t));
 }
 
 // Writes a string to the file.
@@ -142,6 +173,11 @@ void FileWriter::write_string(string str)
 }
 
 /* FILEX */
+
+string FileX::exe_dir;  // The path to the binary.
+
+// Given a path or filename, combines it with the current executable path and returns the combined, full path.
+string FileX::game_path(const string& path) { return merge_paths(get_executable_dir(), path); }
 
 // Loads a text file into an std::string.
 string FileX::file_to_string(const string& filename)
@@ -181,5 +217,38 @@ vector<string> FileX::file_to_vec(const string& filename, uint8_t flags)
     file.close();
     return lines;
 }
+
+// Platform-agnostic way to find this binary's runtime directory.
+string FileX::get_executable_dir()
+{
+    string result;
+#if defined(WESTGATE_TARGET_WINDOWS)
+    wchar_t *buf = new wchar_t[MAX_PATH];
+    GetModuleFileNameW(nullptr, buf, MAX_PATH);
+    std::wstring ws(buf);
+    result = string(ws.begin(), ws.end());
+    delete[] buf;
+#elif defined(WESTGATE_TARGET_LINUX)
+    char *buf = new char[1024];
+    ssize_t n = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
+    if (n < 0) throw runtime_error("Could not determine binary path!");
+    buf[n] = '\0';
+    result = string(buf);
+    delete[] buf;
+#elif defined(WESTGATE_TARGET_APPLE)
+    char *buf = new char[1024];
+    uint32_t size = sizeof(buf);
+    if (_NSGetExecutablePath(buf, &size) != 0) throw runtime_error("Could not determine binary path!");
+    result = string(buf);
+    delete[] buf;
+#else
+    #error Unsupported/unknown target platform!
+#endif
+    if (exe_dir.empty()) exe_dir = fs::path(result).parent_path().string();
+    return exe_dir;
+}
+
+// Merges two path strings together.
+string FileX::merge_paths(const string& path_a, const string& path_b) { return (fs::path(path_a) / path_b).string(); }
 
 }   // westgate namespace

@@ -23,8 +23,8 @@
 
 namespace westgate {
 
-class FileReader;   // defined in util/filereader.hpp
-class FileWriter;   // defined in util/filewriter.hpp
+class FileReader;   // defined in util/filex.hpp
+class FileWriter;   // defined in util/filex.hpp
 
 enum class PlayerTag : uint16_t {
     // Tags for features the player has explicitly enabled or disabled.

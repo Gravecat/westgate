@@ -22,7 +22,7 @@
 #include "core/core.hpp"
 #include "core/game.hpp"
 #include "core/terminal.hpp"
-#include "util/binpath.hpp"
+#include "util/filex.hpp"
 #include "util/namegen.hpp"
 #include "util/strx.hpp"
 #include "util/timer.hpp"
@@ -80,11 +80,11 @@ void World::create_region_saves(int save_slot)
     print("{c}Generating game world from static data...");
 
     // Create a game saves folder, if one doesn't already exist.
-    const fs::path userdata_saves_path = BinPath::game_path("userdata/saves");
+    const fs::path userdata_saves_path = FileX::game_path("userdata/saves");
     if (!fs::is_directory(userdata_saves_path)) fs::create_directory(userdata_saves_path);
 
     // This early in development, we're gonna just delete the save folder each time. It'll become more permanent later.
-    const fs::path save_dir = BinPath::merge_paths(userdata_saves_path.string(), to_string(save_slot));
+    const fs::path save_dir = FileX::merge_paths(userdata_saves_path.string(), to_string(save_slot));
     fs::remove_all(save_dir);
     fs::create_directory(save_dir);
 

@@ -24,8 +24,8 @@
 
 namespace westgate {
 
-class FileReader;   // defined in util/filereader.cpp
-class FileWriter;   // defined in util/filewriter.hpp
+class FileReader;   // defined in util/filex.hpp
+class FileWriter;   // defined in util/filex.hpp
 
 class Mobile : public Entity {
 public:

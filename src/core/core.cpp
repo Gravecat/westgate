@@ -30,7 +30,7 @@
 #include "core/core.hpp"
 #include "core/game.hpp"
 #include "core/terminal.hpp"
-#include "util/binpath.hpp"
+#include "util/filex.hpp"
 #include "util/strx.hpp"
 #include "util/timer.hpp"
 #include "util/yaml.hpp"
@@ -115,7 +115,7 @@ Core& Core::core()
 const string Core::datafile(const string file)
 {
     if (!gamedata_location_.size()) throw runtime_error("Could not locate valid gamedata folder!");
-    return BinPath::merge_paths(gamedata_location_, file);
+    return FileX::merge_paths(gamedata_location_, file);
 }
 
 // Destroys the singleton Core object and ends execution.
@@ -131,10 +131,10 @@ void Core::destroy_core(int exit_code)
 // Attempts to locate the gamedata folder.
 void Core::find_gamedata()
 {
-    const string game_path_data = BinPath::game_path("gamedata");
-    const string game_path_data_westgate_yml = BinPath::merge_paths(game_path_data, "westgate.yml");
-    const string source_path_data = BinPath::merge_paths(source::SOURCE_DIR, "gamedata");
-    const string source_path_data_westgate_yml = BinPath::merge_paths(source_path_data, "westgate.yml");
+    const string game_path_data = FileX::game_path("gamedata");
+    const string game_path_data_westgate_yml = FileX::merge_paths(game_path_data, "westgate.yml");
+    const string source_path_data = FileX::merge_paths(source::SOURCE_DIR, "gamedata");
+    const string source_path_data_westgate_yml = FileX::merge_paths(source_path_data, "westgate.yml");
     
     if (fs::exists(game_path_data_westgate_yml))
     {
@@ -357,7 +357,7 @@ void Core::nonfatal(string error, int type)
 // Opens the output log for messages.
 void Core::open_log()
 {
-    const fs::path userdata_path = BinPath::game_path("userdata");
+    const fs::path userdata_path = FileX::game_path("userdata");
     const fs::path logfile_path = userdata_path.string() + "/log.txt";
     if (!fs::exists(userdata_path)) fs::create_directory(userdata_path);
     if (fs::exists(logfile_path)) fs::remove(logfile_path);
