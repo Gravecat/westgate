@@ -25,8 +25,8 @@
 
 namespace westgate {
 
-class FileReader;   // defined in util/filereader.hpp
-class FileWriter;   // defined in util/filewriter.hpp
+class FileReader;   // defined in util/filex.hpp
+class FileWriter;   // defined in util/filex.hpp
 
 // Cardinal directions, along with up/down, to link the world together.
 enum class Direction : uint8_t { NONE, NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST, UP, DOWN };

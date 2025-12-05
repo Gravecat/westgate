@@ -29,8 +29,8 @@ namespace westgate {
 
 enum class Direction : uint8_t; // defined in world/area/link.hpp
 
-class FileReader;   // defined in util/filereader.hpp
-class FileWriter;   // defined in util/filewriter.hpp
+class FileReader;   // defined in util/filex.hpp
+class FileWriter;   // defined in util/filex.hpp
 
 class TimeWeather
 {

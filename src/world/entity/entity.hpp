@@ -25,8 +25,8 @@
 
 namespace westgate {
 
-class FileReader;   // defined in util/filereader.hpp
-class FileWriter;   // defined in util/filewriter.hpp
+class FileReader;   // defined in util/filex.hpp
+class FileWriter;   // defined in util/filex.hpp
 class Room;         // defined in world/room.hpp
 
 // Used to allow Entity to self-identify its derived class.

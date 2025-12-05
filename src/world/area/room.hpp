@@ -28,8 +28,8 @@
 
 namespace westgate {
 
-class FileReader;   // defined in util/filereader.hpp
-class FileWriter;   // defined in util/filewriter.hpp
+class FileReader;   // defined in util/filex.hpp
+class FileWriter;   // defined in util/filex.hpp
 
 // Tags are kinda like flags that can be set on Rooms, except using std::set.
 enum class RoomTag : uint16_t {
