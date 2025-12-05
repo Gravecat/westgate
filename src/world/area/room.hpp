@@ -79,7 +79,7 @@ enum class RoomTag : uint16_t {
 
 class Room {
 public:
-    static constexpr uint32_t   ROOM_SAVE_VERSION = 9;  // The expected version for saving/loading binary game data.
+    static constexpr uint32_t   ROOM_SAVE_VERSION = 10; // The expected version for saving/loading binary game data.
 
     static const std::string&   direction_name(Direction dir);  // Gets the string name of a Direction enum.
     static RoomTag              parse_room_tag(const std::string &tag); // Parses a string RoomTag name into a RoomTag enum.

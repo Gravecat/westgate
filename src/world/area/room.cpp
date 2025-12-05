@@ -215,9 +215,9 @@ void Room::load_delta(FileReader* file)
             case ROOM_DELTA_ENTITIES:
             {
                 // Load any Entities in this Room.
-                const size_t entity_count = file->read_data<size_t>();
+                const uint32_t entity_count = file->read_data<uint32_t>();
                 entities_.reserve(entity_count);
-                for (size_t i = 0; i < entity_count; i++)
+                for (uint32_t i = 0; i < entity_count; i++)
                 {
                     EntityType type = file->read_data<EntityType>();
                     switch(type)
@@ -235,8 +235,8 @@ void Room::load_delta(FileReader* file)
             {
                 // Clear all existing tags, and load the full set of tags in from the save file.
                 tags_.clear();
-                size_t tag_count = file->read_data<size_t>();
-                for (size_t i = 0; i < tag_count; i++)
+                uint32_t tag_count = file->read_data<uint32_t>();
+                for (uint32_t i = 0; i < tag_count; i++)
                     set_tag(file->read_data<RoomTag>(), false);
                 break;
             }
@@ -422,7 +422,7 @@ void Room::save_delta(FileWriter* file)
     if (entities_exist)
     {
         file->write_data<uint32_t>(ROOM_DELTA_ENTITIES);
-        file->write_data<size_t>(entities_.size());
+        file->write_data<uint32_t>(entities_.size());
         for (auto &entity : entities_)
             entity->save(file);
     }
@@ -431,7 +431,7 @@ void Room::save_delta(FileWriter* file)
     if (tags_changed)
     {
         file->write_data<uint32_t>(ROOM_DELTA_TAGS);
-        file->write_data<size_t>(tags_.size());
+        file->write_data<uint32_t>(tags_.size());
         for (auto &tag : tags_)
             file->write_data<RoomTag>(tag);
     }

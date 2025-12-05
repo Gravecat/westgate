@@ -80,7 +80,7 @@ protected:
     Room*       parent_room_;   // The Room (if any) where this Entity is located.
 
 private:
-    static constexpr uint32_t   ENTITY_SAVE_VERSION =   3;  // The expected version for saving/loading binary game data.
+    static constexpr uint32_t   ENTITY_SAVE_VERSION =   4;  // The expected version for saving/loading binary game data.
 
     // Identifiers for blocks of data in the save file, used to quickly catch errors when loading old or invalid data.
     static constexpr uint32_t   ENTITY_SAVE_PROPS =     1;

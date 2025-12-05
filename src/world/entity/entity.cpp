@@ -48,8 +48,8 @@ Entity::Entity(FileReader* file) : gender_(Gender::NONE), name_("undefined entit
     // Load the Entity's tags, if any.
     const uint32_t tags_tag = file->read_data<uint32_t>();
     if (tags_tag != ENTITY_SAVE_TAGS) FileReader::standard_error("Invalid tag in entity save data", tags_tag, ENTITY_SAVE_TAGS);
-    size_t tag_count = file->read_data<size_t>();
-    for (size_t t = 0; t < tag_count; t++)
+    uint32_t tag_count = file->read_data<uint32_t>();
+    for (uint32_t t = 0; t < tag_count; t++)
         set_tag(file->read_data<EntityTag>());
 }
 
@@ -157,7 +157,7 @@ void Entity::save(FileWriter* file)
 
     // Write the Entity's tags, if any.
     file->write_data<uint32_t>(ENTITY_SAVE_TAGS);
-    file->write_data<size_t>(tags_.size());
+    file->write_data<uint32_t>(tags_.size());
     for (auto &tag : tags_)
         file->write_data<EntityTag>(tag);
 }
