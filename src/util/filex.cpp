@@ -71,11 +71,23 @@ bool FileReader::check_footer()
 
 bool FileReader::check_header()
 {
-    uint8_t check[3];
-    check[0] = read_data<uint8_t>();
-    check[1] = read_data<uint8_t>();
-    check[2] = read_data<uint8_t>();
-    return (check[0] == 0xC0 && check[1] == 0xFF && check[2] == 0xEE);
+    if (read_data<uint8_t>() != 0xC0) return false;
+    if (read_data<uint8_t>() != 0xFF) return false;
+    if (read_data<uint8_t>() != 0xEE) return false;
+
+    // Check the sizes of data types; if the game was saved on a platform with weird data type sizes, like int being 16-bit, we need to know before trying to
+    // load the binary data on this platform.
+    if (read_data<uint8_t>() != sizeof(char)) return false;
+    if (read_data<uint8_t>() != sizeof(short)) return false;
+    if (read_data<uint8_t>() != sizeof(int)) return false;
+    if (read_data<uint8_t>() != sizeof(long)) return false;
+    if (read_data<uint8_t>() != sizeof(long long)) return false;
+    if (read_data<uint8_t>() != sizeof(float)) return false;
+    if (read_data<uint8_t>() != sizeof(double)) return false;
+    if (read_data<uint8_t>() != sizeof(long double)) return false;
+    if (read_data<uint8_t>() != sizeof(bool)) return false;
+    if (read_data<uint8_t>() != sizeof(wchar_t)) return false;
+    return true;
 }
 
 // Reads a blob of binary data, in the form of a std::vector<char>
@@ -138,6 +150,18 @@ void FileWriter::write_header()
     write_data<uint8_t>(0xC0);
     write_data<uint8_t>(0xFF);
     write_data<uint8_t>(0xEE);
+
+    // Write the sizes of the standard data types, so that we can throw an error if they're not what we expected. This is extra important for stuff like bool.
+    write_data<uint8_t>(sizeof(char));
+    write_data<uint8_t>(sizeof(short));
+    write_data<uint8_t>(sizeof(int));
+    write_data<uint8_t>(sizeof(long));
+    write_data<uint8_t>(sizeof(long long));
+    write_data<uint8_t>(sizeof(float));
+    write_data<uint8_t>(sizeof(double));
+    write_data<uint8_t>(sizeof(long double));
+    write_data<uint8_t>(sizeof(bool));
+    write_data<uint8_t>(sizeof(wchar_t));
 }
 
 // Writes a string to the file.
