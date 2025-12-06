@@ -175,8 +175,6 @@ void FileWriter::write_string(string str)
 /* FILEX */
 namespace filex {
 
-string exe_dir; // The path to the binary.
-
 // Given a path or filename, combines it with the current executable path and returns the combined, full path.
 string game_path(const string_view path) { return merge_paths(get_executable_dir(), path); }
 
@@ -224,6 +222,9 @@ vector<string> file_to_vec(const string_view filename, unsigned int flags)
 // Platform-agnostic way to find this binary's runtime directory.
 string get_executable_dir()
 {
+    static string exe_dir;  // The path to the binary.
+    if (!exe_dir.empty()) return exe_dir;
+
     string result;
 #if defined(WESTGATE_TARGET_WINDOWS)
     wchar_t *buf = new wchar_t[MAX_PATH];
@@ -247,7 +248,7 @@ string get_executable_dir()
 #else
     #error Unsupported/unknown target platform!
 #endif
-    if (exe_dir.empty()) exe_dir = fs::path(result).parent_path().string();
+    exe_dir = fs::path(result).parent_path().string();
     return exe_dir;
 }
 
