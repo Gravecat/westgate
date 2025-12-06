@@ -38,7 +38,7 @@ public:
     static bool         find_and_replace(std::string& input, const std::string_view to_find, const std::string_view to_replace);
     static std::string  flatten_tags(const std::string_view str);   // 'Flattens' ANSI tags, by erasing redundant tags in the string.
     static std::string  ftos(double num, int precision = 1);    // Converts a float or double to a string.
-    static uint32_t     murmur3(const std::string_view str);    // Hashes a string with MurmurHash3.
+    static hash_wg      murmur3(const std::string_view str);    // Hashes a string with MurmurHash3.
     static std::string  number_to_text(int64_t num);    // Converts a number (e.g. 123) into a string (e.g. "one hundred and twenty-three").
     // Allows adding conditional tags to a string in the form of [tag_name:conditional text here] and either including or removing the conditional text
     // depending on whether the bool is true or false.
@@ -51,8 +51,8 @@ private:
 // Only in debug builds, we're gonna add some extra code to detect hash collisions in real-time. Yes, it'll slow performance by a tiny amount, but it's a
 // debug build, we're not expecting maximum optimization and speed here.
 #ifdef WESTGATE_BUILD_DEBUG
-    static void check_hash_collision(const std::string_view str, uint32_t hash);
-    static std::map<uint32_t, std::string>  backward_hash_map_;
+    static void check_hash_collision(const std::string_view str, hash_wg hash);
+    static std::map<hash_wg, std::string>  backward_hash_map_;
 #endif
 };
 

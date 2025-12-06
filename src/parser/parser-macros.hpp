@@ -19,6 +19,6 @@
 #pragma once
 #include "core/pch.hpp" // Precompiled header
 
-#define PARSER_FUNCTION     std::vector<uint32_t>& words_hashed, std::vector<std::string>& words
+#define PARSER_FUNCTION     std::vector<hash_wg>& words_hashed, std::vector<std::string>& words
 #define PARSER_NO_WORDS     (void)words;
 #define PARSER_NO_HASHED    (void)words_hashed;

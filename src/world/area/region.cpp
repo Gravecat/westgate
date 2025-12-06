@@ -50,7 +50,7 @@ Room* Region::find_room(const string_view id) const
 { return find_room(StrX::murmur3(id)); }
 
 // Attempts to find a room by its hashed ID.
-Room* Region::find_room(uint32_t id) const
+Room* Region::find_room(hash_wg id) const
 {
     auto result = rooms_.find(id);
     if (result == rooms_.end())
@@ -62,7 +62,7 @@ Room* Region::find_room(uint32_t id) const
 }
 
 // Retrieves this Region's unique ID.
-uint32_t Region::id() const { return id_; }
+int Region::id() const { return id_; }
 
 // Loads this Region's YAML data, then applies delta changes from saved game binary data.
 void Region::load(int save_slot, int region_id)
@@ -120,7 +120,7 @@ void Region::load_delta(int save_slot)
         {
             const unsigned int room_ver = file->read_data<unsigned int>();
             if (room_ver != Room::ROOM_SAVE_VERSION) FileReader::standard_error("Invalid region room version", room_ver, Room::ROOM_SAVE_VERSION);
-            const uint32_t room_id = file->read_data<uint32_t>();
+            const hash_wg room_id = file->read_data<hash_wg>();
             auto result = rooms_.find(room_id);
             if (result == rooms_.end()) throw std::runtime_error("Could not locate room " + to_string(room_id) + " in region " + to_string(id_));
             result->second->load_delta(file.get());

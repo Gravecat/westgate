@@ -96,7 +96,7 @@ public:
     const std::string   door_name(Direction dir) const; // Returns the name of the door (door, gate, etc.) on the specified Link, if any.
     Room*       get_link(Direction dir);    // Gets the Room linked in the specified direction, or nullptr if none is linked.
     bool        has_exit(Direction dir) const;  // Checks if an Exit exists in the specified Direction.
-    uint32_t    id() const;     // Retrieves the hashed ID of this Room.
+    hash_wg     id() const; // Retrieves the hashed ID of this Room.
     const std::string&  id_str() const; // Retrieves the string ID of this Room.
     bool        is_unfinished(Direction dir, bool permalock) const; // Checks if this Room has an unfinished or permalock link in a specified direction.
     bool        link_tag(Direction dir, LinkTag tag) const; // Checks a LinkTag on a specified Link.
@@ -107,7 +107,7 @@ public:
     int         region() const; // Returns the ID of the Region this Room belongs to.
     void        save_delta(FileWriter* file);   // Saves only the changes to this Room in a save file. Should only be called by a parent Region.
     void        set_desc(const std::string_view new_desc, bool mark_delta = true);  // Sets the description of this Room.
-    void        set_link(Direction dir, uint32_t new_exit, bool mark_delta = true); // Sets an exit link from this Room to another.
+    void        set_link(Direction dir, hash_wg new_exit, bool mark_delta = true);  // Sets an exit link from this Room to another.
     void        set_link_tag(Direction dir, LinkTag tag, bool mark_delta = true);   // Sets a LinkTag on a specifieid Link.
     void        set_link_tags(Direction dir, std::list<LinkTag> tags_list, bool mark_delta = true); // Sets multiple LinkTags at once.
     void        set_map_char(const std::string_view new_char, bool mark_delta = true);  // Sets the map character for this Room.
@@ -145,7 +145,7 @@ private:
 
     std::string desc_;          // The text description of this Room, as shown to the player.
     std::unique_ptr<Link>   links_[10]; // Any and all Links leading out of this Room.
-    uint32_t    id_;            // The Room's unique hashed ID.
+    hash_wg     id_;            // The Room's unique hashed ID.
     std::string id_str_;        // The Room's unique text ID.
     std::string map_char_;      // The character representing this Room on the minimap.
     std::string name_[2];       // The long and short name of this Room.

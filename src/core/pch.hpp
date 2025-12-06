@@ -26,3 +26,8 @@
 #include <stdexcept>    // std::runtime_error is used frequently to throw error exceptions
 #include <string>       // std::string is used in almost every part of this project
 #include <vector>       // std::vector is used frequently enough to belong here too
+
+// Typedef for hashed strings
+namespace westgate {
+using hash_wg = uint32_t;   // Hashed strings are always 32-bit unsigned integers.
+}

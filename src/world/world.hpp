@@ -42,13 +42,13 @@ public:
 
                     World();    // Sets up the World object and loads static data into memory.
                     ~World();   // Destructor, explicitly frees memory used.
-    void            add_room_to_region(uint32_t room_id, int region_id);    // Updates the room_regions_ map to keep track of what Region each Room is in.
+    void            add_room_to_region(hash_wg room_id, int region_id); // Updates the room_regions_ map to keep track of what Region each Room is in.
     Automap&        automap() const;    // Returns a reference to the automap object.
     void            create_region_saves(int save_slot); // Loads region data from YAML, and saves it as a new save file in the specified slot.
     Room*           find_room(const std::string_view id, int region_id);    // Attempts to find a room by its string ID.
-    Room*           find_room(uint32_t id, int region_id);  // Attempts to find a room by its hashed ID.
-    Room*           find_room(uint32_t id);     // As above, but doesn't specify Region ID. This is more computationally expensive.
-    int             find_room_region(uint32_t id) const;    // Attempts to find the Region that a specified Room belongs to.
+    Room*           find_room(hash_wg id, int region_id);   // Attempts to find a room by its hashed ID.
+    Room*           find_room(hash_wg id);  // As above, but doesn't specify Region ID. This is more computationally expensive.
+    int             find_room_region(hash_wg id) const; // Attempts to find the Region that a specified Room belongs to.
     Region*         load_region(int id);    // Specifies a Region to be loaded into memory.
     ProcNameGen&    namegen() const;        // Returns a reference to the procedural name generator object.
                     // Opens/closes/locks/unlocks a door, without checking for locks/etc. The checks should be done in player commands or Mobile AI.
@@ -65,11 +65,11 @@ private:
     std::unique_ptr<Automap>        automap_ptr_;   // Pointer to the automapper object.
     std::unique_ptr<ProcNameGen>    namegen_ptr_;   // Pointer to the procedural name-generator object.
     std::unordered_map<int, std::unique_ptr<Region>>    regions_;   // The Regions currently loaded into memory.
-    std::unordered_map<uint32_t, int>   room_regions_;  // Lookup table to determine which Region each Room is located in.
+    std::unordered_map<hash_wg, int>    room_regions_;  // Lookup table to determine which Region each Room is located in.
     std::unique_ptr<TimeWeather>    time_weather_ptr_;  // Pointer to the time/weather manager object.
 
 #ifdef WESTGATE_BUILD_DEBUG
-    std::set<uint32_t>  room_name_hashes_used_; // When in debug mode, keeps track of which room names have been used; again, for overlap tracking.
+    std::set<hash_wg>   room_name_hashes_used_; // When in debug mode, keeps track of which room names have been used; again, for overlap tracking.
 #endif
 };
 

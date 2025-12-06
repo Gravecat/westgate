@@ -66,7 +66,7 @@ const string Link::door_name() const
 }
 
 // Gets the Room linked to by this Link.
-uint32_t Link::get() const { return links_to_; }
+hash_wg Link::get() const { return links_to_; }
 
 // Loads the delta changes to this Link (should only be called from its parent Room).
 void Link::load_delta(FileReader* file)
@@ -78,7 +78,7 @@ void Link::load_delta(FileReader* file)
         switch(delta_tag)
         {
             case LINK_DELTA_END: return;
-            case LINK_DELTA_EXIT: links_to_ = file->read_data<uint32_t>(); break;
+            case LINK_DELTA_EXIT: links_to_ = file->read_data<hash_wg>(); break;
             case LINK_DELTA_TAGS:
             {
                 uint32_t tag_count = file->read_data<uint32_t>();
@@ -119,7 +119,7 @@ void Link::save_delta(FileWriter* file)
 }
 
 // Sets this Link to point to a Room.
-void Link::set(uint32_t new_room, bool mark_delta)
+void Link::set(hash_wg new_room, bool mark_delta)
 {
     links_to_ = new_room;
     if (mark_delta) set_tag(LinkTag::ChangedLink);

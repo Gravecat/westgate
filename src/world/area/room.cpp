@@ -176,7 +176,7 @@ bool Room::has_exit(Direction dir) const
 { return (links_[link_id(dir, "has_exit", false)] != nullptr); }
 
 // Retrieves the hashed ID of this Room.
-uint32_t Room::id() const { return id_; }
+hash_wg Room::id() const { return id_; }
 
 // Retrieves the string ID of this Room.
 const string& Room::id_str() const { return id_str_; }
@@ -324,7 +324,7 @@ void Room::look()
     for (int i = 0; i < 10; i++)
     {
         if (!links_[i]) continue;
-        const uint32_t exit = links_[i]->get();
+        const hash_wg exit = links_[i]->get();
         string exit_name = "{C}" + direction_name(static_cast<Direction>(i + 1)) + "{c}";
         const Room* target_room = world().find_room(exit);
 
@@ -410,7 +410,7 @@ void Room::save_delta(FileWriter* file)
     // Write the save version for this Room, and the Room's ID.
     file->write_data<unsigned int>(Region::REGION_DELTA_ROOM);
     file->write_data<unsigned int>(ROOM_SAVE_VERSION);
-    file->write_data<uint32_t>(id_);
+    file->write_data<hash_wg>(id_);
 
     // Save any Entities in this Room.
     if (entities_exist)
@@ -488,7 +488,7 @@ void Room::set_desc(const string_view new_desc, bool mark_delta)
 }
 
 // Sets an exit link from this Room to another.
-void Room::set_link(Direction dir, uint32_t new_exit, bool mark_delta)
+void Room::set_link(Direction dir, hash_wg new_exit, bool mark_delta)
 {
     int array_pos = link_id(dir, "set_link", false);
     if (!links_[array_pos])
@@ -585,7 +585,7 @@ void Room::transfer(Entity* entity_ptr, Room* room_ptr)
     }
 
     // Try to determine which vector position houses the Entity being moved.
-    uint32_t source_id = 0;
+    hash_wg source_id = 0;
     bool source_found = false;
     for (size_t i = 0; i < entities_.size(); i++)
     {

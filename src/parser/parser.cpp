@@ -38,7 +38,7 @@ using westgate::terminal::print;
 
 namespace westgate::parser {
 
-static const std::map<uint32_t, Direction> parser_directions = {
+static const std::map<hash_wg, Direction> parser_directions = {
     { 1081869984, Direction::NORTH }, { 4254119393, Direction::NORTH },
     { 1897786808, Direction::NORTHEAST }, { 3641754167, Direction::NORTHEAST },
     { 717260451, Direction::EAST }, { 4163295959, Direction::EAST },
@@ -51,7 +51,7 @@ static const std::map<uint32_t, Direction> parser_directions = {
     { 715181085, Direction::DOWN }, { 2573673949, Direction::DOWN },
 };
 
-static const std::unordered_map<uint32_t, std::function<void(vector<uint32_t>&, vector<string>&)>> parser_verbs = {
+static const std::unordered_map<hash_wg, std::function<void(vector<hash_wg>&, vector<string>&)>> parser_verbs = {
     { 2252282012, actions::cheats::hash },                  // #hash
     { 3069208872, actions::meta::automap },                 // automap
     { 2746646486, actions::world_interaction::open_close }, // close
@@ -94,7 +94,7 @@ static const std::unordered_map<uint32_t, std::function<void(vector<uint32_t>&, 
 };
 
 // Parses a hashed string into a Direction enum.
-Direction parse_direction(uint32_t hash)
+Direction parse_direction(hash_wg hash)
 {
     auto result = parser_directions.find(hash);
     if (result == parser_directions.end()) return Direction::NONE;
@@ -121,7 +121,7 @@ void process_input(const string_view input)
 
     // Split the input into multiple words. We're mostly gonna be using a 'verb noun' structure here, but it might get more complex later.
     vector<string> words = StrX::string_explode(input);
-    vector<uint32_t> word_hashes;
+    vector<hash_wg> word_hashes;
     for (auto word : words)
         word_hashes.push_back(StrX::murmur3(StrX::str_tolower(word)));
 

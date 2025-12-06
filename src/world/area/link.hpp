@@ -68,10 +68,10 @@ public:
     void        clear_tag(LinkTag the_tag, bool mark_delta = true); // Clears a LinkTag from this Link.
     void        clear_tags(std::list<LinkTag> tags_list, bool mark_delta = true);   // Clears multiple LinkTags at the same time.
     const std::string   door_name() const;  // Returns the name of the door (door, gate, etc.) on this Link, if any.
-    uint32_t    get() const;    // Gets the Room linked to by this Link.)
+    hash_wg     get() const;    // Gets the Room linked to by this Link.)
     void        load_delta(FileReader* file);   // Loads the delta changes to this Link (should only be called from its parent Room).
     void        save_delta(FileWriter* file);   // Saves the delta changes to this Link (should only be called from its parent Room).
-    void        set(uint32_t new_room, bool mark_delta = true);     // Sets this Link to point to a Room.
+    void        set(hash_wg new_room, bool mark_delta = true);  // Sets this Link to point to a Room.
     void        set_tag(LinkTag the_tag, bool mark_delta = true);   // Sets a LinkTag on this Link.
     void        set_tags(std::list<LinkTag> tags_list, bool mark_delta = true); // Sets multiple LinkTags at the same time.
     bool        tag(LinkTag the_tag) const; // Checks if a LinkTag is set on this Link.
@@ -83,7 +83,7 @@ private:
 
     static const std::map<std::string, LinkTag> tag_map_;   // Used during loading YAML data, to convert LinkTag text names into LinkTag enums.
 
-    uint32_t    links_to_;      // The Room this Exit links to, or 0 for unlinked.
+    hash_wg links_to_;      // The Room this Exit links to, or 0 for unlinked.
     std::set<LinkTag>   tags_;  // Any and all tags on this Link.
 };
 

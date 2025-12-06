@@ -64,7 +64,7 @@ World::~World()
 }
 
 // Updates the room_regions_ map to keep track of what Region each Room is in.
-void World::add_room_to_region(uint32_t room_id, int region_id)
+void World::add_room_to_region(hash_wg room_id, int region_id)
 { room_regions_.insert({room_id, region_id}); }
 
 // Returns a reference to the automap object.
@@ -109,7 +109,7 @@ void World::create_region_saves(int save_slot)
 // When in debug mode, mark name hashes as used, to track overlaps.
 void World::debug_mark_room(const string_view room_name)
 {
-    const uint32_t room_name_hash = StrX::murmur3(room_name);
+    const hash_wg room_name_hash = StrX::murmur3(room_name);
     if (room_name_hashes_used_.count(room_name_hash) > 0) throw runtime_error("Room name hash collision detected: " + string{room_name});
     room_name_hashes_used_.insert(room_name_hash);
 }
@@ -120,7 +120,7 @@ Room* World::find_room(const string_view id, int region_id)
 { return find_room(StrX::murmur3(id), region_id); }
 
 // Attempts to find a room by its hashed ID.
-Room* World::find_room(uint32_t id, int region_id)
+Room* World::find_room(hash_wg id, int region_id)
 {
     auto region = regions_.find(region_id);
     if (region == regions_.end())
@@ -132,11 +132,11 @@ Room* World::find_room(uint32_t id, int region_id)
 }
 
 // As above, but doesn't specify Region ID. This is more computationally expensive.
-Room* World::find_room(uint32_t id)
+Room* World::find_room(hash_wg id)
 { return find_room(id, find_room_region(id)); }
 
 // Attempts to find the Region that a specified Room belongs to.
-int World::find_room_region(uint32_t id) const
+int World::find_room_region(hash_wg id) const
 {
     auto result = room_regions_.find(id);
     if (result == room_regions_.end()) throw runtime_error("Unable to locate room " + to_string(id));

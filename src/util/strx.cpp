@@ -54,7 +54,7 @@ vector<string> StrX::ansi_vector_split(const string_view str, size_t line_length
 {
     string current_line, last_tag;
     vector<string> result, words = string_explode(str, " ");
-    uint32_t current_pos = 0;
+    size_t current_pos = 0;
 
     while(words.size())
     {
@@ -95,8 +95,8 @@ vector<string> StrX::ansi_vector_split(const string_view str, size_t line_length
 // Only in debug builds, we're gonna add some extra code to detect hash collisions in real-time. Yes, it'll slow performance by a tiny amount, but it's a
 // debug build, we're not expecting maximum optimization and speed here.
 #ifdef WESTGATE_BUILD_DEBUG
-std::map<uint32_t, string> StrX::backward_hash_map_;
-void StrX::check_hash_collision(const string_view str, uint32_t hash)
+std::map<hash_wg, string> StrX::backward_hash_map_;
+void StrX::check_hash_collision(const string_view str, hash_wg hash)
 {
     auto result_b = backward_hash_map_.find(hash);
     if (result_b == backward_hash_map_.end())
@@ -209,7 +209,7 @@ string StrX::ftos(double num, int precision)
 }
 
 // Hashes a string with MurmurHash3.
-uint32_t StrX::murmur3(const string_view str)
+hash_wg StrX::murmur3(const string_view str)
 {
     const uint32_t seed = 0x9747b28c;
     uint32_t hash = 0;  // Shouldn't matter, but I don't like uninitialized variables on principle.

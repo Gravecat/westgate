@@ -93,7 +93,7 @@ void open_close(PARSER_FUNCTION)
 // Travels in a specific direction.
 void travel(PARSER_FUNCTION)
 {
-    uint32_t direction_hash = words_hashed.at(0);
+    hash_wg direction_hash = words_hashed.at(0);
     if (direction_hash == 93100650 || direction_hash == 1337450370 || direction_hash == 1908976648) // go, move, travel
     {
         if (words_hashed.size() < 2)
