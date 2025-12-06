@@ -42,11 +42,11 @@ Inventory::Inventory(FileReader* file)
     if (save_version != INVENTORY_SAVE_VERSION) FileReader::standard_error("Invalid inventory save version", save_version, INVENTORY_SAVE_VERSION);
 
     // Read the size of this Inventory.
-    const size_t inv_size = file->read_data<size_t>();
+    const size_wg inv_size = file->read_data<size_wg>();
     items_.reserve(inv_size);
 
     // Iterate over the Inventory, loading each Entity within.
-    for (size_t i = 0; i < inv_size; i++)
+    for (size_wg i = 0; i < inv_size; i++)
     {
         unique_ptr<Entity> ent = Entity::load_entity(file);
         if (ent->type() != EntityType::ITEM) throw runtime_error("Non-Item Entity loaded from within Inventory data: " + ent->name());
@@ -94,7 +94,7 @@ void Inventory::save(FileWriter* file)
     file->write_data<unsigned int>(INVENTORY_SAVE_VERSION);
 
     // Write the size of the Inventory.
-    file->write_data<size_t>(items_.size());
+    file->write_data<size_wg>(items_.size());
 
     // Iterate over the Inventory, saving each Entity within.
     for (auto &item : items_)

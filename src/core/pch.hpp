@@ -27,7 +27,19 @@
 #include <string>       // std::string is used in almost every part of this project
 #include <vector>       // std::vector is used frequently enough to belong here too
 
-// Typedef for hashed strings
+// Typedefs for hashed strings, and a size_t analogue that we'll use for reading/writing data in binary saved game files.
 namespace westgate {
 using hash_wg = uint32_t;   // Hashed strings are always 32-bit unsigned integers.
+
+// Sizes of elements like strings or vectors, when written into a binary save file. We want to check the size of size_t, and go either 16-bit if size_t is
+// 16-bit width, or 32-bit if it's larger. There is no reason for this game to ever need size_wg to be 64-bit, and by avoiding 64-bit, we make saved game
+// files much more compatible between 64- and 32-bit computers. By allowing size_wg to be 16-bit if needed, we avoid a 32-bit saved game file possibly loading
+// in an utterly corrupted state on a 16-bit platform.
+#if SIZE_MAX == UINT16_MAX
+using size_wg = uint16_t;
+#elif SIZE_MAX >= UINT32_MAX
+using size_wg =  uint32_t;
+#else
+#error Unsupported size_t size
+#endif
 }

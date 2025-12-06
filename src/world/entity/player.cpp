@@ -43,8 +43,8 @@ Player::Player(FileReader* file) : Mobile(file)
     // Load the Player's tags, if any.
     const unsigned int tags_tag = file->read_data<unsigned int>();
     if (tags_tag != PLAYER_SAVE_TAGS) FileReader::standard_error("Invalid tag in player save data", tags_tag, PLAYER_SAVE_TAGS);
-    uint32_t tag_count = file->read_data<uint32_t>();
-    for (uint32_t t = 0; t < tag_count; t++)
+    size_wg tag_count = file->read_data<size_wg>();
+    for (size_wg t = 0; t < tag_count; t++)
         set_player_tag(file->read_data<PlayerTag>());
 }
 
@@ -72,7 +72,7 @@ void Player::save(FileWriter* file)
 
     // Write the PlayerTags, if any.
     file->write_data<unsigned int>(PLAYER_SAVE_TAGS);
-    file->write_data<uint32_t>(player_tags_.size());
+    file->write_data<size_wg>(player_tags_.size());
     for (auto &tag : player_tags_)
         file->write_data<PlayerTag>(tag);
 }

@@ -93,7 +93,7 @@ bool FileReader::check_header()
 // Reads a blob of binary data, in the form of a std::vector<char>
 vector<char> FileReader::read_char_vec()
 {
-    const uint32_t size = read_data<uint32_t>();
+    const size_wg size = read_data<size_wg>();
     vector<char> buffer(data_.begin() + read_index_, data_.begin() + read_index_ + size);
     read_index_ += size;
     return buffer;
@@ -102,7 +102,7 @@ vector<char> FileReader::read_char_vec()
 // Reads a string from the loaded file.
 string FileReader::read_string()
 {
-    uint32_t len = read_data<uint32_t>();
+    size_wg len = read_data<size_wg>();
     string result(data_.begin() + read_index_, data_.begin() + read_index_ + len);
     read_index_ += len;
     return result;
@@ -133,7 +133,7 @@ FileWriter::~FileWriter() { file_out_.close(); }
 // Writes binary data (in the form of an std::vector<char>) to the binary file.
 void FileWriter::write_char_vec(vector<char> vec)
 {
-    write_data<uint32_t>(vec.size());
+    write_data<size_wg>(vec.size());
     file_out_.write(vec.data(), vec.size());
 }
 
@@ -167,8 +167,8 @@ void FileWriter::write_header()
 // Writes a string to the file.
 void FileWriter::write_string(string str)
 {
-    uint32_t len = str.size();
-    write_data<uint32_t>(len);
+    size_wg len = str.size();
+    write_data<size_wg>(len);
     file_out_.write(str.c_str(), str.size());
 }
 

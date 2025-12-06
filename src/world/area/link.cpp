@@ -81,8 +81,8 @@ void Link::load_delta(FileReader* file)
             case LINK_DELTA_EXIT: links_to_ = file->read_data<hash_wg>(); break;
             case LINK_DELTA_TAGS:
             {
-                uint32_t tag_count = file->read_data<uint32_t>();
-                for (uint32_t i = 0; i < tag_count; i++)
+                size_wg tag_count = file->read_data<size_wg>();
+                for (size_wg i = 0; i < tag_count; i++)
                     set_tag(file->read_data<LinkTag>(), false);
                 break;
             }
