@@ -64,10 +64,9 @@ FileReader::FileReader(string filename, bool allow_missing_file) : read_index_(0
 // Reads two bytes and compares them to the standard footer.
 bool FileReader::check_footer()
 {
-    uint8_t check[2];
-    check[0] = read_data<uint8_t>();
-    check[1] = read_data<uint8_t>();
-    return (check[0] == 0x13 && check[1] == 0x51);
+    if (read_data<uint8_t>() != 0x13) return false;
+    if (read_data<uint8_t>() != 0x51) return false;
+    return true;
 }
 
 bool FileReader::check_header()
