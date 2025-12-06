@@ -77,6 +77,7 @@ bool FileReader::check_header()
 
     // Check the sizes of data types; if the game was saved on a platform with weird data type sizes, like int being 16-bit, we need to know before trying to
     // load the binary data on this platform.
+    if (read_data<uint8_t>() != sizeof(hash_wg)) return false;
     if (read_data<uint8_t>() != sizeof(size_wg)) return false;
     if (read_data<uint8_t>() != sizeof(char)) return false;
     if (read_data<uint8_t>() != sizeof(short)) return false;
@@ -152,6 +153,7 @@ void FileWriter::write_header()
     write_data<uint8_t>(0xEE);
 
     // Write the sizes of the standard data types, so that we can throw an error if they're not what we expected. This is extra important for stuff like bool.
+    write_data<uint8_t>(sizeof(hash_wg));
     write_data<uint8_t>(sizeof(size_wg));
     write_data<uint8_t>(sizeof(char));
     write_data<uint8_t>(sizeof(short));
