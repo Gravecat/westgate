@@ -33,7 +33,7 @@ using std::vector;
 namespace westgate {
 
 // Strips all ANSI colour tags like {M} from a string.
-string StrX::ansi_strip(string_view str)
+string StrX::ansi_strip(const string_view str)
 {
     string result = string{str};
     while(true)
@@ -46,11 +46,11 @@ string StrX::ansi_strip(string_view str)
 }
 
 // Returns the length of a specified string, not counting the ANSI colour tags like {G} or {kR}.
-size_t StrX::ansi_strlen(std::string_view str)
+size_t StrX::ansi_strlen(const string_view str)
 { return ansi_strip(str).length(); }
 
 // Splits an ANSI-tagged string across multiple lines of text.
-vector<string> StrX::ansi_vector_split(string_view str, uint32_t line_length)
+vector<string> StrX::ansi_vector_split(const string_view str, uint32_t line_length)
 {
     string current_line, last_tag;
     vector<string> result, words = string_explode(str, " ");
@@ -96,7 +96,7 @@ vector<string> StrX::ansi_vector_split(string_view str, uint32_t line_length)
 // debug build, we're not expecting maximum optimization and speed here.
 #ifdef WESTGATE_BUILD_DEBUG
 std::map<uint32_t, std::string> StrX::backward_hash_map_;
-void StrX::check_hash_collision(string_view str, uint32_t hash)
+void StrX::check_hash_collision(const string_view str, uint32_t hash)
 {
     auto result_b = backward_hash_map_.find(hash);
     if (result_b == backward_hash_map_.end())
@@ -131,7 +131,7 @@ string StrX::comma_list(vector<string> vec, uint8_t mode)
 }
 
 // Decodes a compressed string (e.g. 4cab2z becomes ccccabzz).
-string StrX::decode_compressed_string(string_view str)
+string StrX::decode_compressed_string(const string_view str)
 {
     string result, cb = string{str};
     while(cb.size())
@@ -158,7 +158,7 @@ string StrX::decode_compressed_string(string_view str)
 }
 
 // Find and replace one string with another.
-bool StrX::find_and_replace(string& input, string_view to_find, string_view to_replace)
+bool StrX::find_and_replace(string& input, const string_view to_find, const string_view to_replace)
 {
     string::size_type pos = 0;
     const string::size_type find_len = to_find.length(), replace_len = to_replace.length();
@@ -174,7 +174,7 @@ bool StrX::find_and_replace(string& input, string_view to_find, string_view to_r
 }
 
 // 'Flattens' ANSI tags, by erasing redundant tags in the string.
-string StrX::flatten_tags(string_view str)
+string StrX::flatten_tags(const string_view str)
 {
     string output, last_tag, to_check = string{str};
 
@@ -209,7 +209,7 @@ string StrX::ftos(double num, int precision)
 }
 
 // Hashes a string with MurmurHash3.
-uint32_t StrX::murmur3(string_view str)
+uint32_t StrX::murmur3(const string_view str)
 {
     const uint32_t seed = 0x9747b28c;
     uint32_t hash = 0;  // Shouldn't matter, but I don't like uninitialized variables on principle.
@@ -275,7 +275,7 @@ string StrX::number_to_text(int64_t num)
 
 // Allows adding conditional tags to a string in the form of [tag_name:conditional text here] and either including or removing the conditional text depending on
 // whether the bool is true or false.
-void StrX::process_conditional_tags(string& str, string_view tag, bool active)
+void StrX::process_conditional_tags(string& str, const string_view tag, bool active)
 {
     string tag_str = string{tag};
     do
@@ -294,7 +294,7 @@ void StrX::process_conditional_tags(string& str, string_view tag, bool active)
 }
 
 // Converts a string to lower-case.
-string StrX::str_tolower(string_view str)
+string StrX::str_tolower(const string_view str)
 {
     string output = string{str};
     std::transform(output.begin(), output.end(), output.begin(), ::tolower);
@@ -302,7 +302,7 @@ string StrX::str_tolower(string_view str)
 }
 
 // Converts a string to upper-case.
-string StrX::str_toupper(string_view str)
+string StrX::str_toupper(const string_view str)
 {
     string output = string{str};
     std::transform(output.begin(), output.end(), output.begin(), ::toupper);
@@ -310,7 +310,7 @@ string StrX::str_toupper(string_view str)
 }
 
 // String split/explode function.
-vector<string> StrX::string_explode(string_view str, string_view separator)
+vector<string> StrX::string_explode(const string_view str, const string_view separator)
 {
     vector<string> results;
 

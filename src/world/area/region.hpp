@@ -34,11 +34,11 @@ public:
 
                 Region();                       // Creates an empty Region.
                 ~Region();                      // Destructor, cleans up stored data.
-    Room*       find_room(std::string_view id) const;   // Attempts to find a room by its string ID.
+    Room*       find_room(const std::string_view id) const; // Attempts to find a room by its string ID.
     Room*       find_room(uint32_t id) const;   // Attempts to find a room by its hashed ID.
     uint32_t    id() const;                     // Retrieves this Region's unique ID.
     void        load(int save_slot, int region_id); // Loads this Region's YAML data, then applies delta changes from saved game binary data.
-    void        load_from_gamedata(std::string_view filename, bool update_world = false);   // Loads a Region from YAML game data.
+    void        load_from_gamedata(const std::string_view filename, bool update_world = false); // Loads a Region from YAML game data.
     void        save_delta(int save_slot, bool no_changes = false); // Saves only the changes to this Region in a save file.
 
 private:

@@ -178,10 +178,10 @@ void FileWriter::write_string(string str)
 string FileX::exe_dir;  // The path to the binary.
 
 // Given a path or filename, combines it with the current executable path and returns the combined, full path.
-string FileX::game_path(string_view path) { return merge_paths(get_executable_dir(), path); }
+string FileX::game_path(const string_view path) { return merge_paths(get_executable_dir(), path); }
 
 // Loads a text file into an std::string.
-string FileX::file_to_string(string_view filename)
+string FileX::file_to_string(const string_view filename)
 {
     string filename_str = string(filename);
     if (!fs::exists(filename)) throw runtime_error("Invalid file: " + filename_str);
@@ -194,7 +194,7 @@ string FileX::file_to_string(string_view filename)
 }
 
 // Loads a text file into a vector, one string for each line of the file.
-vector<string> FileX::file_to_vec(string_view filename, uint8_t flags)
+vector<string> FileX::file_to_vec(const string_view filename, uint8_t flags)
 {
     const bool flag_ignore_blank_lines = (flags & FTV_FLAG_IGNORE_BLANK_LINES) == FTV_FLAG_IGNORE_BLANK_LINES;
     const bool flag_ignore_comments = (flags & FTV_FLAG_IGNORE_COMMENTS) == FTV_FLAG_IGNORE_COMMENTS;
@@ -252,6 +252,6 @@ string FileX::get_executable_dir()
 }
 
 // Merges two path strings together.
-string FileX::merge_paths(string_view path_a, string_view path_b) { return (fs::path(path_a) / path_b).string(); }
+string FileX::merge_paths(const string_view path_a, const string_view path_b) { return (fs::path(path_a) / path_b).string(); }
 
 }   // westgate namespace

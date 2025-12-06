@@ -105,7 +105,7 @@ string ProcNameGen::namegen_v1()
 }
 
 // Generates a name with the v4 generator (front-end to Skeeto's fantasy name generator).
-string ProcNameGen::namegen_v4(string_view pattern, unsigned int max_len, unsigned int min_len)
+string ProcNameGen::namegen_v4(const string_view pattern, unsigned int max_len, unsigned int min_len)
 {
     const string pattern_str = string{pattern};
     string result;

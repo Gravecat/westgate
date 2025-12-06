@@ -61,7 +61,7 @@ enum class LinkTag : uint16_t {
 class Link
 {
 public:
-    static LinkTag  parse_link_tag(std::string_view tag);   // Parses a string LinkTag name into a LinkTag enum.
+    static LinkTag  parse_link_tag(const std::string_view tag); // Parses a string LinkTag name into a LinkTag enum.
 
                 Link(); // Creates a new Link with default values.
     bool        changed() const;    // Checks if this Link has been modified.

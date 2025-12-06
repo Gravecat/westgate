@@ -130,7 +130,7 @@ unsigned int get_width()
 }
 
 // Prints a string of text with std::cout, processing ANSI colour tags.
-void print(string_view text, bool newline)
+void print(const string_view text, bool newline)
 {
     // Handle blank text by just printing a newline.
     if (!text.size())
@@ -295,7 +295,7 @@ void print(string_view text, bool newline)
 }
 
 // Attempts to set the title of the console window. May not work on all platforms.
-void set_window_title(string_view new_title)
+void set_window_title(const string_view new_title)
 {
 #ifdef WESTGATE_TARGET_WINDOWS
     SetConsoleTitleA(string{new_title}.c_str());

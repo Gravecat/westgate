@@ -30,7 +30,7 @@ namespace westgate {
 YAML::YAML() : ref_(nullptr) { }
 
 // Calls load_file() when constructing.
-YAML::YAML(string_view filename, bool allow_backslash) { load_file(filename, allow_backslash); }
+YAML::YAML(const string_view filename, bool allow_backslash) { load_file(filename, allow_backslash); }
 
 // Creates a new YAML object from a parent tree.
 YAML::YAML(const ryml::Tree tree, ryml::ConstNodeRef new_ref) : ref_(new_ref), tree_(tree) { }
@@ -44,14 +44,14 @@ string YAML::get(size_t index) const
 }
 
 // Retrieves a child of this tree.
-YAML YAML::get_child(string_view key) const
+YAML YAML::get_child(const string_view key) const
 {
     YAML new_yaml(tree_, ref_[ryml::to_csubstr(key)]);
     return new_yaml;
 }
 
 // Retrieves all values of a sequence.
-vector<string> YAML::get_seq(string_view key) const
+vector<string> YAML::get_seq(const string_view key) const
 {
     if (!key_exists(key)) throw runtime_error("Missing YAML key: " + string{key});
     YAML yaml = get_child(key);
@@ -69,7 +69,7 @@ bool YAML::is_map() const { return noderef().is_map(); }
 bool YAML::is_seq() const { return noderef().is_seq(); }
 
 // Checks if a given key exists.
-bool YAML::key_exists(string_view key) const
+bool YAML::key_exists(const string_view key) const
 {
     if (!is_map()) throw runtime_error("Not a map!");
     return noderef().has_child(ryml::to_csubstr(key));
@@ -103,7 +103,7 @@ std::map<string, string> YAML::keys_vals() const
 }
 
 // Loads a YAML file into memory and parse it.
-void YAML::load_file(std::string_view filename, bool allow_backslash)
+void YAML::load_file(const string_view filename, bool allow_backslash)
 {
     string file_string = FileX::file_to_string(string{filename}.c_str());
     // If we don't care about using backslash for... whatever rapidYAML does with them, just turn them into double-backslashes so they're treated as a
@@ -130,7 +130,7 @@ ryml::ConstNodeRef YAML::noderef() const { return ref_; }
 size_t YAML::size() const { return static_cast<size_t>(noderef().num_children()); }
 
 // Returns the value of a key, as a string.
-string YAML::val(string_view key) const
+string YAML::val(const string_view key) const
 {
     auto cskey = ryml::to_csubstr(key);
     return string(noderef()[cskey].val().str).substr(0, noderef()[cskey].val().len);

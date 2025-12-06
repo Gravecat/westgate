@@ -33,7 +33,7 @@ private:
     std::string name_f();       // Returns a random feminine name.
     std::string name_m();       // Returns a random masculine name.
     std::string namegen_v1();   // Generates a random name (v1 code, Elite-style).
-    std::string namegen_v4(std::string_view pattern, unsigned int max_len = 8, unsigned int min_len = 2);   // Generates a name with the v4 generator.
+    std::string namegen_v4(const std::string_view pattern, unsigned int max_len = 8, unsigned int min_len = 2); // Generates a name with the v4 generator.
     std::string pv3_t();        // Ends of words.
     std::string random_word(bool cap = false);  // Generates a random word.
     std::string surname();      // Generates a random surname.

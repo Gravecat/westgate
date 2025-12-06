@@ -92,7 +92,7 @@ void Link::load_delta(FileReader* file)
 }
 
 // Parses a string LinkTag name into a LinkTag enum.
-LinkTag Link::parse_link_tag(string_view tag)
+LinkTag Link::parse_link_tag(const string_view tag)
 {
     const string tag_str = string{tag};
     auto result = tag_map_.find(tag_str);

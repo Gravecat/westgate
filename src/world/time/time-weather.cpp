@@ -326,7 +326,7 @@ void TimeWeather::save_data(FileWriter* file)
 }
 
 // Retrieves a message directly from the string map, with tags processed.
-std::string TimeWeather::string_map(string_view key)
+std::string TimeWeather::string_map(const string_view key)
 {
     const string key_str = string{key};
     const Room* player_room = player().parent_room();

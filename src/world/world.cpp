@@ -107,7 +107,7 @@ void World::create_region_saves(int save_slot)
 
 #ifdef WESTGATE_BUILD_DEBUG
 // When in debug mode, mark name hashes as used, to track overlaps.
-void World::debug_mark_room(string_view room_name)
+void World::debug_mark_room(const string_view room_name)
 {
     const uint32_t room_name_hash = StrX::murmur3(room_name);
     if (room_name_hashes_used_.count(room_name_hash) > 0) throw runtime_error("Room name hash collision detected: " + string{room_name});
@@ -116,7 +116,7 @@ void World::debug_mark_room(string_view room_name)
 #endif
 
 // Attempts to find a room by its string ID.
-Room* World::find_room(string_view id, int region_id)
+Room* World::find_room(const string_view id, int region_id)
 { return find_room(StrX::murmur3(id), region_id); }
 
 // Attempts to find a room by its hashed ID.

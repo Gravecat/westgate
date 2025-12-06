@@ -229,7 +229,7 @@ void Entity::set_gender(Gender new_gender)
 }
 
 // Sets the name of this Entity.
-void Entity::set_name(string_view new_name) { name_ = new_name; }
+void Entity::set_name(const string_view new_name) { name_ = new_name; }
 
 // Sets a new Entity as the parent of this Entity, or nullptr for none.
 void Entity::set_parent_entity(Entity* new_entity_parent)

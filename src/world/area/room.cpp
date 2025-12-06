@@ -69,7 +69,7 @@ const RoomTag Room::unfinished_directions_[20] = { RoomTag::UnfinishedNorth, Roo
 Room::Room() : desc_("Missing room description."), links_{}, id_(0), map_char_("{M}?"), name_{"undefined", "undefined"} { }
 
 // Creates a Room with a specified ID.
-Room::Room(std::string_view new_id) : Room()
+Room::Room(const string_view new_id) : Room()
 {
     id_str_ = new_id;
     id_ = StrX::murmur3(new_id);
@@ -189,7 +189,7 @@ bool Room::is_unfinished(Direction dir, bool permalock) const
 }
 
 // Turns a Direction into an int for array access, produces a standard error on invalid input.
-int Room::link_id(Direction dir, string_view caller, bool fail_on_null) const
+int Room::link_id(Direction dir, const string_view caller, bool fail_on_null) const
 {
     const string caller_str = string{caller};
     if (dir == Direction::NONE || dir > Direction::DOWN) throw runtime_error("Invalid direction call from " + caller_str + " [" + id_str_ + "]");
@@ -376,7 +376,7 @@ const std::string Room::map_char() const
 const std::string& Room::name() const { return name_[1]; }
 
 // Parses a string RoomTag name into a RoomTag enum.
-RoomTag Room::parse_room_tag(string_view tag)
+RoomTag Room::parse_room_tag(const string_view tag)
 {
     const string tag_str = string{tag};
     auto result = tag_map_.find(tag_str);
@@ -476,7 +476,7 @@ void Room::save_delta(FileWriter* file)
 }
 
 // Sets the description of this Room.
-void Room::set_desc(string_view new_desc, bool mark_delta)
+void Room::set_desc(const string_view new_desc, bool mark_delta)
 {
     if (mark_delta) set_tag(RoomTag::ChangedDesc);
     if (!new_desc.size())
@@ -518,14 +518,14 @@ void Room::set_link_tags(Direction dir, std::list<LinkTag> tags_list, bool mark_
 }
 
 // Sets the map character for this Room.
-void Room::set_map_char(string_view new_char, bool mark_delta)
+void Room::set_map_char(const string_view new_char, bool mark_delta)
 {
     if (mark_delta) set_tag(RoomTag::ChangedMapChar);
     map_char_ = new_char;
 }
 
 // Sets the short name of this Room.
-void Room::set_name(string_view new_name, string_view new_short_name, bool mark_delta)
+void Room::set_name(const string_view new_name, const string_view new_short_name, bool mark_delta)
 {
     if (!new_name.size() && !new_short_name.size()) return;
     if (mark_delta) set_tag(RoomTag::ChangedName);

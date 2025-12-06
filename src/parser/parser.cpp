@@ -102,7 +102,7 @@ Direction parse_direction(uint32_t hash)
 }
 
 // Attempts to parse a string into a number; invalid results are set to INT_MIN.
-int32_t parse_number(string_view num)
+int32_t parse_number(const string_view num)
 {
     int32_t result = 0;
     try
@@ -115,7 +115,7 @@ int32_t parse_number(string_view num)
 }
 
 // Processes input from the player.
-void process_input(string_view input)
+void process_input(const string_view input)
 {
     if (!input.size()) return;  // Nothing to do here.
 

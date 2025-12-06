@@ -46,7 +46,7 @@ Region::~Region()
 { rooms_.clear(); }
 
 // Attempts to find a room by its string ID.
-Room* Region::find_room(string_view id) const
+Room* Region::find_room(const string_view id) const
 { return find_room(StrX::murmur3(id)); }
 
 // Attempts to find a room by its hashed ID.
@@ -133,7 +133,7 @@ void Region::load_delta(int save_slot)
 }
 
 // Loads a Region from YAML game data.
-void Region::load_from_gamedata(string_view filename, bool update_world)
+void Region::load_from_gamedata(const string_view filename, bool update_world)
 {
     // Determine this region's ID from the filename.
     const std::string filename_str = string{filename};

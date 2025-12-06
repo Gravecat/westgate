@@ -55,7 +55,7 @@ public:
     Season      room_season();              // Retrieves the season override (if any) for the current Room.
     void        save_data(FileWriter* file);    // Saves the time/weather data to the specified save file.
     std::string season_str(Season season);  // Converts a season integer to a string.
-    std::string string_map(std::string_view key);   // Retrieves a message directly from the string map, with tags processed.
+    std::string string_map(const std::string_view key); // Retrieves a message directly from the string map, with tags processed.
     void        tick();                     // Advances time by the smallest possible gradient; useful for loops waiting for something to happen.
     TimeOfDay   time_of_day(bool fine);     // Returns the current time of day (morning, day, dusk, night)
     int         time_of_day_exact();        // Returns the exact time of day.

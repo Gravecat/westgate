@@ -27,7 +27,7 @@ const std::string   get_input();    // Prints a standard cursor and waits for no
                     // As with get_input(), but requires the user to enter an integer number. If yes_no is true, it allows yes/no to translate to 1/0.
 int                 get_number(int lowest = INT_MIN, int highest = INT_MAX, bool yes_no = false);
 unsigned int        get_width();    // Gets the width of the console window, in characters. If anything goes wrong, it'll return 0.
-void                print(std::string_view text = "", bool newline = true); // Prints a string of text with std::cout, processing ANSI colour tags.
-void                set_window_title(std::string_view new_title);   // Attempts to set the title of the console window. May not work on all platforms.
+void                print(const std::string_view text = "", bool newline = true);   // Prints a string of text with std::cout, processing ANSI colour tags.
+void                set_window_title(const std::string_view new_title); // Attempts to set the title of the console window. May not work on all platforms.
 
 } } // namespace terminal, westgate
