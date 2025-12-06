@@ -120,10 +120,10 @@ void process_input(const string_view input)
     if (!input.size()) return;  // Nothing to do here.
 
     // Split the input into multiple words. We're mostly gonna be using a 'verb noun' structure here, but it might get more complex later.
-    vector<string> words = StrX::string_explode(input);
+    vector<string> words = strx::string_explode(input);
     vector<hash_wg> word_hashes;
     for (auto word : words)
-        word_hashes.push_back(StrX::murmur3(StrX::str_tolower(word)));
+        word_hashes.push_back(strx::murmur3(strx::str_tolower(word)));
 
     auto result = parser_verbs.find(word_hashes.at(0));
     if (result == parser_verbs.end()) print("{Y}I don't know that word.");

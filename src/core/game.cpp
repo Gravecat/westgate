@@ -105,7 +105,7 @@ void Game::load_game(int save_slot)
     world_ptr_->load_region(current_region);
 
     print("{c}Saved game loaded successfully!");
-    core().log("Saved game loaded in " + StrX::ftos(load_timer.elapsed() / 1000.0f, 3) + " seconds.");
+    core().log("Saved game loaded in " + strx::ftos(load_timer.elapsed() / 1000.0f, 3) + " seconds.");
 }
 
 // brøether, may i have the lööps
@@ -128,7 +128,7 @@ void Game::new_game(int starting_region, string_view starting_room)
     save(false);
 
 #ifdef WESTGATE_BUILD_DEBUG
-    core().log("New game initialized in " + StrX::ftos(new_game_timer.elapsed() / 1000.0f, 3) + " seconds.");
+    core().log("New game initialized in " + strx::ftos(new_game_timer.elapsed() / 1000.0f, 3) + " seconds.");
 #endif
 }
 

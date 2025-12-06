@@ -53,9 +53,9 @@ void ProcNameGen::load_namelists()
     YAML yaml(core().datafile("namegen/namegen-strings.yml"));
     if (!yaml.is_map()) throw runtime_error("namegen-strings.yml: Invalid file format");
     if (!yaml.key_exists("consonant_block")) throw runtime_error("namegen-strings.yml: consonant_block missing");
-    consonant_block = StrX::decode_compressed_string(yaml.val("consonant_block"));
+    consonant_block = strx::decode_compressed_string(yaml.val("consonant_block"));
     if (!yaml.key_exists("vowel_block")) throw runtime_error("namegen-strings.yml: vowel_block missing");
-    vowel_block = StrX::decode_compressed_string(yaml.val("vowel_block"));
+    vowel_block = strx::decode_compressed_string(yaml.val("vowel_block"));
     if (!yaml.key_exists("v4_template")) throw runtime_error("namegen-strings.yml: v4_template missing");
     v4_template = yaml.val("v4_template");
     pv3_c = yaml.get_seq("pv3_c");

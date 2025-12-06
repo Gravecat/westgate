@@ -254,7 +254,7 @@ void Core::init_core(vector<string> parameters)
     find_gamedata();
     game_ptr_ = std::make_unique<Game>();
 #ifdef WESTGATE_BUILD_DEBUG
-    this->log("Core initialized in " + StrX::ftos(init_timer.elapsed() / 1000.0f, 3) + " seconds.");
+    this->log("Core initialized in " + strx::ftos(init_timer.elapsed() / 1000.0f, 3) + " seconds.");
 #endif
 }
 

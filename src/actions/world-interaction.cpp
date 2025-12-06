@@ -179,7 +179,7 @@ void wait(PARSER_FUNCTION)
             print("{Y}I don't understand. Please specify how long you want to wait in {G}seconds{Y}, {G}minutes{Y}, {G}hours{Y} or {G}days{Y}.");
             return;
     }
-    print("You prepare to wait for " + StrX::number_to_text(original_amount) + " " + time_str + (original_amount > 1 ? "s" : "") +
+    print("You prepare to wait for " + strx::number_to_text(original_amount) + " " + time_str + (original_amount > 1 ? "s" : "") +
         ". Time passes...");
     world().time_weather().pass_time(amount, true);
 }

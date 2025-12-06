@@ -72,7 +72,7 @@ Room::Room() : desc_("Missing room description."), links_{}, id_(0), map_char_("
 Room::Room(const string_view new_id) : Room()
 {
     id_str_ = new_id;
-    id_ = StrX::murmur3(new_id);
+    id_ = strx::murmur3(new_id);
 }
 
 // Adds an Entity to this room directly. Use transfer() to move Entities between rooms.
@@ -308,14 +308,14 @@ void Room::look()
 
     string processed_desc = desc_;
     TimeWeather::TimeOfDay tod = world().time_weather().time_of_day(false);
-    StrX::process_conditional_tags(processed_desc, "daydawn", tod == TimeWeather::TimeOfDay::DAWN || tod == TimeWeather::TimeOfDay::DAY);
-    StrX::process_conditional_tags(processed_desc, "nightdusk", tod == TimeWeather::TimeOfDay::NIGHT || tod == TimeWeather::TimeOfDay::DUSK);
-    vector<string> room_desc = StrX::ansi_vector_split("  " + processed_desc, desc_width);
+    strx::process_conditional_tags(processed_desc, "daydawn", tod == TimeWeather::TimeOfDay::DAWN || tod == TimeWeather::TimeOfDay::DAY);
+    strx::process_conditional_tags(processed_desc, "nightdusk", tod == TimeWeather::TimeOfDay::NIGHT || tod == TimeWeather::TimeOfDay::DUSK);
+    vector<string> room_desc = strx::ansi_vector_split("  " + processed_desc, desc_width);
     room_desc.insert(room_desc.begin(), "{C}" + name_[0]);
 
     if (can_see_outside())
     {
-        vector<string> weather_desc = StrX::ansi_vector_split("{K}  " + world().time_weather().weather_desc(), desc_width);
+        vector<string> weather_desc = strx::ansi_vector_split("{K}  " + world().time_weather().weather_desc(), desc_width);
         room_desc.insert(room_desc.end(), weather_desc.begin(), weather_desc.end());
     }
 
@@ -337,12 +337,12 @@ void Room::look()
             else exit_tags.push_back("closed");
         }
 
-        if (exit_tags.size()) exit_name += " (" + StrX::comma_list(exit_tags) + ")";
+        if (exit_tags.size()) exit_name += " (" + strx::comma_list(exit_tags) + ")";
         exits_list.push_back(exit_name);
     }
-    if (exits_list.size()) exits_list_str = string("  {c}There ") + (exits_list.size() > 1 ? "are " : "is ") + StrX::number_to_text(exits_list.size()) +
-        " obvious exit" + (exits_list.size() > 1 ? "s" : "") + ": " + StrX::comma_list(exits_list, StrX::CL_MODE_USE_AND) + ".";
-    exits_list = StrX::ansi_vector_split(exits_list_str, desc_width);
+    if (exits_list.size()) exits_list_str = string("  {c}There ") + (exits_list.size() > 1 ? "are " : "is ") + strx::number_to_text(exits_list.size()) +
+        " obvious exit" + (exits_list.size() > 1 ? "s" : "") + ": " + strx::comma_list(exits_list, strx::CL_MODE_USE_AND) + ".";
+    exits_list = strx::ansi_vector_split(exits_list_str, desc_width);
     room_desc.insert(room_desc.end(), exits_list.begin(), exits_list.end());
 
     // Generate the room map (if any), then combine the room map and room description together.

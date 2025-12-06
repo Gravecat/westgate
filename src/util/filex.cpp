@@ -113,7 +113,7 @@ void FileReader::standard_error(const string &err, int64_t data, int64_t expecte
 {
     string error_str = err;
     if (data != expected_data) error_str += " (" + to_string(data) + ", expected " + to_string(expected_data) + ")";
-    if (error_sources.size()) error_str += " [" + StrX::comma_list(error_sources) + "]";
+    if (error_sources.size()) error_str += " [" + strx::comma_list(error_sources) + "]";
     throw runtime_error(error_str);
 }
 

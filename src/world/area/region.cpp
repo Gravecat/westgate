@@ -47,7 +47,7 @@ Region::~Region()
 
 // Attempts to find a room by its string ID.
 Room* Region::find_room(const string_view id) const
-{ return find_room(StrX::murmur3(id)); }
+{ return find_room(strx::murmur3(id)); }
 
 // Attempts to find a room by its hashed ID.
 Room* Region::find_room(hash_wg id) const
@@ -196,17 +196,17 @@ void Region::load_from_gamedata(const string_view filename, bool update_world)
             for (auto &exit_key : room_exit_keys)
             {
                 YAML exit_yaml = exits_yaml.get_child(exit_key);
-                Direction dir = parser::parse_direction(StrX::murmur3(exit_key));
+                Direction dir = parser::parse_direction(strx::murmur3(exit_key));
                 if (exit_yaml.is_seq()) // For Links with LinkTags attached.
                 {
-                    room_ptr->set_link(dir, StrX::murmur3(exit_yaml.get(0)), false);
+                    room_ptr->set_link(dir, strx::murmur3(exit_yaml.get(0)), false);
                     if (exit_yaml.size() > 1)
                     {
                         for (size_t i = 1; i < exit_yaml.size(); i++)
                             room_ptr->set_link_tag(dir, Link::parse_link_tag(exit_yaml.get(i)), false);
                     }
                 }
-                else room_ptr->set_link(dir, StrX::murmur3(exits_yaml.val(exit_key)), false);
+                else room_ptr->set_link(dir, strx::murmur3(exits_yaml.val(exit_key)), false);
             }
         }
 

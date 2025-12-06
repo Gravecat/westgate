@@ -51,7 +51,7 @@ World::World() : automap_ptr_(make_unique<Automap>()), namegen_ptr_(make_unique<
     core().log("Loading static data into memory.");
     namegen_ptr_->load_namelists();
 #ifdef WESTGATE_BUILD_DEBUG
-    core().log("Static data loaded in " + StrX::ftos(init_world.elapsed() / 1000.0f, 3) + " seconds.");
+    core().log("Static data loaded in " + strx::ftos(init_world.elapsed() / 1000.0f, 3) + " seconds.");
 #endif
 }
 
@@ -109,7 +109,7 @@ void World::create_region_saves(int save_slot)
 // When in debug mode, mark name hashes as used, to track overlaps.
 void World::debug_mark_room(const string_view room_name)
 {
-    const hash_wg room_name_hash = StrX::murmur3(room_name);
+    const hash_wg room_name_hash = strx::murmur3(room_name);
     if (room_name_hashes_used_.count(room_name_hash) > 0) throw runtime_error("Room name hash collision detected: " + string{room_name});
     room_name_hashes_used_.insert(room_name_hash);
 }
@@ -117,7 +117,7 @@ void World::debug_mark_room(const string_view room_name)
 
 // Attempts to find a room by its string ID.
 Room* World::find_room(const string_view id, int region_id)
-{ return find_room(StrX::murmur3(id), region_id); }
+{ return find_room(strx::murmur3(id), region_id); }
 
 // Attempts to find a room by its hashed ID.
 Room* World::find_room(hash_wg id, int region_id)
