@@ -34,11 +34,11 @@ class ProcNameGen;  // defined in util/text/namegen.hpp
 class Region;       // defined in world/area/region.hpp
 class Room;         // defined in world/area/room.hpp
 class TimeWeather;  // defined in world/time-weather.hpp
-enum class Direction : uint8_t; // defined in world/area/area.hpp
+enum class Direction : unsigned char;   // defined in world/area/area.hpp
 
 class World {
 public:
-    enum class OpenCloseLockUnlock : uint8_t { OPEN, CLOSE, LOCK, UNLOCK };
+    enum class OpenCloseLockUnlock : unsigned char { OPEN, CLOSE, LOCK, UNLOCK };
 
                     World();    // Sets up the World object and loads static data into memory.
                     ~World();   // Destructor, explicitly frees memory used.

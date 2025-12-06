@@ -37,11 +37,11 @@ Player::Player(FileReader* file) : Mobile(file)
     if (!file) return;
 
     // Check the save version for this Player.
-    const uint32_t save_version = file->read_data<uint32_t>();
+    const unsigned int save_version = file->read_data<unsigned int>();
     if (save_version != PLAYER_SAVE_VERSION) FileReader::standard_error("Invalid player save version", save_version, PLAYER_SAVE_VERSION);
 
     // Load the Player's tags, if any.
-    const uint32_t tags_tag = file->read_data<uint32_t>();
+    const unsigned int tags_tag = file->read_data<unsigned int>();
     if (tags_tag != PLAYER_SAVE_TAGS) FileReader::standard_error("Invalid tag in player save data", tags_tag, PLAYER_SAVE_TAGS);
     uint32_t tag_count = file->read_data<uint32_t>();
     for (uint32_t t = 0; t < tag_count; t++)
@@ -68,10 +68,10 @@ int Player::region() const { return region_; }
 void Player::save(FileWriter* file)
 {
     Mobile::save(file);
-    file->write_data<uint32_t>(PLAYER_SAVE_VERSION);
+    file->write_data<unsigned int>(PLAYER_SAVE_VERSION);
 
     // Write the PlayerTags, if any.
-    file->write_data<uint32_t>(PLAYER_SAVE_TAGS);
+    file->write_data<unsigned int>(PLAYER_SAVE_TAGS);
     file->write_data<uint32_t>(player_tags_.size());
     for (auto &tag : player_tags_)
         file->write_data<PlayerTag>(tag);

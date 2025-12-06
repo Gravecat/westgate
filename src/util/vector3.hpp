@@ -28,8 +28,8 @@ namespace westgate {
 struct Vector3
 {
     Vector3() : x(0), y(0), z(0) { }
-    Vector3(int32_t vx, int32_t vy, int32_t vz) : x(vx), y(vy), z(vz) { }
-    Vector3(std::initializer_list<int32_t> list)
+    Vector3(long vx, long vy, long vz) : x(vx), y(vy), z(vz) { }
+    Vector3(std::initializer_list<long> list)
     {
         auto it = list.begin();
         x = (it != list.end()) ? *it++ : 0;
@@ -56,7 +56,7 @@ struct Vector3
     // Allows this Vector3 to return its coordinates in string form.
     const std::string   string() const { return std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(z); }
 
-    int32_t x, y, z;
+    long x, y, z;
 };
 
 // specialise std::hash
@@ -67,14 +67,14 @@ inline void hash_combine(std::size_t& seed, std::size_t h) noexcept
 
 namespace std {
 using westgate::hash_combine;
-template <> struct hash<westgate::Vector3>
+template<> struct hash<westgate::Vector3>
 {
     std::size_t operator()(const westgate::Vector3& v) const noexcept
     {
         std::size_t seed = 0;
-        hash_combine(seed, std::hash<int32_t>{}(v.x));
-        hash_combine(seed, std::hash<int32_t>{}(v.y));
-        hash_combine(seed, std::hash<int32_t>{}(v.z));
+        hash_combine(seed, std::hash<long>{}(v.x));
+        hash_combine(seed, std::hash<long>{}(v.y));
+        hash_combine(seed, std::hash<long>{}(v.z));
         return seed;
     }
 };

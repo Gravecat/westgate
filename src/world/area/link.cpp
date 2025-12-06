@@ -71,10 +71,10 @@ uint32_t Link::get() const { return links_to_; }
 // Loads the delta changes to this Link (should only be called from its parent Room).
 void Link::load_delta(FileReader* file)
 {
-    uint32_t delta_tag = 0;
+    unsigned int delta_tag = 0;
     while(true)
     {
-        delta_tag = file->read_data<uint32_t>();
+        delta_tag = file->read_data<unsigned int>();
         switch(delta_tag)
         {
             case LINK_DELTA_END: return;
@@ -105,17 +105,17 @@ void Link::save_delta(FileWriter* file)
 {
     if (tag(LinkTag::ChangedLink))
     {
-        file->write_data<uint32_t>(LINK_DELTA_EXIT);
-        file->write_data<uint32_t>(links_to_);
+        file->write_data<unsigned int>(LINK_DELTA_EXIT);
+        file->write_data<unsigned int>(links_to_);
     }
     if (tag(LinkTag::ChangedTags))
     {
-        file->write_data<uint32_t>(LINK_DELTA_TAGS);
-        file->write_data<uint32_t>(tags_.size());
+        file->write_data<unsigned int>(LINK_DELTA_TAGS);
+        file->write_data<unsigned int>(tags_.size());
         for (auto &tag : tags_)
             file->write_data<LinkTag>(tag);
     }
-    file->write_data<uint32_t>(LINK_DELTA_END);
+    file->write_data<unsigned int>(LINK_DELTA_END);
 }
 
 // Sets this Link to point to a Room.

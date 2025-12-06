@@ -160,17 +160,17 @@ TimeWeather::LightDark TimeWeather::light_dark()
 // Loads the time/weather data from the specified save file.
 void TimeWeather::load_data(FileReader* file)
 {
-    const uint32_t tw_save_ver = file->read_data<uint32_t>();
+    const unsigned int tw_save_ver = file->read_data<unsigned int>();
     if (tw_save_ver != TIME_WEATHER_SAVE_VERSION) FileReader::standard_error("Incompatible time/weather data version", tw_save_ver, TIME_WEATHER_SAVE_VERSION);
     day_ = file->read_data<int>();
     moon_ = file->read_data<int>();
     time_ = file->read_data<int>();
-    time_passed_ = file->read_data<uint64_t>();
+    time_passed_ = file->read_data<unsigned long long>();
     time_passed_subsecond_ = file->read_data<float>();
     weather_ = file->read_data<Weather>();
     wind_clockwise_ = file->read_data<bool>();
     wind_direction_ = file->read_data<Direction>();
-    wind_next_change_ = file->read_data<uint64_t>();
+    wind_next_change_ = file->read_data<unsigned long long>();
 }
 
 // Returns the name of the current month.
@@ -237,7 +237,7 @@ bool TimeWeather::pass_time(float seconds, bool allow_interrupt)
         const bool storm = (weather_ == Weather::BLIZZARD || weather_ == Weather::STORMY);
         if (storm && wind_next_change_ > time_passed_ - seconds_to_add)
         {
-            const uint64_t wind_change_time_left = wind_next_change_ - time_passed_ - seconds_to_add;
+            const unsigned long long wind_change_time_left = wind_next_change_ - time_passed_ - seconds_to_add;
             if (wind_change_time_left > HOUR) wind_next_change_ = time_passed_ - seconds_to_add + rnd::get<int>(30 * MINUTE, 60 * MINUTE);
         }
         // If it's due to change direction now, let's do it.
@@ -254,7 +254,7 @@ bool TimeWeather::pass_time(float seconds, bool allow_interrupt)
             else if (rnd::get<bool>(storm ? 0.8f : 0.35f)) wind_clockwise_ = !wind_clockwise_;
 
             // Rotate the wind, and apply the new value.
-            uint8_t wind_dir_int = static_cast<uint8_t>(wind_direction_);
+            int wind_dir_int = static_cast<int>(wind_direction_);
             wind_dir_int = ((wind_dir_int - 1 + (wind_clockwise_ ? 1 : -1) + 8) % 8) + 1;
             wind_direction_ = static_cast<Direction>(wind_dir_int);
         }
@@ -313,16 +313,16 @@ string TimeWeather::season_str(TimeWeather::Season season)
 // Saves the time/weather data to the specified datafile.
 void TimeWeather::save_data(FileWriter* file)
 {
-    file->write_data<uint32_t>(TIME_WEATHER_SAVE_VERSION);
+    file->write_data<unsigned int>(TIME_WEATHER_SAVE_VERSION);
     file->write_data<int>(day_);
     file->write_data<int>(moon_);
     file->write_data<int>(time_);
-    file->write_data<uint64_t>(time_passed_);
+    file->write_data<unsigned long long>(time_passed_);
     file->write_data<float>(time_passed_subsecond_);
     file->write_data<Weather>(weather_);
     file->write_data<bool>(wind_clockwise_);
     file->write_data<Direction>(wind_direction_);
-    file->write_data<uint64_t>(wind_next_change_);
+    file->write_data<unsigned long long>(wind_next_change_);
 }
 
 // Retrieves a message directly from the string map, with tags processed.
@@ -418,7 +418,7 @@ string TimeWeather::time_of_day_str(bool fine)
 void TimeWeather::tick() { pass_time(TIME_GRANULARITY); }
 
 // Returns the total amount of time passed in this game.
-uint64_t TimeWeather::time_passed() { return time_passed_; }
+unsigned long long TimeWeather::time_passed() { return time_passed_; }
 
 void TimeWeather::trigger_event(string *message_to_append, bool silent)
 {

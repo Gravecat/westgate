@@ -49,17 +49,17 @@ public:
     void                nonfatal(const std::string_view error, int type);
 
 private:
-    static constexpr int        ERROR_CASCADE_THRESHOLD =       25; // The amount cascade_count can reach within CASCADE_TIMEOUT seconds before it aborts.
-    static constexpr int        ERROR_CASCADE_TIMEOUT =         30; // The number of seconds without an error to reset the cascade timer.
-    static constexpr int        ERROR_CASCADE_WEIGHT_CRITICAL = 20; // The amount a critical type log entry will add to the cascade timer.
-    static constexpr int        ERROR_CASCADE_WEIGHT_ERROR =    5;  // The amount an error type log entry will add to the cascade timer.
-    static constexpr int        ERROR_CASCADE_WEIGHT_WARNING =  1;  // The amount a warning type log entry will add to the cascade timer.
-    static constexpr uint32_t   WESTGATE_GAMEDATA_VERSION =     1;  // The expected version for the gamedata folder.
+    static constexpr int            ERROR_CASCADE_THRESHOLD =       25; // The amount cascade_count can reach within CASCADE_TIMEOUT seconds before it aborts.
+    static constexpr int            ERROR_CASCADE_TIMEOUT =         30; // The number of seconds without an error to reset the cascade timer.
+    static constexpr int            ERROR_CASCADE_WEIGHT_CRITICAL = 20; // The amount a critical type log entry will add to the cascade timer.
+    static constexpr int            ERROR_CASCADE_WEIGHT_ERROR =    5;  // The amount an error type log entry will add to the cascade timer.
+    static constexpr int            ERROR_CASCADE_WEIGHT_WARNING =  1;  // The amount a warning type log entry will add to the cascade timer.
+    static constexpr unsigned int   WESTGATE_GAMEDATA_VERSION =     1;  // The expected version for the gamedata folder.
 
     int                 cascade_count_;     // Keeps track of rapidly-occurring, non-fatal error messages.
     bool                cascade_failure_;   // Is a cascade failure in progress?
     time_t              cascade_timer_;     // Timer to check the speed of non-halting warnings, to prevent cascade locks.
-    uint8_t             dead_already_;      // Have we already died? Is this crash within the Core subsystem?
+    int                 dead_already_;      // Have we already died? Is this crash within the Core subsystem?
     std::string         gamedata_location_; // The path of the game's data files.
     bool                lock_stderr_;       // Whether the stderr-checking code is allowed to run or not.
     std::stringstream   stderr_buffer_;     // Pointer to a stringstream buffer used to catch stderr messages.

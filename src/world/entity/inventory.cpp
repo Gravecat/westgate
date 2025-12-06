@@ -38,7 +38,7 @@ Inventory::Inventory(FileReader* file)
     }
 
     // Check the save version for this Inventory.
-    const uint32_t save_version = file->read_data<uint32_t>();
+    const unsigned int save_version = file->read_data<unsigned int>();
     if (save_version != INVENTORY_SAVE_VERSION) FileReader::standard_error("Invalid inventory save version", save_version, INVENTORY_SAVE_VERSION);
 
     // Read the size of this Inventory.
@@ -91,7 +91,7 @@ void Inventory::erase(size_t index)
 void Inventory::save(FileWriter* file)
 {
     // Write the save version for this Inventory.
-    file->write_data<uint32_t>(INVENTORY_SAVE_VERSION);
+    file->write_data<unsigned int>(INVENTORY_SAVE_VERSION);
 
     // Write the size of the Inventory.
     file->write_data<size_t>(items_.size());

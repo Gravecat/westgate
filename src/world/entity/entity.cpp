@@ -41,24 +41,24 @@ Entity::Entity(FileReader* file) : gender_(Gender::NONE), name_("undefined entit
     if (!file) return;
 
     // Check the save version for this Entity.
-    const uint32_t save_version = file->read_data<uint32_t>();
+    const unsigned int save_version = file->read_data<unsigned int>();
     if (save_version != ENTITY_SAVE_VERSION) FileReader::standard_error("Invalid entity save version", save_version, ENTITY_SAVE_VERSION);
 
     // Retrieve the Entity's name and gender.
-    const uint32_t props_tag = file->read_data<uint32_t>();
+    const unsigned int props_tag = file->read_data<unsigned int>();
     if (props_tag != ENTITY_SAVE_PROPS) FileReader::standard_error("Invalid tag in entity save data", props_tag, ENTITY_SAVE_PROPS);
     name_ = file->read_string();
     gender_ = file->read_data<Gender>();
 
     // Load the Entity's tags, if any.
-    const uint32_t tags_tag = file->read_data<uint32_t>();
+    const unsigned int tags_tag = file->read_data<unsigned int>();
     if (tags_tag != ENTITY_SAVE_TAGS) FileReader::standard_error("Invalid tag in entity save data", tags_tag, ENTITY_SAVE_TAGS);
     uint32_t tag_count = file->read_data<uint32_t>();
     for (uint32_t t = 0; t < tag_count; t++)
         set_tag(file->read_data<EntityTag>());
 
     // Load the Entity's Inventory, if any.
-    const uint32_t inv_tag = file->read_data<uint32_t>();
+    const unsigned int inv_tag = file->read_data<unsigned int>();
     if (inv_tag != ENTITY_SAVE_INVENTORY) FileReader::standard_error("Invalid tag in entity save data", inv_tag, ENTITY_SAVE_INVENTORY);
     if (file->read_data<bool>()) inventory_ = std::make_unique<Inventory>(file);
 }
@@ -144,7 +144,7 @@ std::unique_ptr<Entity> Entity::load_entity(FileReader* file)
 }
 
 // Retrieves the name of this Entity.
-const string Entity::name(uint32_t flags) const
+const string Entity::name(unsigned int flags) const
 {
     const bool the = ((flags & NAME_FLAG_THE) == NAME_FLAG_THE);
     const bool capitalize_first = ((flags & NAME_FLAG_CAPITALIZE_FIRST) == NAME_FLAG_CAPITALIZE_FIRST);
@@ -193,21 +193,21 @@ void Entity::save(FileWriter* file)
     file->write_data<EntityType>(type());
 
     // Write the save version for this Entity.
-    file->write_data<uint32_t>(ENTITY_SAVE_VERSION);
+    file->write_data<unsigned int>(ENTITY_SAVE_VERSION);
 
     // Write the Entity's name and gender.
-    file->write_data<uint32_t>(ENTITY_SAVE_PROPS);
+    file->write_data<unsigned int>(ENTITY_SAVE_PROPS);
     file->write_string(name_);
     file->write_data<Gender>(gender_);
 
     // Write the Entity's tags, if any.
-    file->write_data<uint32_t>(ENTITY_SAVE_TAGS);
+    file->write_data<unsigned int>(ENTITY_SAVE_TAGS);
     file->write_data<uint32_t>(tags_.size());
     for (auto &tag : tags_)
         file->write_data<EntityTag>(tag);
 
     // Save this Entity's Inventory, if any.
-    file->write_data<uint32_t>(ENTITY_SAVE_INVENTORY);
+    file->write_data<unsigned int>(ENTITY_SAVE_INVENTORY);
     if (inventory_)
     {
         file->write_data<bool>(true);
@@ -220,9 +220,9 @@ void Entity::save(FileWriter* file)
 void Entity::set_gender(Gender new_gender)
 {
     // While unlikely, it can't hurt to check and ensure the value is within valid bounds.
-    if (static_cast<uint8_t>(new_gender) > static_cast<uint8_t>(Gender::IT))
+    if (static_cast<unsigned char>(new_gender) > static_cast<unsigned char>(Gender::IT))
     {
-        core().nonfatal("Attempt to set invalid gender (" + to_string(static_cast<uint8_t>(new_gender)) + ") on " + name_, Core::CORE_ERROR);
+        core().nonfatal("Attempt to set invalid gender (" + to_string(static_cast<unsigned char>(new_gender)) + ") on " + name_, Core::CORE_ERROR);
         new_gender = Gender::NONE;
     }
     gender_ = new_gender;

@@ -161,8 +161,8 @@ const string Room::door_name(Direction dir) const
 // Gets the Room linked in the specified direction, or nullptr if none is linked.
 Room* Room::get_link(Direction dir)
 {
-    const uint8_t array_pos = static_cast<uint8_t>(dir) - 1;
-    if (array_pos >= 10)
+    const int array_pos = static_cast<int>(dir) - 1;
+    if (array_pos < 0 || array_pos >= 10)
     {
         core().nonfatal("Attempt to retrieve invalid room link on " + id_str_ + " (" + to_string(array_pos) + ")", Core::CORE_ERROR);
         return nullptr;
@@ -208,10 +208,10 @@ bool Room::link_tag(Direction dir, LinkTag tag) const
 // Loads only the changes to this Room from a save file. Should only be called by a parent Region.
 void Room::load_delta(FileReader* file)
 {
-    uint32_t delta_tag = 0;
+    unsigned int delta_tag = 0;
     do
     {
-        delta_tag = file->read_data<uint32_t>();
+        delta_tag = file->read_data<unsigned int>();
         switch(delta_tag)
         {
             case ROOM_DELTA_ENTITIES:
@@ -245,7 +245,7 @@ void Room::load_delta(FileReader* file)
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    const uint32_t link_delta_type = file->read_data<uint32_t>();
+                    const unsigned int link_delta_type = file->read_data<unsigned int>();
                     switch(link_delta_type)
                     {
                         // If no Link is marked, delete any Link that may currently be there.
@@ -408,14 +408,14 @@ void Room::save_delta(FileWriter* file)
     if (!(entities_exist || tags_changed || desc_changed || exits_changed || name_changed || map_char_changed)) return;
 
     // Write the save version for this Room, and the Room's ID.
-    file->write_data<uint32_t>(Region::REGION_DELTA_ROOM);
-    file->write_data<uint32_t>(ROOM_SAVE_VERSION);
+    file->write_data<unsigned int>(Region::REGION_DELTA_ROOM);
+    file->write_data<unsigned int>(ROOM_SAVE_VERSION);
     file->write_data<uint32_t>(id_);
 
     // Save any Entities in this Room.
     if (entities_exist)
     {
-        file->write_data<uint32_t>(ROOM_DELTA_ENTITIES);
+        file->write_data<unsigned int>(ROOM_DELTA_ENTITIES);
         file->write_data<uint32_t>(entities_.size());
         for (auto &entity : entities_)
             entity->save(file);
@@ -424,7 +424,7 @@ void Room::save_delta(FileWriter* file)
     // If any tags have changed, write them all here.
     if (tags_changed)
     {
-        file->write_data<uint32_t>(ROOM_DELTA_TAGS);
+        file->write_data<unsigned int>(ROOM_DELTA_TAGS);
         file->write_data<uint32_t>(tags_.size());
         for (auto &tag : tags_)
             file->write_data<RoomTag>(tag);
@@ -433,33 +433,33 @@ void Room::save_delta(FileWriter* file)
     // If the room description has changed, add it here.
     if (desc_changed)
     {
-        file->write_data<uint32_t>(ROOM_DELTA_DESC);
+        file->write_data<unsigned int>(ROOM_DELTA_DESC);
         file->write_string(desc_);
     }
 
     // If any of the exits have changed, add them here.
     if (exits_changed)
     {
-        file->write_data<uint32_t>(ROOM_DELTA_LINKS);
+        file->write_data<unsigned int>(ROOM_DELTA_LINKS);
         for (int i = 0; i < 10; i++)
         {
             if (links_[i])
             {
                 if (links_[i]->changed())
                 {
-                    file->write_data<uint32_t>(ROOM_DELTA_LINK_CHANGED);
+                    file->write_data<unsigned int>(ROOM_DELTA_LINK_CHANGED);
                     links_[i]->save_delta(file);
                 }
-                else file->write_data<uint32_t>(ROOM_DELTA_LINK_UNCHANGED);
+                else file->write_data<unsigned int>(ROOM_DELTA_LINK_UNCHANGED);
             }
-            else file->write_data<uint32_t>(ROOM_DELTA_LINK_NONE);
+            else file->write_data<unsigned int>(ROOM_DELTA_LINK_NONE);
         }
     }
 
     // If the room's short name has changed, add it here.
     if (name_changed)
     {
-        file->write_data<uint32_t>(ROOM_DELTA_NAME);
+        file->write_data<unsigned int>(ROOM_DELTA_NAME);
         file->write_string(name_[0]);
         file->write_string(name_[1]);
     }
@@ -467,12 +467,12 @@ void Room::save_delta(FileWriter* file)
     // If the map character has changed, add it here.
     if (map_char_changed)
     {
-        file->write_data<uint32_t>(ROOM_DELTA_MAP_CHAR);
+        file->write_data<unsigned int>(ROOM_DELTA_MAP_CHAR);
         file->write_string(map_char_);
     }
 
     // Mark the end of the changes.
-    file->write_data<uint32_t>(ROOM_DELTA_END);
+    file->write_data<unsigned int>(ROOM_DELTA_END);
 }
 
 // Sets the description of this Room.

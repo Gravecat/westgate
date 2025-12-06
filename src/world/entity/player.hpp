@@ -26,7 +26,7 @@ namespace westgate {
 class FileReader;   // defined in util/filex.hpp
 class FileWriter;   // defined in util/filex.hpp
 
-enum class PlayerTag : uint16_t {
+enum class PlayerTag : unsigned short {
     // Tags for features the player has explicitly enabled or disabled.
     AutomapOff =    1,  // The player has disabled the auto-generating minimap.
 
@@ -51,10 +51,10 @@ public:
     EntityType  type() const override { return EntityType::PLAYER; }    // Self-identifies this Entity's derived class.
 
 private:
-    static constexpr uint32_t   PLAYER_SAVE_VERSION =   2;  // The expected version for saving/loading binary game data.
+    static constexpr unsigned int   PLAYER_SAVE_VERSION =   2;  // The expected version for saving/loading binary game data.
 
     // Identifiers for blocks of data in the save file, used to quickly catch errors when loading old or invalid data.
-    static constexpr uint32_t   PLAYER_SAVE_TAGS =      1;
+    static constexpr unsigned int   PLAYER_SAVE_TAGS =      1;
 
     int region_;    // The current Region the Player is in.
     std::set<PlayerTag> player_tags_;   // Any and all PlayerTags on the Player.

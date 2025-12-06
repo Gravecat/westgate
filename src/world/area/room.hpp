@@ -32,7 +32,7 @@ class FileReader;   // defined in util/filex.hpp
 class FileWriter;   // defined in util/filex.hpp
 
 // Tags are kinda like flags that can be set on Rooms, except using std::set.
-enum class RoomTag : uint16_t {
+enum class RoomTag : unsigned short {
     // Tags regarding changes made to this Room.
     ChangedTags =       1,  // The RoomTags on this Room have been changed.
     ChangedDesc =       2,  // The Room's description has been changed.
@@ -79,7 +79,7 @@ enum class RoomTag : uint16_t {
 
 class Room {
 public:
-    static constexpr uint32_t   ROOM_SAVE_VERSION = 10; // The expected version for saving/loading binary game data.
+    static constexpr unsigned int   ROOM_SAVE_VERSION = 10; // The expected version for saving/loading binary game data.
 
     static const std::string&   direction_name(Direction dir);  // Gets the string name of a Direction enum.
     static RoomTag              parse_room_tag(const std::string_view tag); // Parses a string RoomTag name into a RoomTag enum.
@@ -123,17 +123,17 @@ protected:
     std::vector<std::unique_ptr<Entity>>    entities_;  // Entities that exist within this Room.
 
 private:
-    static constexpr uint32_t   ROOM_DELTA_END =        0;  // The marker to indicate the end of delta changes on this Room.
-    static constexpr uint32_t   ROOM_DELTA_ENTITIES =   1;  // The delta tag to indicate entity data is below.
-    static constexpr uint32_t   ROOM_DELTA_TAGS =       2;  // Any and all RoomTags that have changed on this Room.
-    static constexpr uint32_t   ROOM_DELTA_DESC =       3;  // The Room description, if it's changed.
-    static constexpr uint32_t   ROOM_DELTA_LINKS =      4;  // The Room's Links, if any have changed.
-    static constexpr uint32_t   ROOM_DELTA_NAME =       5;  // The Room's name, if it's changed.
-    static constexpr uint32_t   ROOM_DELTA_MAP_CHAR =   6;  // The Room's map character, if it's changed.
+    static constexpr unsigned int   ROOM_DELTA_END =        0;  // The marker to indicate the end of delta changes on this Room.
+    static constexpr unsigned int   ROOM_DELTA_ENTITIES =   1;  // The delta tag to indicate entity data is below.
+    static constexpr unsigned int   ROOM_DELTA_TAGS =       2;  // Any and all RoomTags that have changed on this Room.
+    static constexpr unsigned int   ROOM_DELTA_DESC =       3;  // The Room description, if it's changed.
+    static constexpr unsigned int   ROOM_DELTA_LINKS =      4;  // The Room's Links, if any have changed.
+    static constexpr unsigned int   ROOM_DELTA_NAME =       5;  // The Room's name, if it's changed.
+    static constexpr unsigned int   ROOM_DELTA_MAP_CHAR =   6;  // The Room's map character, if it's changed.
 
-    static constexpr uint32_t   ROOM_DELTA_LINK_NONE =      100;    // Marks this Link as missing or removed.
-    static constexpr uint32_t   ROOM_DELTA_LINK_UNCHANGED = 101;    // Marks this Link as existing but unchanged.
-    static constexpr uint32_t   ROOM_DELTA_LINK_CHANGED =   201;    // Marks this Link as existing and modified.
+    static constexpr unsigned int   ROOM_DELTA_LINK_NONE =      100;    // Marks this Link as missing or removed.
+    static constexpr unsigned int   ROOM_DELTA_LINK_UNCHANGED = 101;    // Marks this Link as existing but unchanged.
+    static constexpr unsigned int   ROOM_DELTA_LINK_CHANGED =   201;    // Marks this Link as existing and modified.
 
     static const std::string    direction_names_[11];       // Lookup table to convert a Direction enum into a string name.
     static const Direction      reverse_direction_map_[11]; // Lookup table that inverts a Direction (e.g. east -> west).

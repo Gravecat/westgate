@@ -105,7 +105,7 @@ void Region::load_delta(int save_slot)
     // Load the save file, check the headers and version.
     auto file = std::make_unique<FileReader>(save_file);
     if (!file->check_header()) throw runtime_error("Invalid region deltas" + err_file);
-    const uint32_t delta_ver = file->read_data<uint32_t>();
+    const unsigned int delta_ver = file->read_data<unsigned int>();
     if (delta_ver != REGION_SAVE_VERSION) FileReader::standard_error("Invalid region deltas save version" + err_file, delta_ver, REGION_SAVE_VERSION);
     if (file->read_string().compare("REGION_DELTA")) throw runtime_error("Invalid region deltas" + err_file);
     const int delta_id = file->read_data<int>();
@@ -114,11 +114,11 @@ void Region::load_delta(int save_slot)
     // Load the Room deltas, if any.
     while(true)
     {
-        const uint32_t delta_tag = file->read_data<uint32_t>();
+        const unsigned int delta_tag = file->read_data<unsigned int>();
         if (delta_tag == REGION_DELTA_ROOMS_END) break;
         else if (delta_tag == REGION_DELTA_ROOM)
         {
-            const uint32_t room_ver = file->read_data<uint32_t>();
+            const unsigned int room_ver = file->read_data<unsigned int>();
             if (room_ver != Room::ROOM_SAVE_VERSION) FileReader::standard_error("Invalid region room version", room_ver, Room::ROOM_SAVE_VERSION);
             const uint32_t room_id = file->read_data<uint32_t>();
             auto result = rooms_.find(room_id);
@@ -154,7 +154,7 @@ void Region::load_from_gamedata(const string_view filename, bool update_world)
     const YAML region_id = yaml.get_child("REGION_IDENTIFIER");
     if (!region_id.is_map()) throw runtime_error(filename_str + ": Cannot find region identifier data!");
     if (!region_id.key_exists("version")) throw runtime_error(filename_str + ": Missing version in identifier data!");
-    uint32_t region_version;
+    unsigned int region_version;
     try { region_version = std::stoul(region_id.val("version")); }
     catch (std::invalid_argument&) { throw runtime_error(filename_str + ": Invalid region version identifier!"); }
     if (region_version != REGION_YAML_VERSION) FileReader::standard_error("Invalid region version", region_version, REGION_YAML_VERSION, {filename_str});
@@ -242,7 +242,7 @@ void Region::save_delta(int save_slot, bool no_changes)
     // Create the save file, and mark it with a version tag.
     auto file = std::make_unique<FileWriter>(region_save_file.string());
     file->write_header();
-    file->write_data<uint32_t>(REGION_SAVE_VERSION);
+    file->write_data<unsigned int>(REGION_SAVE_VERSION);
     file->write_string("REGION_DELTA");
     file->write_data<int>(id_);
 
@@ -252,7 +252,7 @@ void Region::save_delta(int save_slot, bool no_changes)
         for (auto &room : rooms_)
             room.second->save_delta(file.get());
     }
-    file->write_data<uint32_t>(REGION_DELTA_ROOMS_END);
+    file->write_data<unsigned int>(REGION_DELTA_ROOMS_END);
 
     // Write an EOF tag, so we know the end is where it should be.
     file->write_footer();

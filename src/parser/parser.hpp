@@ -21,7 +21,7 @@
 
 namespace westgate {
 
-enum class Direction : uint8_t; // defined in world/area/room.hpp
+enum class Direction : unsigned char;   // defined in world/area/room.hpp
 
 namespace parser {
 

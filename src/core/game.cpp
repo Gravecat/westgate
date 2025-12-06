@@ -87,7 +87,7 @@ void Game::load_game(int save_slot)
 
     // Check the misc data headers and version.
     if (!file->check_header()) throw runtime_error("Invalid save data header!");
-    const uint32_t misc_version = file->read_data<uint32_t>();
+    const unsigned int misc_version = file->read_data<unsigned int>();
     if (misc_version != MISC_DATA_SAVE_VERSION) FileReader::standard_error("Invalid save data version", misc_version, MISC_DATA_SAVE_VERSION);
     if (file->read_string() != "MISC_DATA") throw runtime_error("Invalid save data header!");
 
@@ -153,7 +153,7 @@ void Game::save_misc_data()
 
     // Write the standard header, then the misc data version, and the misc data string tag.
     file->write_header();
-    file->write_data<uint32_t>(MISC_DATA_SAVE_VERSION);
+    file->write_data<unsigned int>(MISC_DATA_SAVE_VERSION);
     file->write_string("MISC_DATA");
 
     // The only misc data to write for now is the player's region ID.

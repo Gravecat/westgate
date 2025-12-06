@@ -194,7 +194,7 @@ string FileX::file_to_string(const string_view filename)
 }
 
 // Loads a text file into a vector, one string for each line of the file.
-vector<string> FileX::file_to_vec(const string_view filename, uint8_t flags)
+vector<string> FileX::file_to_vec(const string_view filename, unsigned int flags)
 {
     const bool flag_ignore_blank_lines = (flags & FTV_FLAG_IGNORE_BLANK_LINES) == FTV_FLAG_IGNORE_BLANK_LINES;
     const bool flag_ignore_comments = (flags & FTV_FLAG_IGNORE_COMMENTS) == FTV_FLAG_IGNORE_COMMENTS;

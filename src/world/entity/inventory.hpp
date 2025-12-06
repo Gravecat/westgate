@@ -39,7 +39,7 @@ public:
     void    transfer(Inventory* new_inv, size_t index); // Moves an item from this Inventory into another.
 
 private:
-    static constexpr uint32_t   INVENTORY_SAVE_VERSION =    1;  // The expected version for saving/loading binary game data.
+    static constexpr unsigned int   INVENTORY_SAVE_VERSION =    1;  // The expected version for saving/loading binary game data.
 
     std::vector<std::unique_ptr<Item>>  items_; // The Items stored in this Inventory.
 };

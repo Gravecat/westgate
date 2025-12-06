@@ -29,8 +29,8 @@ namespace westgate {
 class Region
 {
 public:
-    static constexpr uint32_t   REGION_DELTA_ROOM =         1;  // The delta tag to indicate room data is following.
-    static constexpr uint32_t   REGION_DELTA_ROOMS_END =    2;  // The delta tag to indicate the end of the room data.
+    static constexpr unsigned int   REGION_DELTA_ROOM =         1;  // The delta tag to indicate room data is following.
+    static constexpr unsigned int   REGION_DELTA_ROOMS_END =    2;  // The delta tag to indicate the end of the room data.
 
                 Region();                       // Creates an empty Region.
                 ~Region();                      // Destructor, cleans up stored data.
@@ -44,8 +44,8 @@ public:
 private:
     void        load_delta(int save_slot);  // Loads delta changes from a saved game file.
 
-    static constexpr uint32_t   REGION_SAVE_VERSION =       4;  // The expected version for saving/loading binary game data.
-    static constexpr uint32_t   REGION_YAML_VERSION =       4;  // The expected version for region YAML data.
+    static constexpr unsigned int   REGION_SAVE_VERSION =       4;  // The expected version for saving/loading binary game data.
+    static constexpr unsigned int   REGION_YAML_VERSION =       4;  // The expected version for region YAML data.
 
     int         id_;    // The ID of the loaded region file.
     std::string name_;  // The name of this Region.

@@ -31,12 +31,12 @@ class FileWriter;   // defined in util/filewriter.hpp
 class Room;         // defined in world/room.hpp
 
 // Used to allow Entity to self-identify its derived class.
-enum class EntityType : uint8_t { ENTITY, MOBILE, PLAYER, ITEM };
+enum class EntityType : unsigned char { ENTITY, MOBILE, PLAYER, ITEM };
 
 // The genders of things in the game.
-enum class Gender : uint8_t { NONE, HE, SHE, THEY, IT };
+enum class Gender : unsigned char { NONE, HE, SHE, THEY, IT };
 
-enum class EntityTag : uint16_t {
+enum class EntityTag : unsigned short {
     // Tags regarding this Entity's name or identity.
     ProperNoun = 1,     // This Entity's name is a proper noun (e.g. Smaug).
     PluralName,         // This Entity's name is a plural (e.g. "pack of rats").
@@ -44,10 +44,10 @@ enum class EntityTag : uint16_t {
 };
 
 // Flags for the name() function.
-static constexpr uint32_t NAME_FLAG_THE =               1;  // Precede the Entity's name with 'the', unless the name is a proper noun.
-static constexpr uint32_t NAME_FLAG_CAPITALIZE_FIRST =  2;  // Capitalize the first letter of the Entity's name (including the "The") if set.
-static constexpr uint32_t NAME_FLAG_POSSESSIVE =        4;  // Change the Entity's name to a possessive noun (e.g. goblin -> goblin's).
-static constexpr uint32_t NAME_FLAG_PLURAL =            8;  // Return a plural of the Entity's name (e.g. apple -> apples).
+static constexpr unsigned int   NAME_FLAG_THE =               1;  // Precede the Entity's name with 'the', unless the name is a proper noun.
+static constexpr unsigned int   NAME_FLAG_CAPITALIZE_FIRST =  2;  // Capitalize the first letter of the Entity's name (including the "The") if set.
+static constexpr unsigned int   NAME_FLAG_POSSESSIVE =        4;  // Change the Entity's name to a possessive noun (e.g. goblin -> goblin's).
+static constexpr unsigned int   NAME_FLAG_PLURAL =            8;  // Return a plural of the Entity's name (e.g. apple -> apples).
 
 class Entity {
 public:
@@ -64,7 +64,7 @@ public:
     const std::string   himself_herself() const;    // Returns a gender string (himself/herself/theirself/etc.)
     const std::string   his_her() const;    // Returns a gender string (his/her/its/their/etc.)
     Inventory*          inv();  // Returns a pointer to the attached Inventory, if any.
-    const std::string   name(uint32_t flags = 0) const; // Retrieves the name of this Entity.
+    const std::string   name(unsigned int flags = 0) const; // Retrieves the name of this Entity.
     Entity*             parent_entity() const;  // Retrieves the Entity (if any) containing this Entity.
     Room*               parent_room() const;    // Retrieves the Room (if any) containing this Entity.
     void                remove_inventory();     // Removes an Inventory pointer from this Entity.
@@ -86,12 +86,12 @@ protected:
     Room*       parent_room_;   // The Room (if any) where this Entity is located.
 
 private:
-    static constexpr uint32_t   ENTITY_SAVE_VERSION =   5;  // The expected version for saving/loading binary game data.
+    static constexpr unsigned int   ENTITY_SAVE_VERSION =   5;  // The expected version for saving/loading binary game data.
 
     // Identifiers for blocks of data in the save file, used to quickly catch errors when loading old or invalid data.
-    static constexpr uint32_t   ENTITY_SAVE_PROPS =     1;
-    static constexpr uint32_t   ENTITY_SAVE_TAGS =      2;
-    static constexpr uint32_t   ENTITY_SAVE_INVENTORY = 3;
+    static constexpr unsigned int   ENTITY_SAVE_PROPS =     1;
+    static constexpr unsigned int   ENTITY_SAVE_TAGS =      2;
+    static constexpr unsigned int   ENTITY_SAVE_INVENTORY = 3;
 
     std::unique_ptr<Inventory>  inventory_; // An Inventory attached to this Entity, if any.
     std::set<EntityTag> tags_;  // Any and all tags on this Entity.

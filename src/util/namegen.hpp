@@ -21,7 +21,7 @@
 
 namespace westgate {
 
-enum class Gender : uint8_t;    // defined in world/entity/entity.hpp
+enum class Gender : unsigned char;  // defined in world/entity/entity.hpp
 
 class ProcNameGen {
 public:

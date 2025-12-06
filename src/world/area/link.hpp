@@ -29,10 +29,10 @@ class FileReader;   // defined in util/filex.hpp
 class FileWriter;   // defined in util/filex.hpp
 
 // Cardinal directions, along with up/down, to link the world together.
-enum class Direction : uint8_t { NONE, NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST, UP, DOWN };
+enum class Direction : unsigned char { NONE, NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST, UP, DOWN };
 
 // Tags are kinda like flags that can be set on Links, except using std::set.
-enum class LinkTag : uint16_t {
+enum class LinkTag : unsigned short {
     // Tags regarding changes made to this exit.
     ChangedLink =   1,  // The exit link has changed.
     ChangedTags =   2,  // The ExitTags on this exit have been changed.
@@ -77,9 +77,9 @@ public:
     bool        tag(LinkTag the_tag) const; // Checks if a LinkTag is set on this Link.
 
 private:
-    static constexpr uint32_t   LINK_DELTA_END =    0;  // Marks the end of the Link's delta changes.
-    static constexpr uint32_t   LINK_DELTA_EXIT =   1;  // The linked exit on this Link has changed.
-    static constexpr uint32_t   LINK_DELTA_TAGS =   2;  // The LinkTags on this Link have changed.
+    static constexpr unsigned int   LINK_DELTA_END =    0;  // Marks the end of the Link's delta changes.
+    static constexpr unsigned int   LINK_DELTA_EXIT =   1;  // The linked exit on this Link has changed.
+    static constexpr unsigned int   LINK_DELTA_TAGS =   2;  // The LinkTags on this Link have changed.
 
     static const std::map<std::string, LinkTag> tag_map_;   // Used during loading YAML data, to convert LinkTag text names into LinkTag enums.
 

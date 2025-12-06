@@ -37,7 +37,7 @@ public:
     World&  world() const;  // Returns a reference to the World object.
 
 private:
-    static constexpr uint32_t   MISC_DATA_SAVE_VERSION = 6; // The version of the misc data file in save files. Changing this will make save files incompatible.
+    static constexpr unsigned int   MISC_DATA_SAVE_VERSION = 6; // The version of the misc data file in save files. Changing this will make save files incompatible.
 
     Player* player_ptr_;    // Pointer to the player-character object. Ownership of the object lies with the Room they're in.
     int     save_id_;       // The current saved-game ID (or -1 for none).

@@ -50,7 +50,7 @@ size_t StrX::ansi_strlen(const string_view str)
 { return ansi_strip(str).length(); }
 
 // Splits an ANSI-tagged string across multiple lines of text.
-vector<string> StrX::ansi_vector_split(const string_view str, uint32_t line_length)
+vector<string> StrX::ansi_vector_split(const string_view str, size_t line_length)
 {
     string current_line, last_tag;
     vector<string> result, words = string_explode(str, " ");
@@ -110,7 +110,7 @@ void StrX::check_hash_collision(const string_view str, uint32_t hash)
 #endif  // WESTGATE_BUILD_DEBUG
 
 // Converts a vector to a comma-separated list.
-string StrX::comma_list(vector<string> vec, uint8_t mode)
+string StrX::comma_list(vector<string> vec, unsigned int mode)
 {
     string plus = ", ";
     if (mode == CL_MODE_USE_AND) plus = " and ";

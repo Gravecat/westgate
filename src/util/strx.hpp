@@ -25,14 +25,14 @@ namespace westgate {
 
 class StrX {
 public:
-    static constexpr uint8_t CL_MODE_USE_AND = 1;   // Use 'and' for the last entry in comma_list().
-    static constexpr uint8_t CL_MODE_USE_OR =  2;   // Use 'or' for the last entry in comma_list();
+    static constexpr unsigned int   CL_MODE_USE_AND = 1;   // Use 'and' for the last entry in comma_list().
+    static constexpr unsigned int   CL_MODE_USE_OR =  2;   // Use 'or' for the last entry in comma_list();
 
     static std::string  ansi_strip(const std::string_view str); // Strips all ANSI colour tags like {M} from a string.
     static size_t       ansi_strlen(const std::string_view str);    // Returns the length of a specified string, not counting the ANSI colour tags like {G}.
                                     // Splits an ANSI-tagged string across multiple lines of text.
-    static std::vector<std::string> ansi_vector_split(const std::string_view str, uint32_t line_length);
-    static std::string  comma_list(std::vector<std::string> vec, uint8_t mode = 0);    // Converts a vector to a comma-separated list.
+    static std::vector<std::string> ansi_vector_split(const std::string_view str, size_t line_length);
+    static std::string  comma_list(std::vector<std::string> vec, unsigned int mode = 0);    // Converts a vector to a comma-separated list.
     static std::string  decode_compressed_string(const std::string_view str);   // Decodes a compressed string (e.g. 4cab2z becomes ccccabzz).
     // Find and replace one string with another.
     static bool         find_and_replace(std::string& input, const std::string_view to_find, const std::string_view to_replace);

@@ -27,7 +27,7 @@
 
 namespace westgate {
 
-enum class Direction : uint8_t; // defined in world/area/link.hpp
+enum class Direction : unsigned char;   // defined in world/area/link.hpp
 
 class FileReader;   // defined in util/filex.hpp
 class FileWriter;   // defined in util/filex.hpp
@@ -35,12 +35,12 @@ class FileWriter;   // defined in util/filex.hpp
 class TimeWeather
 {
 public:
-    enum class LightDark : uint8_t { LIGHT, DARK, NIGHT };
-    enum class LunarPhase : uint8_t { NEW, WAXING_CRESCENT, FIRST_QUARTER, WAXING_GIBBOUS, FULL, WANING_GIBBOUS, THIRD_QUARTER, WANING_CRESCENT };
-    enum class Season : uint8_t { AUTO, WINTER, SPRING, SUMMER, AUTUMN };
+    enum class LightDark : unsigned char { LIGHT, DARK, NIGHT };
+    enum class LunarPhase : unsigned char { NEW, WAXING_CRESCENT, FIRST_QUARTER, WAXING_GIBBOUS, FULL, WANING_GIBBOUS, THIRD_QUARTER, WANING_CRESCENT };
+    enum class Season : unsigned char { AUTO, WINTER, SPRING, SUMMER, AUTUMN };
     enum Time { SECOND = 1, MINUTE = 60, HOUR = 3600, DAY = 86400 };
-    enum class TimeOfDay : uint8_t { DAWN, SUNRISE, MORNING, NOON, SUNSET, DUSK, NIGHT, MIDNIGHT, DAY };
-    enum class Weather : uint8_t { BLIZZARD, STORMY, RAIN, CLEAR, FAIR, OVERCAST, FOG, LIGHTSNOW, SLEET };
+    enum class TimeOfDay : unsigned char { DAWN, SUNRISE, MORNING, NOON, SUNSET, DUSK, NIGHT, MIDNIGHT, DAY };
+    enum class Weather : unsigned char { BLIZZARD, STORMY, RAIN, CLEAR, FAIR, OVERCAST, FOG, LIGHTSNOW, SLEET };
 
                 TimeWeather();              // Sets up the time and weather system with default values, and loads its strings into memory.
     Season      current_season();           // Gets the current season.
@@ -60,15 +60,15 @@ public:
     TimeOfDay   time_of_day(bool fine);     // Returns the current time of day (morning, day, dusk, night)
     int         time_of_day_exact();        // Returns the exact time of day.
     std::string time_of_day_str(bool fine); // Returns the current time of day as a string.
-    uint64_t    time_passed();              // Returns the total amount of time passed in this game.
+    unsigned long long  time_passed();      // Returns the total amount of time passed in this game.
     Weather     weather();                  // Gets the current weather, runs fix_weather() internally.
     std::string weather_desc();             // Returns a weather description for the current time/weather, based on the current season.
     std::string weather_str(Weather weather);   // Converts a weather integer to a string.
 
 private:
-    static constexpr int    LUNAR_CYCLE_DAYS =  29;     // How many days are in a lunar cycle?
-    static constexpr float  TIME_GRANULARITY =  0.1f;   // The lower this number, the more fine-grained the accuracy of the passage of time becomes.
-    static constexpr int    TIME_WEATHER_SAVE_VERSION = 2;  // The version of the time/weather saved data in the saved game file.
+    static constexpr int            LUNAR_CYCLE_DAYS =  29;     // How many days are in a lunar cycle?
+    static constexpr float          TIME_GRANULARITY =  0.1f;   // The lower this number, the more fine-grained the accuracy of the passage of time becomes.
+    static constexpr unsigned int   TIME_WEATHER_SAVE_VERSION = 2;  // The version of the time/weather saved data in the saved game file.
 
     Weather     fix_weather(Weather weather, Season season);    // Fixes weather for a specified season.
     void        trigger_event(std::string *message_to_append, bool silent); // Triggers a time-change event.
@@ -78,12 +78,12 @@ private:
     int         day_;       // The current day of the year.
     int         moon_;      // The current moon phase.
     int         time_;      // The time of day.
-    uint64_t    time_passed_;   // The total amount of time that has passed in this game.
+    unsigned long long  time_passed_;   // The total amount of time that has passed in this game.
     float       time_passed_subsecond_; // For counting time passed in amounts of time less than a second.
     Weather     weather_;   // The current weather.
     bool        wind_clockwise_;    // Is the wind direction changing in a clockwise direction?
     Direction   wind_direction_;    // The current direction the wind is blowing from.
-    uint64_t    wind_next_change_;  // The time when the wind is due to next change direction.
+    unsigned long long  wind_next_change_;  // The time when the wind is due to next change direction.
 
     std::map<std::string, std::string>  tw_string_map_; // The time and weather transition strings.
     std::vector<std::string>            weather_change_map_;    // Weather change maps, to determine odds of changing to different weather types.
