@@ -44,11 +44,11 @@ string ProcNameGen::consonant()
 // Loads the namelists from the data files.
 void ProcNameGen::load_namelists()
 {
-    const unsigned int ftv_flags = FileX::FTV_FLAG_IGNORE_BLANK_LINES | FileX::FTV_FLAG_IGNORE_COMMENTS;
-    names_f = FileX::file_to_vec(core().datafile("namegen/names-f.txt"), ftv_flags);
-    names_m = FileX::file_to_vec(core().datafile("namegen/names-m.txt"), ftv_flags);
-    names_s_a = FileX::file_to_vec(core().datafile("namegen/surname-a.txt"), ftv_flags);
-    names_s_b = FileX::file_to_vec(core().datafile("namegen/surname-b.txt"), ftv_flags);
+    const unsigned int ftv_flags = filex::FTV_FLAG_IGNORE_BLANK_LINES | filex::FTV_FLAG_IGNORE_COMMENTS;
+    names_f = filex::file_to_vec(core().datafile("namegen/names-f.txt"), ftv_flags);
+    names_m = filex::file_to_vec(core().datafile("namegen/names-m.txt"), ftv_flags);
+    names_s_a = filex::file_to_vec(core().datafile("namegen/surname-a.txt"), ftv_flags);
+    names_s_b = filex::file_to_vec(core().datafile("namegen/surname-b.txt"), ftv_flags);
 
     YAML yaml(core().datafile("namegen/namegen-strings.yml"));
     if (!yaml.is_map()) throw runtime_error("namegen-strings.yml: Invalid file format");

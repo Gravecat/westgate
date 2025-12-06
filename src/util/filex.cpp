@@ -122,7 +122,7 @@ void FileReader::standard_error(const string &err, int64_t data, int64_t expecte
 // Constructor, opens a binary file.
 FileWriter::FileWriter(const string& filename)
 {
-    const string bp_filename = FileX::game_path(filename);
+    const string bp_filename = filex::game_path(filename);
     fs::remove(bp_filename);
     file_out_.open(bp_filename.c_str(), std::ios::binary | std::ios::out);
 }
@@ -173,14 +173,15 @@ void FileWriter::write_string(string str)
 }
 
 /* FILEX */
+namespace filex {
 
-string FileX::exe_dir;  // The path to the binary.
+string exe_dir; // The path to the binary.
 
 // Given a path or filename, combines it with the current executable path and returns the combined, full path.
-string FileX::game_path(const string_view path) { return merge_paths(get_executable_dir(), path); }
+string game_path(const string_view path) { return merge_paths(get_executable_dir(), path); }
 
 // Loads a text file into an std::string.
-string FileX::file_to_string(const string_view filename)
+string file_to_string(const string_view filename)
 {
     string filename_str = string(filename);
     if (!fs::exists(filename)) throw runtime_error("Invalid file: " + filename_str);
@@ -193,7 +194,7 @@ string FileX::file_to_string(const string_view filename)
 }
 
 // Loads a text file into a vector, one string for each line of the file.
-vector<string> FileX::file_to_vec(const string_view filename, unsigned int flags)
+vector<string> file_to_vec(const string_view filename, unsigned int flags)
 {
     const bool flag_ignore_blank_lines = (flags & FTV_FLAG_IGNORE_BLANK_LINES) == FTV_FLAG_IGNORE_BLANK_LINES;
     const bool flag_ignore_comments = (flags & FTV_FLAG_IGNORE_COMMENTS) == FTV_FLAG_IGNORE_COMMENTS;
@@ -221,7 +222,7 @@ vector<string> FileX::file_to_vec(const string_view filename, unsigned int flags
 }
 
 // Platform-agnostic way to find this binary's runtime directory.
-string FileX::get_executable_dir()
+string get_executable_dir()
 {
     string result;
 #if defined(WESTGATE_TARGET_WINDOWS)
@@ -251,6 +252,6 @@ string FileX::get_executable_dir()
 }
 
 // Merges two path strings together.
-string FileX::merge_paths(const string_view path_a, const string_view path_b) { return (fs::path(path_a) / path_b).string(); }
+string merge_paths(const string_view path_a, const string_view path_b) { return (fs::path(path_a) / path_b).string(); }
 
-}   // westgate namespace
+} } // filex, westgate namespaces

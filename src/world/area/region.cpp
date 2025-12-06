@@ -99,7 +99,7 @@ void Region::load_delta(int save_slot)
 {
     // Ensure the save file exists.
     const string err_file = " (slot " + to_string(save_slot) + ", region " + to_string(id_) + ")";
-    const string save_file = FileX::game_path("userdata/saves/" + to_string(save_slot) + "/region/" + to_string(id_) + ".wg");
+    const string save_file = filex::game_path("userdata/saves/" + to_string(save_slot) + "/region/" + to_string(id_) + ".wg");
     if (!fs::is_regular_file(save_file)) throw runtime_error("Unable to load region deltas" + err_file);
 
     // Load the save file, check the headers and version.
@@ -232,11 +232,11 @@ void Region::load_from_gamedata(const string_view filename, bool update_world)
 void Region::save_delta(int save_slot, bool no_changes)
 {
     // Ensure the correct folder exists.
-    const fs::path region_saves_path = FileX::game_path("userdata/saves/" + to_string(save_slot) + "/region");
+    const fs::path region_saves_path = filex::game_path("userdata/saves/" + to_string(save_slot) + "/region");
     if (!fs::exists(region_saves_path)) fs::create_directory(region_saves_path);
 
     // Delete any old data if it's currently there.
-    const fs::path region_save_file = FileX::merge_paths(region_saves_path.string(), to_string(id_) + ".wg");
+    const fs::path region_save_file = filex::merge_paths(region_saves_path.string(), to_string(id_) + ".wg");
     if (fs::exists(region_save_file)) fs::remove(region_save_file);
 
     // Create the save file, and mark it with a version tag.

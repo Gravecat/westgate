@@ -73,7 +73,7 @@ void Game::load_game(int save_slot)
     Timer load_timer;
 
     player_ptr_ = nullptr;
-    const fs::path save_path = FileX::game_path("userdata/saves/" + to_string(save_slot));
+    const fs::path save_path = filex::game_path("userdata/saves/" + to_string(save_slot));
     if (!fs::exists(save_path))
     {
         print("{R}Saved game file cannot be located.");
@@ -81,7 +81,7 @@ void Game::load_game(int save_slot)
     }
 
     // Load the misc data file.
-    const fs::path misc_path = FileX::merge_paths(save_path.string(), "savedata.wg");
+    const fs::path misc_path = filex::merge_paths(save_path.string(), "savedata.wg");
     if (!fs::exists(misc_path)) throw runtime_error("Could not locate saved game data!");
     std::unique_ptr<FileReader> file = std::make_unique<FileReader>(misc_path.string());
 
@@ -147,7 +147,7 @@ void Game::save(bool chatty)
 // Writes a misc save file, which contains everything that isn't in the region saves.
 void Game::save_misc_data()
 {
-    const fs::path save_path = FileX::game_path("userdata/saves/" + to_string(save_id_) + "/savedata.wg");
+    const fs::path save_path = filex::game_path("userdata/saves/" + to_string(save_id_) + "/savedata.wg");
     if (fs::exists(save_path)) fs::remove(save_path);
     auto file = std::make_unique<FileWriter>(save_path.string());
 

@@ -72,23 +72,20 @@ private:
     std::ofstream   file_out_;  // File handle for writing into the binary data file.
 };
 
-class FileX {
-public:
-    // Flags for file_to_vec()
-    static constexpr unsigned int   FTV_FLAG_IGNORE_BLANK_LINES =   1;  // Ignores any blank lines in the file.
-    static constexpr unsigned int   FTV_FLAG_IGNORE_COMMENTS =      2;  // Ignores any comments (lines starting with #) in the file.
-    static constexpr unsigned int   FTV_FLAG_NO_STRIP_NEWLINES =    4;  // Tells file_to_vec() to NOT strip trailing \r or \n newlines from the file.
+namespace filex {
 
-    // Given a path or filename, combines it with the current executable path and returns the combined, full path.
-    static std::string  game_path(const std::string_view path);
-    static std::string  get_executable_dir();   // Platform-agnostic way to find this binary's runtime directory.
-    static std::string  file_to_string(const std::string_view filename);    // Loads a text file into an std::string.
-                                    // Loads a text file into a vector, one string for each line of the file.
-    static std::vector<std::string> file_to_vec(const std::string_view filename, unsigned int flags = 0);
-    static std::string  merge_paths(const std::string_view path_a, std::string_view path_b);    // Merges two path strings together.
+// Flags for file_to_vec()
+constexpr unsigned int  FTV_FLAG_IGNORE_BLANK_LINES =   1;  // Ignores any blank lines in the file.
+constexpr unsigned int  FTV_FLAG_IGNORE_COMMENTS =      2;  // Ignores any comments (lines starting with #) in the file.
+constexpr unsigned int  FTV_FLAG_NO_STRIP_NEWLINES =    4;  // Tells file_to_vec() to NOT strip trailing \r or \n newlines from the file.
 
-private:
-    static std::string  exe_dir;    // The path to the game's binary directory.
-};
+// Given a path or filename, combines it with the current executable path and returns the combined, full path.
+std::string game_path(const std::string_view path);
+std::string get_executable_dir();   // Platform-agnostic way to find this binary's runtime directory.
+std::string file_to_string(const std::string_view filename);    // Loads a text file into an std::string.
+                            // Loads a text file into a vector, one string for each line of the file.
+std::vector<std::string>    file_to_vec(const std::string_view filename, unsigned int flags = 0);
+std::string merge_paths(const std::string_view path_a, std::string_view path_b);    // Merges two path strings together.
 
-}   // westgate namespace
+} } // filex, westgate namespaces
+
