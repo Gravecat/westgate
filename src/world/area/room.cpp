@@ -47,7 +47,7 @@ const Direction Room::reverse_direction_map_[11] = { Direction::NONE, Direction:
     Direction::NORTH, Direction::NORTHEAST, Direction::EAST, Direction::SOUTHEAST, Direction::DOWN, Direction::UP };
 
 // Used during loading YAML data, to convert RoomTag text names into RoomTag enums.
-const std::map<std::string, RoomTag> Room::tag_map_ = { {"Explored", RoomTag::Explored }, { "Indoors", RoomTag::Indoors }, { "Windows", RoomTag::Windows },
+const std::map<string, RoomTag> Room::tag_map_ = { {"Explored", RoomTag::Explored }, { "Indoors", RoomTag::Indoors }, { "Windows", RoomTag::Windows },
     { "City", RoomTag::City }, { "Underground", RoomTag::Underground }, { "Trees", RoomTag::Trees }, { "AlwaysWinter", RoomTag::AlwaysWinter },
     { "AlwaysSpring", RoomTag::AlwaysSpring }, { "AlwaysSummer", RoomTag::AlwaysSummer }, { "AlwaysAutumn", RoomTag::AlwaysAutumn },
     { "UnfinishedNorth", RoomTag::UnfinishedNorth }, { "UnfinishedNortheast", RoomTag::UnfinishedNortheast }, { "UnfinishedEast", RoomTag::UnfinishedEast },
@@ -151,7 +151,7 @@ const string& Room::direction_name(Direction dir)
 }
 
 // Returns the name of the door (door, gate, etc.) on the specified Link, if any.
-const std::string Room::door_name(Direction dir) const
+const string Room::door_name(Direction dir) const
 {
     int array_pos = link_id(dir, "clear_link_tag", false);
     if (!links_[array_pos]) return "";
@@ -365,7 +365,7 @@ void Room::look()
 }
 
 // Retrieves the map character for this Room.
-const std::string Room::map_char() const
+const string Room::map_char() const
 {
     if (!map_char_.size()) throw runtime_error(id_str_ + ": empty map char");
     if (map_char_[0] == '{') return map_char_ + "{0}";
@@ -373,7 +373,7 @@ const std::string Room::map_char() const
 }
 
 // Retrieves the full name of this Room.
-const std::string& Room::name() const { return name_[1]; }
+const string& Room::name() const { return name_[1]; }
 
 // Parses a string RoomTag name into a RoomTag enum.
 RoomTag Room::parse_room_tag(const string_view tag)

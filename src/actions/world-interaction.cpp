@@ -168,7 +168,7 @@ void wait(PARSER_FUNCTION)
         print("{Y}Don't be ridiculous.");
         return;
     }
-    std::string time_str;
+    string time_str;
     switch(words_hashed.at(2))
     {
         case 1296922301: case 3652255926: time_str = "second"; break;

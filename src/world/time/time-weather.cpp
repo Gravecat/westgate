@@ -59,15 +59,15 @@ TimeWeather::TimeWeather() : time_passed_(0), time_passed_subsecond_(0)
     else weather_ = Weather::FAIR;
 
     weather_change_map_.resize(9);
-    const std::string filename = core().datafile("misc/weather.yml");
+    const string filename = core().datafile("misc/weather.yml");
     if (!fs::is_regular_file(filename)) throw runtime_error("Could not load weather.yml!");
     YAML yaml(filename);
     if (!yaml.is_map()) throw runtime_error("weather.yml file is invalid!");
     auto key_vals = yaml.keys_vals();
     for (auto &key_val : key_vals)
     {
-        const std::string key = key_val.first;
-        const std::string val = key_val.second;
+        const string key = key_val.first;
+        const string val = key_val.second;
 
         if (key.size() == 5 && !key.substr(0,4).compare("WMAP"))
         {
@@ -326,7 +326,7 @@ void TimeWeather::save_data(FileWriter* file)
 }
 
 // Retrieves a message directly from the string map, with tags processed.
-std::string TimeWeather::string_map(const string_view key)
+string TimeWeather::string_map(const string_view key)
 {
     const string key_str = string{key};
     const Room* player_room = player().parent_room();
@@ -338,7 +338,7 @@ std::string TimeWeather::string_map(const string_view key)
         core().nonfatal("Unable to retrieve time/weather string: " + key_str, Core::CORE_ERROR);
         return "";
     }
-    std::string out = result->second;
+    string out = result->second;
     StrX::process_conditional_tags(out, "outside", !indoors);
     StrX::process_conditional_tags(out, "inside", indoors);
     if (in_city)

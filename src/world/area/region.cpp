@@ -136,7 +136,7 @@ void Region::load_delta(int save_slot)
 void Region::load_from_gamedata(const string_view filename, bool update_world)
 {
     // Determine this region's ID from the filename.
-    const std::string filename_str = string{filename};
+    const string filename_str = string{filename};
     auto dash_pos = filename.find_first_of('-');
     if (dash_pos == string::npos) throw runtime_error("Cannot determine region ID: " + filename_str);
     try { id_ = std::stoul(filename_str.substr(0, dash_pos)); }

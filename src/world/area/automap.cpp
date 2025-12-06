@@ -79,7 +79,7 @@ vector<string> Automap::generate_map(Room* start_room)
             bool unfinished_link = false;
             unsigned int line_length = 1;
             const Direction dir = static_cast<Direction>(i);
-            std::string link_colour = "{K}";
+            string link_colour = "{K}";
             if (!room->get_link(dir))
             {
                 if (room->is_unfinished(dir, false))

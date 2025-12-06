@@ -171,7 +171,7 @@ void World::open_close_lock_unlock_no_checks(Room* room, Direction dir, OpenClos
     if (!room->link_tag(dir, LinkTag::Openable)) throw runtime_error("Attempt to open/close/lock/unlock a non-Openable exit! [" + room->id_str() + "]");
     Room* dest_room = room->get_link(dir);
     const Direction reverse_dir = Room::reverse_direction(dir);
-    std::string action_str;
+    string action_str;
     switch(type)
     {
         case OpenCloseLockUnlock::OPEN:
@@ -205,7 +205,7 @@ void World::open_close_lock_unlock_no_checks(Room* room, Direction dir, OpenClos
 
     // If the Actor pointer exists (it can be nullptr to make a door open on its own) AND the Mobile is in the same room as the Player, we'll inform them that
     // the door has been opened by this Mobile.
-    std::string message;
+    string message;
     if (room == player_parent && actor && actor->parent_room() == player_parent)
     {
         if (actor->tag(EntityTag::PluralName)) action_str.pop_back();
