@@ -79,6 +79,9 @@ Item* Inventory::at(size_t index)
 // Deletes everything from this Inventory.
 void Inventory::clear() { items_.clear(); }
 
+// Returns true if this Inventory is empty.
+bool Inventory::empty() const { return items_.empty(); }
+
 // Removes an Item from this Inventory.
 void Inventory::erase(size_t index)
 {

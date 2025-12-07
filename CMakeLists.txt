@@ -24,6 +24,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(WESTGATE_CPPS
   src/actions/cheats.cpp
   src/actions/meta.cpp
+  src/actions/player-interaction.cpp
   src/actions/silly.cpp
   src/actions/world-interaction.cpp
   src/core/core.cpp

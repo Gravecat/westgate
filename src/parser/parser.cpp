@@ -22,6 +22,7 @@
 
 #include "actions/cheats.hpp"
 #include "actions/meta.hpp"
+#include "actions/player-interaction.hpp"
 #include "actions/silly.hpp"
 #include "actions/world-interaction.hpp"
 #include "core/core.hpp"
@@ -61,6 +62,9 @@ static const std::unordered_map<hash_wg, std::function<void(vector<hash_wg>&, ve
     { 717260451, actions::world_interaction::travel },      // east
     { 3693685262, actions::silly::magic_word },             // frotz
     { 93100650, actions::world_interaction::travel },       // go
+    { 1947733315, actions::player_interaction::inventory }, // i
+    { 1772178168, actions::player_interaction::inventory }, // inv
+    { 3649621541, actions::player_interaction::inventory }, // inventory
     { 1214476199, actions::world_interaction::look },       // l
     { 365823675, actions::world_interaction::look },        // look
     { 3654652163, actions::meta::automap },                 // map

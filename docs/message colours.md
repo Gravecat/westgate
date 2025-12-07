@@ -25,6 +25,7 @@ The brighter colours should be reserved for more important, attention-getting pu
 - System and tutorial messages.
 
 `{w}` (gray)
+- General messages, low-importance. Usually used as a response to commands, rather than something that happens separately.
 
 ---
 

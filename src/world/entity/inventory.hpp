@@ -33,6 +33,7 @@ public:
     void    add(std::unique_ptr<Item> item);    // Adds an Item to this Inventory (use std::move).
     Item*   at(size_t index);       // Returns a pointer to a specified Item in this Inventory.
     void    clear();                // Deletes everything from this Inventory.
+    bool    empty() const;          // Returns true if this Inventory is empty.
     void    erase(size_t index);    // Removes an Item from this Inventory.
     void    save(FileWriter* file); // Saves this Entity to a save game file.
     size_t  size() const;           // Returns the amount of Items in this Inventory.
