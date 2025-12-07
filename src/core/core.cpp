@@ -56,10 +56,9 @@ Core::Core() : cascade_count_(0), cascade_failure_(false), cascade_timer_(std::t
 void Core::check_stderr()
 {
     if (lock_stderr_) return;
-    
     lock_stderr_ = true;
-    const string err_buffer = stderr_buffer_.str();
-    if (err_buffer.size())
+    if (const string err_buffer = stderr_buffer_.str();
+        err_buffer.size())
     {
         this->log(err_buffer);
         stderr_buffer_.str(string());
@@ -337,8 +336,8 @@ void Core::nonfatal(const string_view error, int type)
 
     if (cascade_weight)
     {
-        time_t elapsed_seconds = std::time(0) - cascade_timer_;
-        if (elapsed_seconds <= ERROR_CASCADE_TIMEOUT)
+        if (time_t elapsed_seconds = std::time(0) - cascade_timer_;
+            elapsed_seconds <= ERROR_CASCADE_TIMEOUT)
         {
             cascade_count_ += cascade_weight;
             if (cascade_count_ > ERROR_CASCADE_THRESHOLD)

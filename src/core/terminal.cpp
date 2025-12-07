@@ -143,8 +143,7 @@ void print(const string_view text, bool newline)
     unsigned int chars_so_far = 0;
 
     // I KNOW THIS IS A NIGHTMARE OF CODE BUT THERE ARE SO MANY EDGE CASES :(
-    std::function<void(string, bool)> print_formatted = [&print_formatted, &console_width, &chars_so_far](const string &line,
-        bool recalc_cursor)
+    std::function<void(string, bool)> print_formatted = [&print_formatted, &console_width, &chars_so_far](const string &line, bool recalc_cursor)
     {
         if (!line.size()) return;
         // This can be computationally expensive to do for every single word, especially on Unix, so we'll only check the 'cursor' position when absolutely
@@ -152,8 +151,8 @@ void print(const string_view text, bool newline)
         if (recalc_cursor) chars_so_far = get_cursor_x();
 
         // If newlines are specified, break them up and handle them with recursive calls.
-        auto new_line = line.find_first_of('\n');
-        if (new_line != string::npos)
+        if (auto new_line = line.find_first_of('\n');
+            new_line != string::npos)
         {
             const string before_newline = line.substr(0, new_line);
             const string after_newline = line.substr(new_line + 1);

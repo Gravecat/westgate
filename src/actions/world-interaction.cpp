@@ -73,8 +73,8 @@ void open_close(PARSER_FUNCTION)
         print("{Y}That isn't something you can " + open_close + "!");
         return;
     }
-    const bool is_open = room->link_tag(dir, LinkTag::Open);
-    if ((open && is_open) || (!open && !is_open))
+    if (const bool is_open = room->link_tag(dir, LinkTag::Open);
+        (open && is_open) || (!open && !is_open))
     {
         print("{Y}It's already " + open_closed + ".");
         return;

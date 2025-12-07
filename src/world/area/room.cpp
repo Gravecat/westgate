@@ -103,8 +103,8 @@ bool Room::can_see_outside() const
         }
 
         // Check the linked room, to see if it's outdoors.
-        Room* linked_room = world().find_room(link->get());
-        if (linked_room->tag(RoomTag::Indoors) || linked_room->tag(RoomTag::Underground)) continue;
+        if (Room* linked_room = world().find_room(link->get());
+            linked_room->tag(RoomTag::Indoors) || linked_room->tag(RoomTag::Underground)) continue;
         else return true;
     }
 
@@ -114,7 +114,7 @@ bool Room::can_see_outside() const
 // Clears a LinkTag on a specifieid Link.
 void Room::clear_link_tag(Direction dir, LinkTag tag, bool mark_delta)
 {
-    int array_pos = link_id(dir, "clear_link_tag", true);
+    const int array_pos = link_id(dir, "clear_link_tag", true);
     links_[array_pos]->clear_tag(tag, mark_delta);
     if (mark_delta) set_tag(RoomTag::ChangedExits);
 }
@@ -122,7 +122,7 @@ void Room::clear_link_tag(Direction dir, LinkTag tag, bool mark_delta)
 // Clears multiple LinkTags at once.
 void Room::clear_link_tags(Direction dir, std::list<LinkTag> tags_list, bool mark_delta)
 {
-    int array_pos = link_id(dir, "clear_link_tags", true);
+    const int array_pos = link_id(dir, "clear_link_tags", true);
     links_[array_pos]->clear_tags(tags_list, mark_delta);
     if (mark_delta) set_tag(RoomTag::ChangedExits);
 }
@@ -153,7 +153,7 @@ const string& Room::direction_name(Direction dir)
 // Returns the name of the door (door, gate, etc.) on the specified Link, if any.
 const string Room::door_name(Direction dir) const
 {
-    int array_pos = link_id(dir, "clear_link_tag", false);
+    const int array_pos = link_id(dir, "clear_link_tag", false);
     if (!links_[array_pos]) return "";
     else return links_[array_pos]->door_name();
 }

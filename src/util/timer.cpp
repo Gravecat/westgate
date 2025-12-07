@@ -38,8 +38,7 @@ bool Timer::expired() const
 // Randomizes the timer, by setting the start time later by a random amount between 1 and amount.
 void Timer::randomize(unsigned int amount)
 {
-    int offset = 1;
-    if (amount > 1) offset = rnd::get<int>(1, amount);
+    int offset = (amount > 1 ? rnd::get<int>(1, amount) : 1);
     start_time_ -= std::chrono::milliseconds(offset);
 }
 

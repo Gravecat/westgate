@@ -38,8 +38,8 @@ Inventory::Inventory(FileReader* file)
     }
 
     // Check the save version for this Inventory.
-    const unsigned int save_version = file->read_data<unsigned int>();
-    if (save_version != INVENTORY_SAVE_VERSION) FileReader::standard_error("Invalid inventory save version", save_version, INVENTORY_SAVE_VERSION);
+    if (const unsigned int save_version = file->read_data<unsigned int>();
+        save_version != INVENTORY_SAVE_VERSION) FileReader::standard_error("Invalid inventory save version", save_version, INVENTORY_SAVE_VERSION);
 
     // Read the size of this Inventory.
     const size_wg inv_size = file->read_data<size_wg>();

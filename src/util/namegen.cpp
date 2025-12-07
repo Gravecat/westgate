@@ -141,12 +141,11 @@ string ProcNameGen::npc_name(Gender gender, bool with_surname)
         to_check[0] = std::tolower(to_check[0]);
         for (size_t i = 0; i < to_check.size(); i++)
         {
-            const char ch = to_check[i];
-            const bool last_char = (i == to_check.size() - 1);
-            if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u' || ch == 'y') // I know Y isn't a vowel, shut up.
+            if (const char ch = to_check[i];
+                ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u' || ch == 'y') // I know Y isn't a vowel, shut up.
             {
                 vowel_count++;
-                if (last_char) ends_in_vowel = true;
+                if (i == to_check.size() - 1) ends_in_vowel = true;
             }
         }
         if (vowel_count >= 3 || (vowel_count >= 2 && ends_in_vowel)) return true;

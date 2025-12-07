@@ -41,25 +41,25 @@ Entity::Entity(FileReader* file) : gender_(Gender::NONE), name_("undefined entit
     if (!file) return;
 
     // Check the save version for this Entity.
-    const unsigned int save_version = file->read_data<unsigned int>();
-    if (save_version != ENTITY_SAVE_VERSION) FileReader::standard_error("Invalid entity save version", save_version, ENTITY_SAVE_VERSION);
+    if (const unsigned int save_version = file->read_data<unsigned int>();
+        save_version != ENTITY_SAVE_VERSION) FileReader::standard_error("Invalid entity save version", save_version, ENTITY_SAVE_VERSION);
 
     // Retrieve the Entity's name and gender.
-    const unsigned int props_tag = file->read_data<unsigned int>();
-    if (props_tag != ENTITY_SAVE_PROPS) FileReader::standard_error("Invalid tag in entity save data", props_tag, ENTITY_SAVE_PROPS);
+    if (const unsigned int props_tag = file->read_data<unsigned int>();
+        props_tag != ENTITY_SAVE_PROPS) FileReader::standard_error("Invalid tag in entity save data", props_tag, ENTITY_SAVE_PROPS);
     name_ = file->read_string();
     gender_ = file->read_data<Gender>();
 
     // Load the Entity's tags, if any.
-    const unsigned int tags_tag = file->read_data<unsigned int>();
-    if (tags_tag != ENTITY_SAVE_TAGS) FileReader::standard_error("Invalid tag in entity save data", tags_tag, ENTITY_SAVE_TAGS);
+    if (const unsigned int tags_tag = file->read_data<unsigned int>();
+        tags_tag != ENTITY_SAVE_TAGS) FileReader::standard_error("Invalid tag in entity save data", tags_tag, ENTITY_SAVE_TAGS);
     size_wg tag_count = file->read_data<size_wg>();
     for (size_wg t = 0; t < tag_count; t++)
         set_tag(file->read_data<EntityTag>());
 
     // Load the Entity's Inventory, if any.
-    const unsigned int inv_tag = file->read_data<unsigned int>();
-    if (inv_tag != ENTITY_SAVE_INVENTORY) FileReader::standard_error("Invalid tag in entity save data", inv_tag, ENTITY_SAVE_INVENTORY);
+    if (const unsigned int inv_tag = file->read_data<unsigned int>();
+        inv_tag != ENTITY_SAVE_INVENTORY) FileReader::standard_error("Invalid tag in entity save data", inv_tag, ENTITY_SAVE_INVENTORY);
     if (file->read_data<bool>()) inventory_ = std::make_unique<Inventory>(file);
 }
 
@@ -132,8 +132,7 @@ Inventory* Entity::inv() { return inventory_.get(); }
 std::unique_ptr<Entity> Entity::load_entity(FileReader* file)
 {
     if (!file) throw runtime_error("Attempt to load Entity from null file pointer!");
-    EntityType type = file->read_data<EntityType>();
-    switch(type)
+    switch(EntityType type = file->read_data<EntityType>())
     {
         case EntityType::ENTITY: return std::make_unique<Entity>(file); break;
         case EntityType::MOBILE: return std::make_unique<Mobile>(file); break;

@@ -102,9 +102,9 @@ Direction parse_direction(hash_wg hash)
 }
 
 // Attempts to parse a string into a number; invalid results are set to INT_MIN.
-int32_t parse_number(const string_view num)
+int parse_number(const string_view num)
 {
-    int32_t result = 0;
+    int result = 0;
     try
     { result = std::stol(string{num}); }
     catch(const std::invalid_argument&)

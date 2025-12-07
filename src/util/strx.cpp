@@ -177,7 +177,6 @@ bool find_and_replace(string& input, const string_view to_find, const string_vie
 string flatten_tags(const string_view str)
 {
     string output, last_tag, to_check = string{str};
-
     while(true)
     {
         size_t tag_open = to_check.find_first_of('{');
@@ -187,8 +186,8 @@ string flatten_tags(const string_view str)
             output += to_check;
             break;
         }
-        string tag_found = to_check.substr(tag_open + 1, tag_closed - tag_open - 1);
-        if (tag_found.compare(last_tag))
+        if (const string tag_found = to_check.substr(tag_open + 1, tag_closed - tag_open - 1);
+            tag_found.compare(last_tag))
         {
             last_tag = tag_found;
             output += to_check.substr(0, tag_closed + 1);
@@ -196,7 +195,6 @@ string flatten_tags(const string_view str)
         else output += to_check.substr(0, tag_open);
         to_check = to_check.substr(tag_closed + 1);
     }
-
     return output;
 }
 

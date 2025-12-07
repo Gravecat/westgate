@@ -44,8 +44,7 @@ namespace westgate {
 Game::Game() : player_ptr_(nullptr), save_id_(-1), world_ptr_(nullptr) { }
 
 // Destructor, cleans up attached classes.
-Game::~Game()
-{ world_ptr_.reset(nullptr); }
+Game::~Game() { world_ptr_.reset(nullptr); }
 
 // Starts the game, in the form of a title screen followed by the main game loop.
 void Game::begin()
@@ -87,8 +86,8 @@ void Game::load_game(int save_slot)
 
     // Check the misc data headers and version.
     if (!file->check_header()) throw runtime_error("Invalid save data header!");
-    const unsigned int misc_version = file->read_data<unsigned int>();
-    if (misc_version != MISC_DATA_SAVE_VERSION) FileReader::standard_error("Invalid save data version", misc_version, MISC_DATA_SAVE_VERSION);
+    if (const unsigned int misc_version = file->read_data<unsigned int>();
+        misc_version != MISC_DATA_SAVE_VERSION) FileReader::standard_error("Invalid save data version", misc_version, MISC_DATA_SAVE_VERSION);
     if (file->read_string() != "MISC_DATA") throw runtime_error("Invalid save data header!");
 
     // Check what Region the player is in.

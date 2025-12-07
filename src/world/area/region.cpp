@@ -105,11 +105,11 @@ void Region::load_delta(int save_slot)
     // Load the save file, check the headers and version.
     auto file = std::make_unique<FileReader>(save_file);
     if (!file->check_header()) throw runtime_error("Invalid region deltas" + err_file);
-    const unsigned int delta_ver = file->read_data<unsigned int>();
-    if (delta_ver != REGION_SAVE_VERSION) FileReader::standard_error("Invalid region deltas save version" + err_file, delta_ver, REGION_SAVE_VERSION);
+    if (const unsigned int delta_ver = file->read_data<unsigned int>();
+        delta_ver != REGION_SAVE_VERSION) FileReader::standard_error("Invalid region deltas save version" + err_file, delta_ver, REGION_SAVE_VERSION);
     if (file->read_string().compare("REGION_DELTA")) throw runtime_error("Invalid region deltas" + err_file);
-    const int delta_id = file->read_data<int>();
-    if (delta_id != id_) FileReader::standard_error("Mismatched region delta ID" + err_file, delta_id, id_);
+    if (const int delta_id = file->read_data<int>();
+        delta_id != id_) FileReader::standard_error("Mismatched region delta ID" + err_file, delta_id, id_);
 
     // Load the Room deltas, if any.
     while(true)
@@ -118,8 +118,8 @@ void Region::load_delta(int save_slot)
         if (delta_tag == REGION_DELTA_ROOMS_END) break;
         else if (delta_tag == REGION_DELTA_ROOM)
         {
-            const unsigned int room_ver = file->read_data<unsigned int>();
-            if (room_ver != Room::ROOM_SAVE_VERSION) FileReader::standard_error("Invalid region room version", room_ver, Room::ROOM_SAVE_VERSION);
+            if (const unsigned int room_ver = file->read_data<unsigned int>();
+                room_ver != Room::ROOM_SAVE_VERSION) FileReader::standard_error("Invalid region room version", room_ver, Room::ROOM_SAVE_VERSION);
             const hash_wg room_id = file->read_data<hash_wg>();
             auto result = rooms_.find(room_id);
             if (result == rooms_.end()) throw std::runtime_error("Could not locate room " + to_string(room_id) + " in region " + to_string(id_));

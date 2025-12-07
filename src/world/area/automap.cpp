@@ -98,8 +98,8 @@ vector<string> Automap::generate_map(Room* start_room)
             if (!unfinished_link) line_length = (room->link_tag(dir, LinkTag::TripleLength) ? 5 : (room->link_tag(dir, LinkTag::DoubleLength) ? 3 : 1));
             for (unsigned int l = 1; l <= line_length; l++)
             {
-                Vector3 new_pos = coord + (direction_to_xyz_[i - 1] * static_cast<int>(l));
-                if (new_pos.x < 0 || new_pos.y < 0 || new_pos.x > 6 || new_pos.y > 6) break;
+                if (Vector3 new_pos = coord + (direction_to_xyz_[i - 1] * static_cast<int>(l));
+                    new_pos.x < 0 || new_pos.y < 0 || new_pos.x > 6 || new_pos.y > 6) break;
                 const unsigned int link_vec_pos = vec_pos + (link_offsets.at(i) * l);
 
                 const char current_sym = game_map.at(link_vec_pos).at(game_map.at(link_vec_pos).size() - 1);

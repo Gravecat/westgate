@@ -160,8 +160,8 @@ TimeWeather::LightDark TimeWeather::light_dark()
 // Loads the time/weather data from the specified save file.
 void TimeWeather::load_data(FileReader* file)
 {
-    const unsigned int tw_save_ver = file->read_data<unsigned int>();
-    if (tw_save_ver != TIME_WEATHER_SAVE_VERSION) FileReader::standard_error("Incompatible time/weather data version", tw_save_ver, TIME_WEATHER_SAVE_VERSION);
+    if (const unsigned int tw_save_ver = file->read_data<unsigned int>();
+        tw_save_ver != TIME_WEATHER_SAVE_VERSION) FileReader::standard_error("Incompatible time/weather data version", tw_save_ver, TIME_WEATHER_SAVE_VERSION);
     day_ = file->read_data<int>();
     moon_ = file->read_data<int>();
     time_ = file->read_data<int>();
@@ -423,8 +423,7 @@ unsigned long long TimeWeather::time_passed() { return time_passed_; }
 void TimeWeather::trigger_event(string *message_to_append, bool silent)
 {
     const string weather_map = weather_change_map_.at(static_cast<int>(weather_));
-    const char new_weather = weather_map[rnd::get<int>(0, weather_map.size() - 1)];
-    switch (new_weather)
+    switch (weather_map[rnd::get<int>(0, weather_map.size() - 1)])
     {
         case 'c': weather_ = Weather::CLEAR; break;
         case 'f': weather_ = Weather::FAIR; break;

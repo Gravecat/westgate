@@ -146,8 +146,8 @@ int World::find_room_region(hash_wg id) const
 // Specifies a Region to be loaded into memory.
 Region* World::load_region(int id)
 {
-    auto region = regions_.find(id);
-    if (region != regions_.end()) return region->second.get();  // It's already loaded.
+    if (auto region = regions_.find(id);
+        region != regions_.end()) return region->second.get();  // It's already loaded.
 
     auto new_region = std::make_unique<Region>();
     new_region->load(game().save_slot(), id);
@@ -198,8 +198,8 @@ void World::open_close_lock_unlock_no_checks(Room* room, Direction dir, OpenClos
     const Room* player_parent = player().parent_room();
 
     // Check if the player saw this door open or close.
-    const bool player_sees = (room == player_parent || dest_room == player_parent) && (!actor || actor->type() != EntityType::PLAYER);
-    if (!player_sees) return;
+    if (const bool player_sees = (room == player_parent || dest_room == player_parent) && (!actor || actor->type() != EntityType::PLAYER);
+        !player_sees) return;
     const Direction player_sees_dir = (room == player_parent ? dir : reverse_dir);
     const string door_name = (room == player_parent ? room->door_name(dir) : dest_room->door_name(reverse_dir));
 
